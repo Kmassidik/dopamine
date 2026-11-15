@@ -60,4 +60,5 @@
     <string name="lesson_empty">This lesson has no questions this version can show yet.</string>
     <string name="lesson_answer_was">Answer: %1$s</string>
     <string name="lesson_order_hint">Tap the steps in the right order. Tap a placed step to take it back.</string>
+    <string name="loading_tagline">a little every day</string>
 </resources>

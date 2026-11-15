@@ -56,7 +56,7 @@ fun SettingsScreen(vm: SettingsViewModel) {
                 Text(stringResource(R.string.settings_title), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
             }
             LazyColumn(
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 112.dp),
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 112.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item { ProfileCard(c, name, draft, vm) }

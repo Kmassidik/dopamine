@@ -1,6 +1,5 @@
 package app.dopamine.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -30,18 +29,18 @@ import app.dopamine.data.repo.ProfileState
 import app.dopamine.ui.category.CategoryScreen
 import app.dopamine.ui.category.CategoryViewModel
 import app.dopamine.ui.home.HomeScreen
+import app.dopamine.ui.loading.LoadingScreen
 import app.dopamine.ui.home.HomeViewModel
 import app.dopamine.ui.onboarding.OnboardingScreen
 import app.dopamine.ui.onboarding.OnboardingViewModel
 import app.dopamine.ui.settings.SettingsScreen
 import app.dopamine.ui.settings.SettingsViewModel
-import app.dopamine.ui.theme.Dopamine
 
 @Composable
 fun AppNav(container: AppContainer) {
     val profile by container.profile.state.collectAsStateWithLifecycle(ProfileState.Loading)
     when (val p = profile) {
-        ProfileState.Loading -> Box(Modifier.fillMaxSize().background(Dopamine.colors.bg))
+        ProfileState.Loading -> LoadingScreen()
         ProfileState.None -> {
             val vm: OnboardingViewModel = viewModel(factory = viewModelFactory { initializer { OnboardingViewModel(container) } })
             OnboardingScreen(vm)

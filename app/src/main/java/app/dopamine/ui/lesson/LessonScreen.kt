@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -112,8 +113,8 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
         ProgressBar(s.index.toFloat() / s.questions.size, c.greenTint, c.green, Modifier.weight(1f).padding(end = 16.dp))
     }
     Column(
-        Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Text(plainMath(q.prompt.orEmpty()), style = MaterialTheme.typography.titleLarge)
         when (q.type) {
@@ -123,7 +124,7 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
             "order_steps" -> OrderBody(c, q, ans, s.checked)
         }
     }
-    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (s.checked) {
             val good = s.lastCorrect
             Column(
@@ -163,7 +164,9 @@ private fun Option(c: DopamineColors, text: String, bg: Color, border: Color, on
             .background(bg)
             .border(OutlineWidth, border, CardShape)
             .bounceClick(onClick = { onClick?.invoke() })
-            .padding(horizontal = 18.dp, vertical = 16.dp),
+            .heightIn(min = 56.dp)
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+        contentAlignment = Alignment.CenterStart,
     ) { Text(text, style = MaterialTheme.typography.titleMedium, color = c.ink) }
 }
 

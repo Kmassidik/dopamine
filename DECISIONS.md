@@ -28,7 +28,7 @@ Format: date, step, decision, options, reason, consequences / how to reverse.
 ## 2026-11-15, design change (user request): white, green, yellow, pink
 - **Decision:** replace the Japanese washi/ink theme with a white background and three accents (green #35C46F, yellow #FFC93C, pink #FF7FAE), chunky rounded shapes, dark ink text on every fill.
 - **Reason:** the user asked for white with a 2026 look in those colors.
-- **Consequences:** deviates from sections 17 and 18 of the original brief (palette, motion ideas, icon STYLE block). Text colors use deeper tones so every pair passes WCAG AA (enforced by `ContrastTest`). Font stays Zen Maru Gothic (OFL), Latin subset 22 KB per weight.
+- **Consequences:** deviates from sections 17 and 18 of the original brief (palette, motion ideas, icon STYLE block). Text colors use deeper tones so every pair passes WCAG AA (enforced by `ContrastTest`). Font later changed (2026-11-16) to Fredoka for headings plus Nunito for body, both OFL, about 30 KB per weight.
 
 ## 2026-11-15, Step 5/10 early: content as files, no Room yet
 - **Decision:** the first working build reads content straight from `filesDir/content` and has no database yet.

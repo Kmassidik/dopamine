@@ -20,7 +20,7 @@ Category tints rotate by `category.order % 3`: 1 green, 2 yellow, 0 pink.
 
 ## Type
 
-Zen Maru Gothic (OFL), Latin subset, Regular / Medium / Bold only (about 22 KB each). Scale (sp): display 32/40 bold, title 22/30 bold, subtitle 18/26 medium, small title 16/24 medium, body 16/24, body-small 14/22, label 16/22 bold, label-medium 14/20, caption 12/16. All sizes use `sp` so they follow the system font scale; never fix the height of a text container.
+Two families, both OFL, Latin subset, static instances cut from the variable fonts (about 30 KB each). **Fredoka** (Medium, Bold) for headings, numbers and buttons. **Nunito** (Regular, SemiBold, Bold) for body text and questions. Scale (sp): display 40/46, display-medium 32/38, headline 28/34, title 24/30 bold, subtitle 18/24 medium, small title 16/22 medium, body 16/24, body-small 14/21, button label 17/22 bold, label 13/18, caption 12/16. Spacing tokens in `Spacing.kt`: gutter 20, card padding 20, gap 12, section 24, button 56, touch 48. All sizes use `sp` so they follow the system font scale; never fix the height of a text container.
 
 ## Shape, spacing
 

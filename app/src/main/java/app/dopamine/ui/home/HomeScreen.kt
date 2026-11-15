@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -59,8 +60,8 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 112.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 112.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
                 item { Header(c, name, onOpenSettings) }
                 item {
@@ -87,7 +88,7 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
 @Composable
 private fun Header(c: DopamineColors, name: String, onOpenSettings: () -> Unit) {
     Box(Modifier.fillMaxWidth()) {
-        RibbonCorner(stringResource(R.string.ribbon_text), c.greenTint, c.ink, Modifier.align(Alignment.TopEnd))
+        RibbonCorner(stringResource(R.string.ribbon_text), c.greenTint, c.ink, Modifier.align(Alignment.TopEnd).offset(y = (-36).dp))
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Row(
@@ -134,7 +135,7 @@ private fun Tile(bg: Color, modifier: Modifier, onClick: (() -> Unit)? = null, c
             .clip(CardShape)
             .background(bg)
             .then(if (onClick != null) Modifier.bounceClick(onClick = onClick) else Modifier)
-            .padding(16.dp),
+            .padding(20.dp),
         content = content,
     )
 }

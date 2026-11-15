@@ -8,7 +8,7 @@ Snapshot as of **2026-11-16**. Read `AGENTS.md` first for rules and environment.
 |---|---|---|
 | Content schemas, sample lessons, manifest generator, validator, CI (content repo) | Done | `dopamine-content` |
 | Gradle project, version catalog, R8 release build | Done | `build.gradle.kts`, `app/build.gradle.kts` |
-| Design system (white + green/yellow/pink, Zen Maru Gothic, WCAG AA tested) | Done | `ui/theme/`, `DESIGN.md` |
+| Design system (white + green/yellow/pink, Fredoka + Nunito, WCAG AA tested) | Done | `ui/theme/`, `DESIGN.md` |
 | 112 illustrated icons + Bot mascot + launcher icon, bob / press motion | Done | `res/drawable-nodpi/`, `ui/components/Components.kt` |
 | Seed content on first launch, re-seed if folder missing or corrupt | Done | `ContentStore.ensureSeeded` |
 | Onboarding: ask the name, store it in Room, greet by name | Done | `ui/onboarding`, `data/db`, `ProfileRepository` |

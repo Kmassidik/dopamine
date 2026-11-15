@@ -23,7 +23,7 @@ import app.dopamine.R
 @Composable
 fun RibbonCorner(text: String, band: Color, ink: Color, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val face = remember { ResourcesCompat.getFont(context, R.font.zen_maru_bold) }
+    val face = remember { ResourcesCompat.getFont(context, R.font.fredoka_bold) }
     Canvas(modifier.size(width = 220.dp, height = 130.dp)) {
         val w = size.width
         val h = size.height
@@ -38,7 +38,7 @@ fun RibbonCorner(text: String, band: Color, ink: Color, modifier: Modifier = Mod
                 textSize = 17.dp.toPx()
                 typeface = face
             }
-            canvas.nativeCanvas.drawTextOnPath(text, path.asAndroidPath(), 112.dp.toPx(), 6.dp.toPx(), paint)
+            canvas.nativeCanvas.drawTextOnPath(text, path.asAndroidPath(), 62.dp.toPx(), 6.dp.toPx(), paint)
         }
     }
 }

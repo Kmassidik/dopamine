@@ -41,7 +41,7 @@ fun OnboardingScreen(vm: OnboardingViewModel) {
 
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(
-            Modifier.fillMaxSize().safeDrawingPadding().imePadding().verticalScroll(rememberScrollState()).padding(16.dp),
+            Modifier.fillMaxSize().safeDrawingPadding().imePadding().verticalScroll(rememberScrollState()).padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             Box(

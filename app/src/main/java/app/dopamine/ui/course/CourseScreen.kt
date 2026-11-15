@@ -58,7 +58,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                 Text(course?.title.orEmpty(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
             }
             LazyColumn(
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 112.dp),
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 112.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 course?.units?.sortedBy { it.order }?.forEach { unit ->
@@ -80,7 +80,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                     .clip(CardShape)
                                     .border(OutlineWidth, c.line, CardShape)
                                     .bounceClick(lesson.title) { onOpenLesson(lesson.id) }
-                                    .padding(16.dp),
+                                    .padding(horizontal = 20.dp, vertical = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Box(Modifier.size(48.dp).clip(CircleShape).background(tint), contentAlignment = Alignment.Center) {
