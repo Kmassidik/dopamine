@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Slice an icon sheet into transparent WebP icons.
+"""Slice an icon sheet into transparent WebP icons. The flat background color is detected from the corners.
 
   python3 tools/slice_sheet.py SHEET.png NAMES.txt OUT_DIR [--grid 4] [--size 256] [--also 384]
 
@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFilter
 
 
 def key_color(img):
@@ -19,26 +19,38 @@ def key_color(img):
     return tuple(sorted(c[i] for c in px)[1] for i in range(3))
 
 
-def remove_key(cell, key, lo=60, hi=150):
-    """Soft alpha by distance to the key color, then despill magenta from the edge pixels."""
-    cell = cell.convert("RGBA")
-    px = cell.load()
+def remove_key(cell, key, tol=48):
+    """Remove the flat background by flood-filling inward from the cell border.
+
+    Works for any flat color (magenta, pink, white...) and never punches holes in icon
+    interiors that happen to share the color, because only border-connected pixels go.
+    """
+    rgb = cell.convert("RGB")
+    work = rgb.copy()
+    sentinel = (1, 2, 3)
+    w, h = work.size
+    for pt in [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1), (w // 2, 0), (w // 2, h - 1), (0, h // 2), (w - 1, h // 2)]:
+        if work.getpixel(pt) != sentinel and sum(abs(a - b) for a, b in zip(work.getpixel(pt), key)) <= tol * 3:
+            ImageDraw.floodfill(work, pt, sentinel, thresh=tol)
+    mask = Image.new("L", work.size, 255)
+    mpx, wpx = mask.load(), work.load()
+    for y in range(h):
+        for x in range(w):
+            if wpx[x, y] == sentinel:
+                mpx[x, y] = 0
+    # Feather the edge a touch so icons do not look cut with scissors.
+    mask = mask.filter(ImageFilter.GaussianBlur(0.8)).point(lambda v: 0 if v < 40 else min(255, int(v * 1.15)))
+    out = rgb.convert("RGBA")
+    out.putalpha(mask)
+    # Despill: pixels at the edge that lean toward the key color get pulled back.
+    px = out.load()
     kr, kg, kb = key
-    for y in range(cell.height):
-        for x in range(cell.width):
-            r, g, b, _ = px[x, y]
-            d = ((r - kr) ** 2 + (g - kg) ** 2 + (b - kb) ** 2) ** 0.5
-            if d <= lo:
-                px[x, y] = (r, g, b, 0)
-            elif d < hi:
-                a = int(255 * (d - lo) / (hi - lo))
-                # despill: pull the magenta tint out of semi-transparent edge pixels
-                m = min(r, b)
-                if m > g:
-                    k = (m - g) * (1 - a / 255) * 0.9
-                    r, b = int(r - k), int(b - k)
-                px[x, y] = (r, g, b, a)
-    return cell
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = px[x, y]
+            if 0 < a < 255:
+                px[x, y] = (min(255, r + (r - kr) // 6), min(255, g + (g - kg) // 6), min(255, b + (b - kb) // 6), a)
+    return out
 
 
 def square_trim(cell, size, margin=0.06):
@@ -67,9 +79,7 @@ def main():
         sys.exit(f"error: expected {a.grid * a.grid} names, got {len(names)}")
     sheet = Image.open(a.sheet).convert("RGB")
     key = key_color(sheet)
-    print(f"sheet {sheet.size}, key color {key}")
-    if sum(abs(c - t) for c, t in zip(key, (255, 0, 255))) > 90:
-        print("warning: corner color is not close to #FF00FF; check the sheet background")
+    print(f"sheet {sheet.size}, background color {key}")
 
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
