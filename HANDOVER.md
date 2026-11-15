@@ -90,3 +90,10 @@ Measured: release APK 1.67 MB; debug APK 14 MB (includes tooling); icon weight a
 - Course order and which of English / SWE / Electronics comes first.
 - Should the Bot mascot appear in the lesson player (feedback poses exist as `mascot_*` icons)?
 - Sound effects: on or off by default, and any preferred free sources (record licenses).
+
+
+## Update 2026-11-16: navigation and basic lesson player
+- Flow is now Home -> subject (category) -> course -> lessons -> lesson player. Floating bottom bar (Home, Review, Settings) shows everywhere except inside a lesson.
+- Lessons open and play all 5 question types. LaTeX is shown as plain text via `ui/lesson/PlainMath.kt` until the native renderer exists.
+- Questions with an `image` are skipped for now (no SVG renderer yet).
+- Results are not saved yet (no hearts, XP or streak persistence). Review tab is a placeholder.

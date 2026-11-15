@@ -1,7 +1,6 @@
 package app.dopamine.ui.category
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -31,23 +31,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.IconImage
+import app.dopamine.ui.components.bounceClick
 import app.dopamine.ui.components.iconFor
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
-import app.dopamine.ui.theme.OutlineWidth
 
+/** Step 2 of Home -> Math -> Algebra -> lessons: the courses inside one subject. */
 @Composable
-fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit) {
+fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit, onOpenCourse: (String) -> Unit) {
     val manifest by vm.manifest.collectAsStateWithLifecycle()
-    val info by vm.info.collectAsStateWithLifecycle()
     val c = Dopamine.colors
     val cat = manifest?.categories?.firstOrNull { it.id == vm.categoryId }
     val courses = manifest?.courses?.filter { it.categoryId == vm.categoryId }?.sortedBy { it.order }.orEmpty()
-    val accent = when ((cat?.order ?: 1) % 3) {
-        1 -> listOf(c.greenTint, c.green)
-        2 -> listOf(c.yellowTint, c.yellow)
-        else -> listOf(c.pinkTint, c.pink)
-    }
+    val tints = listOf(c.greenTint, c.yellowTint, c.pinkTint)
 
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
@@ -59,63 +55,36 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit) {
                 Text(cat?.name.orEmpty(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
             }
             LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 112.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                courses.forEach { course ->
-                    item(key = "course-${course.id}") {
-                        Row(
-                            Modifier.fillMaxWidth().clip(CardShape).background(accent[0]).padding(20.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Box(Modifier.size(56.dp).clip(CircleShape).background(Color.White), contentAlignment = Alignment.Center) {
-                                IconImage(iconFor(cat?.icon.orEmpty()), size = 44.dp)
-                            }
-                            Column(Modifier.padding(start = 16.dp)) {
-                                Text(course.title, style = MaterialTheme.typography.titleLarge)
-                                if (course.description.isNotBlank()) {
-                                    Text(course.description, style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
-                                }
-                            }
+                itemsIndexed(courses, key = { _, course -> course.id }) { i, course ->
+                    val lessons = course.units.sumOf { it.lessons.size }
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(CardShape)
+                            .background(tints[i % tints.size])
+                            .bounceClick(course.title) { onOpenCourse(course.id) }
+                            .padding(20.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(Modifier.size(56.dp).clip(CircleShape).background(Color.White), contentAlignment = Alignment.Center) {
+                            IconImage(iconFor(cat?.icon.orEmpty()), size = 44.dp)
                         }
-                    }
-                    course.units.sortedBy { it.order }.forEach { unit ->
-                        item(key = "unit-${unit.id}") {
-                            Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                                Text(unit.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-                                Text(
-                                    pluralStringResource(R.plurals.n_lessons, unit.lessons.size, unit.lessons.size),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = c.inkSoft,
-                                )
+                        Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
+                            Text(course.title, style = MaterialTheme.typography.titleLarge)
+                            if (course.description.isNotBlank()) {
+                                Text(course.description, style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
                             }
+                            Text(
+                                pluralStringResource(R.plurals.n_lessons, lessons, lessons),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = c.inkSoft,
+                                modifier = Modifier.padding(top = 4.dp),
+                            )
                         }
-                        unit.lessons.sortedBy { it.order }.forEach { lesson ->
-                            item(key = "lesson-${lesson.id}") {
-                                Row(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .clip(CardShape)
-                                        .border(OutlineWidth, c.line, CardShape)
-                                        .padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Box(Modifier.size(48.dp).clip(CircleShape).background(accent[0]), contentAlignment = Alignment.Center) {
-                                        Text(lesson.order.toString(), style = MaterialTheme.typography.titleMedium)
-                                    }
-                                    Column(Modifier.padding(start = 16.dp)) {
-                                        Text(lesson.title, style = MaterialTheme.typography.titleMedium)
-                                        info[lesson.id]?.let {
-                                            Text(
-                                                stringResource(R.string.lesson_summary, pluralStringResource(R.plurals.n_questions, it.questions, it.questions), it.xp),
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = c.inkSoft,
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
                     }
                 }
             }

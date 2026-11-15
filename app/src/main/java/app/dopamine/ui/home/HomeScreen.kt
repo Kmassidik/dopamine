@@ -59,7 +59,7 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 24.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 112.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item { Header(c, name, onOpenSettings) }

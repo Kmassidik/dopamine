@@ -43,7 +43,7 @@ import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
 
 @Composable
-fun SettingsScreen(vm: SettingsViewModel, onBack: () -> Unit) {
+fun SettingsScreen(vm: SettingsViewModel) {
     val c = Dopamine.colors
     val name by vm.name.collectAsStateWithLifecycle()
     val draft by vm.draft.collectAsStateWithLifecycle()
@@ -53,14 +53,10 @@ fun SettingsScreen(vm: SettingsViewModel, onBack: () -> Unit) {
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding().imePadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(48.dp).clip(CircleShape).clickable(onClickLabel = stringResource(R.string.back), onClick = onBack),
-                    contentAlignment = Alignment.Center,
-                ) { AppIcon(R.drawable.ic_back, c.ink, description = stringResource(R.string.back)) }
                 Text(stringResource(R.string.settings_title), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
             }
             LazyColumn(
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 24.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 112.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item { ProfileCard(c, name, draft, vm) }
