@@ -40,6 +40,7 @@ import app.dopamine.domain.model.CategoryDto
 import app.dopamine.domain.model.Manifest
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.IconImage
+import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.components.bounceClick
 import app.dopamine.ui.components.RibbonCorner
 import app.dopamine.ui.components.StatChip
