@@ -83,4 +83,12 @@
     <string name="unsupported_body">This part needs a newer version of the app. Update the app to see it.</string>
     <string name="lesson_locked">Needs a newer app</string>
     <plurals name="n_skipped"><item quantity="one">%d question could not be shown in this version of the app</item><item quantity="other">%d questions could not be shown in this version of the app</item></plurals>
+    <string name="unit_quiz">Unit quiz</string>
+    <string name="unit_quiz_sub">%1$d questions, pass at %2$d%%</string>
+    <string name="unit_quiz_passed">Passed. Tap to try again</string>
+    <string name="quiz_passed">Quiz passed</string>
+    <string name="quiz_failed">Not yet</string>
+    <string name="quiz_failed_body">You need %d%% to pass. Read the notes, then try again.</string>
+    <string name="quiz_try_again">Try again</string>
+    <string name="quiz_read_notes">Read the notes</string>
 </resources>

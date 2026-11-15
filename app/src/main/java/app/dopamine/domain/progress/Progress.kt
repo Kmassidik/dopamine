@@ -41,3 +41,41 @@ fun goalFraction(todayXp: Int, goal: Int = DEFAULT_GOAL_XP): Float =
 
 /** Best score only goes up. */
 fun betterScore(previous: Int?, new: Int): Int = maxOf(previous ?: 0, new)
+
+// ---- Unit quiz ------------------------------------------------------------------------------
+
+const val QUIZ_PASS_PERCENT = 70
+const val QUIZ_XP = 20
+const val QUIZ_MAX_QUESTIONS = 10
+const val QUIZ_MIN_QUESTIONS = 3
+
+fun quizPassed(correct: Int, total: Int): Boolean = total > 0 && scorePercent(correct, total) >= QUIZ_PASS_PERCENT
+
+/**
+ * Picks up to [n] questions for a unit quiz, taking turns between the lessons so each lesson is represented.
+ * Each lesson's questions are shuffled first, and the final order is shuffled too.
+ */
+fun <T> pickBalanced(groups: List<List<T>>, n: Int = QUIZ_MAX_QUESTIONS, random: kotlin.random.Random = kotlin.random.Random.Default): List<T> {
+    val queues = groups.map { ArrayDeque(it.shuffled(random)) }.filter { it.isNotEmpty() }
+    val out = ArrayList<T>()
+    while (out.size < n && queues.any { it.isNotEmpty() }) {
+        for (q in queues) {
+            if (out.size >= n) break
+            q.removeFirstOrNull()?.let { out.add(it) }
+        }
+    }
+    return out.shuffled(random)
+}
+
+/** What to store after a quiz attempt. The best score only goes up; a pass is never lost; XP only on the first pass. */
+data class QuizMerge(val best: Int, val passed: Boolean, val passedAt: Long, val firstPass: Boolean)
+
+fun mergeQuiz(prevBest: Int?, prevPassed: Boolean, prevPassedAt: Long, score: Int, passed: Boolean, now: Long): QuizMerge {
+    val first = passed && !prevPassed
+    return QuizMerge(
+        best = maxOf(prevBest ?: 0, score),
+        passed = passed || prevPassed,
+        passedAt = if (first) now else prevPassedAt,
+        firstPass = first,
+    )
+}

@@ -15,6 +15,7 @@ data class LessonInfo(val questions: Int, val xp: Int)
 class CourseViewModel(private val c: AppContainer, val courseId: String) : ViewModel() {
     val manifest = c.content.manifest
     val done: StateFlow<Set<String>> = c.progress.completedLessons.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
+    val passedQuizzes: StateFlow<Set<String>> = c.progress.passedQuizzes.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
     private val _info = MutableStateFlow<Map<String, LessonInfo>>(emptyMap())
     val info: StateFlow<Map<String, LessonInfo>> = _info.asStateFlow()
 
@@ -25,7 +26,7 @@ class CourseViewModel(private val c: AppContainer, val courseId: String) : ViewM
             _info.value = course.units.flatMap { it.lessons }.filter { !app.dopamine.domain.content.ContentContract.isLocked(it.minApp) }.mapNotNull { ref ->
                 // Counts are cached per lesson version+hash, so reopening a course reads no lesson files.
                 val key = "${ref.id}:${ref.version}:${ref.sha256}"
-                val info = infoCache[key] ?: c.content.lesson(ref)?.let { LessonInfo(it.questions.size, it.xp) }?.also { infoCache[key] = it }
+                val info = infoCache[key] ?: c.content.lesson(ref)?.let { LessonInfo(it.questions.count { q -> q.type in app.dopamine.domain.model.KNOWN_QUESTION_TYPES && q.image == null }, it.xp) }?.also { infoCache[key] = it }
                 info?.let { ref.id to it }
             }.toMap()
         }

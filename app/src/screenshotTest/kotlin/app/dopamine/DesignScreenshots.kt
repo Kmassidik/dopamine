@@ -26,6 +26,10 @@ import app.dopamine.ui.components.InkButton
 import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.components.StatChip
 import app.dopamine.ui.components.Tab
+import app.dopamine.domain.model.Lesson
+import app.dopamine.domain.model.Question
+import app.dopamine.ui.lesson.LessonDone
+import app.dopamine.ui.lesson.LessonState
 import app.dopamine.ui.loading.LoadingScreen
 import app.dopamine.ui.math.MathText
 import app.dopamine.ui.theme.Dopamine
@@ -163,4 +167,33 @@ fun CodeShot() = Page {
         MathText("Use `print(x)` to show \$x\$, then `x = 3` sets it.", style = MaterialTheme.typography.titleMedium)
         CodeBlock("SELECT name FROM users WHERE id = 1;", "sql")
     }
+}
+
+private fun doneState(correct: Int, quiz: Boolean, firstPass: Boolean? = null): LessonState {
+    val qs = List(10) { Question("q$it", "multiple_choice", prompt = "p", choices = listOf("a", "b"), answerIndex = 0, explanation = "e") }
+    return LessonState(
+        loading = false, lesson = Lesson("l", 1, "Unit", 10, questions = qs), questions = qs,
+        index = 10, correct = correct, quiz = quiz, quizFirstPass = firstPass,
+    )
+}
+
+@PreviewTest
+@Preview(name = "quiz-passed", showBackground = true, widthDp = 360, heightDp = 640)
+@Composable
+fun QuizPassedShot() = DopamineTheme(darkTheme = false) {
+    Box(Modifier.background(Color.White)) { LessonDone(Dopamine.colors, doneState(8, true, firstPass = true), {}, {}, {}) }
+}
+
+@PreviewTest
+@Preview(name = "quiz-failed", showBackground = true, widthDp = 360, heightDp = 640)
+@Composable
+fun QuizFailedShot() = DopamineTheme(darkTheme = false) {
+    Box(Modifier.background(Color.White)) { LessonDone(Dopamine.colors, doneState(4, true, firstPass = false), {}, {}, {}) }
+}
+
+@PreviewTest
+@Preview(name = "lesson-done", showBackground = true, widthDp = 360, heightDp = 640)
+@Composable
+fun LessonDoneShot() = DopamineTheme(darkTheme = false) {
+    Box(Modifier.background(Color.White)) { LessonDone(Dopamine.colors, doneState(9, false), {}, {}, {}) }
 }

@@ -3,6 +3,8 @@ package app.dopamine.data.repo
 import app.dopamine.data.db.ProgressDao
 import app.dopamine.domain.progress.DEFAULT_GOAL_XP
 import app.dopamine.domain.progress.epochDay
+import app.dopamine.domain.progress.QUIZ_XP
+import app.dopamine.domain.progress.quizPassed
 import app.dopamine.domain.progress.scorePercent
 import app.dopamine.domain.progress.streak
 import java.util.TimeZone
@@ -18,6 +20,9 @@ class ProgressRepository(private val dao: ProgressDao, private val now: () -> Lo
     val completedLessons: Flow<Set<String>> =
         dao.observeLessons().map { rows -> rows.filter { it.completed }.mapTo(HashSet()) { it.lessonId } as Set<String> }.distinctUntilChanged()
 
+    val passedQuizzes: Flow<Set<String>> =
+        dao.observeQuizzes().map { rows -> rows.filter { it.passed }.mapTo(HashSet()) { it.unitId } as Set<String> }.distinctUntilChanged()
+
     val homeStats: Flow<HomeStats> = dao.observeDays().map { days ->
         val today = today()
         HomeStats(
@@ -30,6 +35,12 @@ class ProgressRepository(private val dao: ProgressDao, private val now: () -> Lo
     suspend fun recordLesson(lessonId: String, correct: Int, total: Int, xp: Int) {
         val t = now()
         dao.record(lessonId, scorePercent(correct, total), xp, epochDay(t, TimeZone.getDefault().getOffset(t).toLong()), t)
+    }
+
+    /** Saves a finished unit quiz. Returns true when it was the first pass (QUIZ_XP was added). */
+    suspend fun recordQuiz(unitId: String, correct: Int, total: Int): Boolean {
+        val t = now()
+        return dao.recordQuiz(unitId, scorePercent(correct, total), quizPassed(correct, total), QUIZ_XP, today(), t)
     }
 
     private fun today(): Long {

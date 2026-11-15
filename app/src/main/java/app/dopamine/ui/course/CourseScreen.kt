@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
 import app.dopamine.domain.content.ContentContract
+import app.dopamine.domain.progress.QUIZ_MAX_QUESTIONS
+import app.dopamine.domain.progress.QUIZ_MIN_QUESTIONS
+import app.dopamine.domain.progress.QUIZ_PASS_PERCENT
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.ChunkyButton
 import app.dopamine.ui.components.IconImage
@@ -41,10 +44,11 @@ import app.dopamine.ui.theme.OutlineWidth
 
 /** Step 3: the units and lessons of one course. Tap a lesson to play it. */
 @Composable
-fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String) -> Unit, onOpenNotes: (String) -> Unit) {
+fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String) -> Unit, onOpenNotes: (String) -> Unit, onOpenQuiz: (String) -> Unit) {
     val manifest by vm.manifest.collectAsStateWithLifecycle()
     val info by vm.info.collectAsStateWithLifecycle()
     val done by vm.done.collectAsStateWithLifecycle()
+    val passedQuizzes by vm.passedQuizzes.collectAsStateWithLifecycle()
     val c = Dopamine.colors
     val course = manifest?.courses?.firstOrNull { it.id == vm.courseId }
     val cat = manifest?.categories?.firstOrNull { it.id == course?.categoryId }
@@ -147,6 +151,32 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                     }
                                 }
                                 if (!locked) AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
+                            }
+                        }
+                    }
+                    val poolSize = unit.lessons.filter { !ContentContract.isLocked(it.minApp) }.sumOf { info[it.id]?.questions ?: 0 }
+                    if (poolSize >= QUIZ_MIN_QUESTIONS) {
+                        item(key = "quiz-${unit.id}") {
+                            val passed = unit.id in passedQuizzes
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clip(CircleShape)
+                                    .background(c.pinkTint)
+                                    .bounceClick(stringResource(R.string.unit_quiz)) { onOpenQuiz(unit.id) }
+                                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                IconImage(if (passed) R.drawable.ic_complete else R.drawable.ic_trophy, size = 32.dp, bob = false)
+                                Column(Modifier.weight(1f).padding(start = 12.dp)) {
+                                    Text(stringResource(R.string.unit_quiz), style = MaterialTheme.typography.titleMedium)
+                                    Text(
+                                        stringResource(if (passed) R.string.unit_quiz_passed else R.string.unit_quiz_sub, minOf(poolSize, QUIZ_MAX_QUESTIONS), QUIZ_PASS_PERCENT),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = c.inkSoft,
+                                    )
+                                }
+                                AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
                             }
                         }
                     }

@@ -46,4 +46,22 @@ class MigrationSqlTest {
     @Test fun versionIsTwo() {
         assertEquals(2, schema(2)["version"]!!.jsonPrimitive.content.toInt())
     }
+
+    @Test fun migration2to3CreatesTheQuizTable() {
+        val v2 = tables(2)
+        val v3 = tables(3)
+        val added = v3.keys - v2.keys
+        assertEquals(setOf("unit_quiz"), added)
+        val executed = Migrations3.STATEMENTS_2_3.toSet()
+        added.forEach { assertTrue("Migration SQL missing or different for $it", v3.getValue(it) in executed) }
+        assertEquals(added.size, executed.size)
+    }
+
+    @Test fun version2TablesAreUntouchedIn3() {
+        tables(2).forEach { (name, sql) -> assertEquals("Table $name changed without a migration", sql, tables(3)[name]) }
+    }
+
+    @Test fun databaseVersionIsThree() {
+        assertEquals(3, schema(3)["version"]!!.jsonPrimitive.content.toInt())
+    }
 }

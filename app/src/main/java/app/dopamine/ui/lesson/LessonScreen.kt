@@ -61,7 +61,7 @@ private class Answer {
 }
 
 @Composable
-fun LessonScreen(vm: LessonViewModel, onClose: () -> Unit) {
+fun LessonScreen(vm: LessonViewModel, onClose: () -> Unit, onRetry: () -> Unit = {}, onOpenNotes: () -> Unit = {}) {
     val s by vm.state.collectAsStateWithLifecycle()
     val c = Dopamine.colors
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
@@ -69,7 +69,7 @@ fun LessonScreen(vm: LessonViewModel, onClose: () -> Unit) {
             when {
                 s.loading -> Box(Modifier.fillMaxSize())
                 s.questions.isEmpty() -> Empty(c, onClose)
-                s.finished -> Done(c, s, onClose)
+                s.finished -> LessonDone(c, s, onClose, onRetry, onOpenNotes)
                 else -> Playing(c, s, vm, onClose)
             }
         }
@@ -86,16 +86,31 @@ private fun Empty(c: DopamineColors, onClose: () -> Unit) {
 }
 
 @Composable
-private fun Done(c: DopamineColors, s: LessonState, onClose: () -> Unit) {
+fun LessonDone(c: DopamineColors, s: LessonState, onClose: () -> Unit, onRetry: () -> Unit, onOpenNotes: () -> Unit) {
+    val good = if (s.quiz) s.quizPassed else s.correct * 2 >= s.questions.size
     Column(Modifier.fillMaxSize().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        IconImage(if (s.correct * 2 >= s.questions.size) R.drawable.mascot_trophy else R.drawable.mascot_cheer, size = 160.dp)
-        Text(stringResource(R.string.lesson_done), style = MaterialTheme.typography.displayLarge, modifier = Modifier.padding(top = 16.dp))
+        IconImage(if (good) R.drawable.mascot_trophy else if (s.quiz) R.drawable.mascot_think else R.drawable.mascot_cheer, size = 160.dp)
+        Text(
+            stringResource(if (!s.quiz) R.string.lesson_done else if (s.quizPassed) R.string.quiz_passed else R.string.quiz_failed),
+            style = MaterialTheme.typography.displayLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 16.dp),
+        )
         Text(
             stringResource(R.string.lesson_score, s.correct, s.questions.size),
             style = MaterialTheme.typography.bodyLarge,
             color = c.inkSoft,
             modifier = Modifier.padding(top = 4.dp, bottom = 16.dp),
         )
+        if (s.quiz && !s.quizPassed) {
+            Text(
+                stringResource(R.string.quiz_failed_body, app.dopamine.domain.progress.QUIZ_PASS_PERCENT),
+                style = MaterialTheme.typography.bodyLarge,
+                color = c.inkSoft,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp),
+            )
+        }
         if (s.skipped > 0) {
             Text(
                 pluralStringResource(R.plurals.n_skipped, s.skipped, s.skipped),
@@ -105,9 +120,17 @@ private fun Done(c: DopamineColors, s: LessonState, onClose: () -> Unit) {
                 modifier = Modifier.padding(bottom = 16.dp),
             )
         }
-        StatChip(R.drawable.ic_xp, "+${s.xpEarned}", c.yellowTint, c.ink, stringResource(R.string.xp_desc, s.xpEarned))
+        if (s.xpEarned > 0 || !s.quiz) {
+            StatChip(R.drawable.ic_xp, "+${s.xpEarned}", c.yellowTint, c.ink, stringResource(R.string.xp_desc, s.xpEarned))
+        }
         Box(Modifier.size(24.dp))
-        ChunkyButton(stringResource(R.string.lesson_finish), onClose, c.green, c.greenLip, c.onAccent)
+        if (s.quiz && !s.quizPassed) {
+            ChunkyButton(stringResource(R.string.quiz_read_notes), onOpenNotes, c.yellow, c.yellowLip, c.onAccent)
+            Box(Modifier.size(4.dp))
+            ChunkyButton(stringResource(R.string.quiz_try_again), onRetry, c.green, c.greenLip, c.onAccent)
+        } else {
+            ChunkyButton(stringResource(R.string.lesson_finish), onClose, c.green, c.greenLip, c.onAccent)
+        }
     }
 }
 

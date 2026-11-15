@@ -62,7 +62,7 @@ private fun Main(container: AppContainer, name: String) {
     val settings: SettingsViewModel = viewModel(factory = viewModelFactory { initializer { SettingsViewModel(container) } })
 
     val route = nav.currentBackStackEntryAsState().value?.destination?.route
-    val inLesson = route?.startsWith("lesson/") == true || route?.startsWith("learn/") == true
+    val inLesson = route?.startsWith("lesson/") == true || route?.startsWith("learn/") == true || route?.startsWith("quiz/") == true
     val selected = when (route) {
         "review" -> Tab.Review
         "settings" -> Tab.Settings
@@ -93,7 +93,7 @@ private fun Main(container: AppContainer, name: String) {
                 val vm: CourseViewModel = viewModel(key = "course-$id", factory = viewModelFactory {
                     initializer { CourseViewModel(container, id) }
                 })
-                CourseScreen(vm, onBack = { nav.popBackStack() }, onOpenLesson = { nav.navigate("learn/$it") }, onOpenNotes = { nav.navigate("notes/$it") })
+                CourseScreen(vm, onBack = { nav.popBackStack() }, onOpenLesson = { nav.navigate("learn/$it") }, onOpenNotes = { nav.navigate("notes/$it") }, onOpenQuiz = { nav.navigate("quiz/$it") })
             }
             composable("notes/{id}") { entry ->
                 val id = entry.arguments?.getString("id").orEmpty()
@@ -110,6 +110,18 @@ private fun Main(container: AppContainer, name: String) {
                 LearnScreen(vm, onBack = { nav.popBackStack() }, onPractice = {
                     nav.navigate("lesson/$id") { popUpTo("learn/{id}") { inclusive = true } }
                 })
+            }
+            composable("quiz/{id}") { entry ->
+                val id = entry.arguments?.getString("id").orEmpty()
+                val vm: LessonViewModel = viewModel(key = "quiz-$id", factory = viewModelFactory {
+                    initializer { LessonViewModel(container, id, quiz = true) }
+                })
+                LessonScreen(
+                    vm,
+                    onClose = { nav.popBackStack() },
+                    onRetry = { nav.navigate("quiz/$id") { popUpTo("quiz/{id}") { inclusive = true } } },
+                    onOpenNotes = { nav.navigate("notes/$id") { popUpTo("quiz/{id}") { inclusive = true } } },
+                )
             }
             composable("lesson/{id}") { entry ->
                 val id = entry.arguments?.getString("id").orEmpty()
