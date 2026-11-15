@@ -99,7 +99,7 @@ private fun Header(c: DopamineColors, name: String) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Row(
-                    Modifier.clip(CircleShape).background(c.bg).heightIn(min = 48.dp).padding(end = 16.dp),
+                    Modifier.clip(CircleShape).heightIn(min = 48.dp).padding(end = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(Modifier.size(44.dp).clip(CircleShape).background(c.yellow), contentAlignment = Alignment.Center) {
@@ -158,7 +158,7 @@ private fun Bento(c: DopamineColors, onStart: () -> Unit) {
             },
             onClick = onStart,
         ) {
-            IconImage(R.drawable.mascot_study, size = 84.dp)
+            IconImage(R.drawable.mascot_study, size = 112.dp)
             Box(Modifier.weight(1f))
             Text(stringResource(R.string.tile_start_title), style = MaterialTheme.typography.titleLarge, color = c.onAccent)
             Text(stringResource(R.string.tile_start_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)

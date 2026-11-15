@@ -38,7 +38,7 @@ fun RibbonCorner(text: String, band: Color, ink: Color, modifier: Modifier = Mod
                 textSize = 17.dp.toPx()
                 typeface = face
             }
-            canvas.nativeCanvas.drawTextOnPath(text, path.asAndroidPath(), 24.dp.toPx(), 6.dp.toPx(), paint)
+            canvas.nativeCanvas.drawTextOnPath(text, path.asAndroidPath(), 112.dp.toPx(), 6.dp.toPx(), paint)
         }
     }
 }
