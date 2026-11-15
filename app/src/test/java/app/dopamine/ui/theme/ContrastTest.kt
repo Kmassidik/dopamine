@@ -18,8 +18,8 @@ class ContrastTest {
     }
 
     private fun ratio(a: Long, b: Long): Double {
-        val (hi, lo) = lum(a).let { x -> lum(b).let { y -> if (x > y) x to y else y to x } }
-        return (hi + 0.05) / (lo + 0.05)
+        val x = lum(a); val y = lum(b)
+        return (maxOf(x, y) + 0.05) / (minOf(x, y) + 0.05)
     }
 
     private fun aa(fg: Long, bg: Long, name: String, min: Double = 4.5) {
@@ -27,33 +27,33 @@ class ContrastTest {
         assertTrue("$name contrast %.2f < $min".format(r), r >= min)
     }
 
-    @Test fun lightText() {
-        listOf(Palette.WASHI, Palette.WASHI_RAISED, Palette.WASHI_DEEP).forEach { bg ->
-            aa(Palette.SUMI, bg, "sumi on %x".format(bg))
-            aa(Palette.SUMI_SOFT, bg, "sumi-soft on %x".format(bg))
-            aa(Palette.INDIGO, bg, "indigo on %x".format(bg))
-            aa(Palette.VERMILION, bg, "vermilion on %x".format(bg))
-            aa(Palette.MATCHA, bg, "matcha on %x".format(bg))
-        }
-        aa(Palette.WASHI_RAISED, Palette.INDIGO, "cream on indigo")
-        aa(Palette.WASHI_RAISED, Palette.VERMILION, "cream on vermilion")
-        aa(Palette.WASHI_RAISED, Palette.MATCHA, "cream on matcha")
-        aa(Palette.SUMI, Palette.SAKURA, "sumi on sakura")
-        aa(Palette.MATCHA, Palette.MATCHA_SOFT, "matcha on soft")
-        aa(Palette.VERMILION, Palette.VERMILION_SOFT, "vermilion on soft")
+    @Test fun light() {
+        aa(Palette.INK, Palette.WHITE, "ink/white")
+        aa(Palette.INK_SOFT, Palette.WHITE, "soft/white")
+        aa(Palette.GREEN_DEEP, Palette.WHITE, "green text/white")
+        aa(Palette.GREEN_DEEP, Palette.GREEN_TINT, "green text/tint")
+        aa(Palette.YELLOW_DEEP, Palette.WHITE, "yellow text/white")
+        aa(Palette.YELLOW_DEEP, Palette.YELLOW_TINT, "yellow text/tint")
+        aa(Palette.PINK_DEEP, Palette.WHITE, "pink text/white")
+        aa(Palette.PINK_DEEP, Palette.PINK_TINT, "pink text/tint")
+        listOf(Palette.GREEN, Palette.YELLOW, Palette.PINK, Palette.GREEN_TINT, Palette.YELLOW_TINT, Palette.PINK_TINT)
+            .forEach { aa(Palette.INK, it, "ink on %x".format(it)) }
+        listOf(Palette.GREEN_TINT, Palette.YELLOW_TINT, Palette.PINK_TINT)
+            .forEach { aa(Palette.INK_SOFT, it, "soft on %x".format(it)) }
     }
 
-    @Test fun darkText() {
-        listOf(Palette.NIGHT, Palette.NIGHT_RAISED, Palette.NIGHT_DEEP).forEach { bg ->
-            aa(Palette.PAPER, bg, "paper on %x".format(bg))
-            aa(Palette.PAPER_SOFT, bg, "paper-soft on %x".format(bg))
-            aa(Palette.INDIGO_LIGHT, bg, "indigo on %x".format(bg))
-            aa(Palette.VERMILION_LIGHT, bg, "vermilion on %x".format(bg))
-            aa(Palette.MATCHA_LIGHT, bg, "matcha on %x".format(bg))
-            aa(Palette.SAKURA_LIGHT, bg, "sakura on %x".format(bg))
+    @Test fun dark() {
+        listOf(Palette.N_BG, Palette.N_SURFACE).forEach { bg ->
+            aa(Palette.N_INK, bg, "ink on %x".format(bg))
+            aa(Palette.N_INK_SOFT, bg, "soft on %x".format(bg))
+            aa(Palette.N_GREEN_TEXT, bg, "green on %x".format(bg))
+            aa(Palette.N_YELLOW, bg, "yellow on %x".format(bg))
+            aa(Palette.N_PINK_TEXT, bg, "pink on %x".format(bg))
         }
-        aa(Palette.NIGHT, Palette.INDIGO_LIGHT, "night on indigo")
-        aa(Palette.MATCHA_LIGHT, Palette.MATCHA_NIGHT_SOFT, "matcha on soft")
-        aa(Palette.VERMILION_LIGHT, Palette.VERMILION_NIGHT_SOFT, "vermilion on soft")
+        aa(Palette.N_GREEN_TEXT, Palette.N_GREEN_TINT, "green/tint")
+        aa(Palette.N_YELLOW, Palette.N_YELLOW_TINT, "yellow/tint")
+        aa(Palette.N_PINK_TEXT, Palette.N_PINK_TINT, "pink/tint")
+        aa(Palette.N_INK_SOFT, Palette.N_GREEN_TINT, "soft/green tint")
+        listOf(Palette.N_GREEN, Palette.N_YELLOW, Palette.N_PINK).forEach { aa(Palette.N_BG, it, "bg on %x".format(it)) }
     }
 }

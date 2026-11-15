@@ -1,36 +1,40 @@
 package app.dopamine.ui.theme
 
-/**
- * Raw design tokens as ARGB longs, so JVM unit tests can check contrast without Compose.
- * Six core colors plus neutrals. See DESIGN.md.
- */
+/** Raw design tokens as ARGB longs so JVM tests can check contrast. See DESIGN.md. */
 object Palette {
-    // Light: washi paper and sumi ink
-    const val WASHI = 0xFFF7F1E3
-    const val WASHI_RAISED = 0xFFFFFBF2
-    const val WASHI_DEEP = 0xFFECE3CE
-    const val SUMI = 0xFF23243A
-    const val SUMI_SOFT = 0xFF565873
-    const val INDIGO = 0xFF34447F
-    const val VERMILION = 0xFFA93620
-    const val VERMILION_FILL = 0xFFD9482B
-    const val MATCHA = 0xFF3F6B34
-    const val MATCHA_FILL = 0xFF6F9A5B
-    const val SAKURA = 0xFFF3A9BA
-    const val SAKURA_SOFT = 0xFFFBE0E6
-    const val MATCHA_SOFT = 0xFFDDEBD3
-    const val VERMILION_SOFT = 0xFFF8D9D1
+    // Light
+    const val WHITE = 0xFFFFFFFF
+    const val INK = 0xFF14201A
+    const val INK_SOFT = 0xFF4F5D55
+    const val LINE = 0xFFE4EAE6
+    const val GREEN = 0xFF35C46F
+    const val GREEN_DEEP = 0xFF17803F
+    const val GREEN_TINT = 0xFFE4F8EC
+    const val GREEN_LIP = 0xFF22994F
+    const val YELLOW = 0xFFFFC93C
+    const val YELLOW_DEEP = 0xFF8A5F00
+    const val YELLOW_TINT = 0xFFFFF3CC
+    const val YELLOW_LIP = 0xFFD9A21B
+    const val PINK = 0xFFFF7FAE
+    const val PINK_DEEP = 0xFFB8305F
+    const val PINK_TINT = 0xFFFFE4EE
+    const val PINK_LIP = 0xFFDB5A8A
 
-    // Dark: deep indigo-black ink
-    const val NIGHT = 0xFF12132A
-    const val NIGHT_RAISED = 0xFF1C1E3C
-    const val NIGHT_DEEP = 0xFF2A2D52
-    const val PAPER = 0xFFF0E9D6
-    const val PAPER_SOFT = 0xFFB9B7CC
-    const val INDIGO_LIGHT = 0xFFA5B2F0
-    const val VERMILION_LIGHT = 0xFFFF8A6B
-    const val MATCHA_LIGHT = 0xFF9CCB86
-    const val SAKURA_LIGHT = 0xFFF7B8C6
-    const val MATCHA_NIGHT_SOFT = 0xFF22362A
-    const val VERMILION_NIGHT_SOFT = 0xFF3D2230
+    // Dark
+    const val N_BG = 0xFF0E1411
+    const val N_SURFACE = 0xFF17201B
+    const val N_INK = 0xFFF2F7F4
+    const val N_INK_SOFT = 0xFFA7B5AC
+    const val N_LINE = 0xFF26332B
+    const val N_GREEN = 0xFF4ADE80
+    const val N_GREEN_TEXT = 0xFF6BE59A
+    const val N_GREEN_TINT = 0xFF173324
+    const val N_GREEN_LIP = 0xFF2A9D5C
+    const val N_YELLOW = 0xFFFFD25E
+    const val N_YELLOW_TINT = 0xFF3A3114
+    const val N_YELLOW_LIP = 0xFFC99A1E
+    const val N_PINK = 0xFFFF8FB8
+    const val N_PINK_TEXT = 0xFFFF9EC3
+    const val N_PINK_TINT = 0xFF3B1A29
+    const val N_PINK_LIP = 0xFFD45E8B
 }

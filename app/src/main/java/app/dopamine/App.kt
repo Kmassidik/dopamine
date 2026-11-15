@@ -1,6 +1,11 @@
 package app.dopamine
 
 import android.app.Application
+import app.dopamine.data.content.ContentStore
+import app.dopamine.data.network.UpdateManager
+import app.dopamine.data.repo.ContentRepository
+import java.util.concurrent.TimeUnit
+import okhttp3.OkHttpClient
 
 class App : Application() {
     lateinit var container: AppContainer
@@ -13,4 +18,15 @@ class App : Application() {
 }
 
 /** Manual dependency injection. Grows with each step; no framework on purpose. */
-class AppContainer(val app: Application)
+class AppContainer(val app: Application) {
+    val store = ContentStore(app)
+    val content = ContentRepository(store)
+
+    private val http = OkHttpClient.Builder()
+        .followSslRedirects(false)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .build()
+
+    val updates = UpdateManager(store, http, { BuildConfig.CONTENT_BASE_URL }, BuildConfig.VERSION_CODE)
+}

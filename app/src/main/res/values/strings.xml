@@ -2,7 +2,26 @@
 <resources>
     <string name="app_name">Dopamine</string>
     <string name="home_title">Dopamine</string>
-    <string name="home_empty_title">No lessons yet</string>
-    <string name="home_empty_body">Lessons appear here once content is loaded.</string>
-    <string name="action_update">Update content</string>
+    <string name="goal_label">Daily goal</string>
+    <string name="goal_progress">%1$d of %2$d XP</string>
+    <string name="goal_hint">Finish one lesson to start your streak.</string>
+    <string name="goal_action">Pick a course</string>
+    <string name="review_title">Review</string>
+    <string name="review_empty">Nothing due. Come back after your next lesson.</string>
+    <string name="section_courses">Courses</string>
+    <string name="loading">Loading lessons</string>
+    <string name="category_summary">%1$d courses · %2$d lessons</string>
+    <string name="category_progress">%1$d of %2$d lessons done</string>
+    <string name="lesson_summary">%1$d questions · %2$d XP</string>
+    <string name="unit_lessons">%1$d lessons</string>
+    <string name="update_idle">Update content</string>
+    <string name="update_last">Updated %1$s</string>
+    <string name="update_bundled">Using the bundled lessons</string>
+    <string name="update_running">Downloading %1$d of %2$d</string>
+    <string name="update_checking">Checking for new lessons</string>
+    <string name="update_cancel">Cancel</string>
+    <string name="update_dismiss">Dismiss</string>
+    <string name="back">Back</string>
+    <string name="streak_desc">Streak: %1$d days</string>
+    <string name="xp_desc">%1$d XP in total</string>
 </resources>
