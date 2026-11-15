@@ -12,7 +12,7 @@ object Palette {
     const val SUMI = 0xFF23243A
     const val SUMI_SOFT = 0xFF565873
     const val INDIGO = 0xFF34447F
-    const val VERMILION = 0xFFB23A22
+    const val VERMILION = 0xFFA93620
     const val VERMILION_FILL = 0xFFD9482B
     const val MATCHA = 0xFF3F6B34
     const val MATCHA_FILL = 0xFF6F9A5B
