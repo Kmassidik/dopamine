@@ -2,19 +2,14 @@
 <resources>
     <string name="app_name">Dopamine</string>
     <string name="home_title">Dopamine</string>
-    <string name="goal_label">Daily goal</string>
     <string name="goal_progress">%1$d of %2$d XP</string>
-    <string name="goal_hint">Finish one lesson to start your streak.</string>
-    <string name="goal_action">Pick a course</string>
     <string name="review_title">Review</string>
-    <string name="review_empty">Nothing due. Come back after your next lesson.</string>
     <string name="section_courses">Courses</string>
     <string name="loading">Loading lessons</string>
     <string name="category_summary">%1$s · %2$s</string>
     <plurals name="n_courses"><item quantity="one">%d course</item><item quantity="other">%d courses</item></plurals>
     <plurals name="n_lessons"><item quantity="one">%d lesson</item><item quantity="other">%d lessons</item></plurals>
     <plurals name="n_questions"><item quantity="one">%d question</item><item quantity="other">%d questions</item></plurals>
-    <string name="category_progress">%1$d of %2$d done</string>
     <string name="lesson_summary">%1$s · %2$d XP</string>
         <string name="update_idle">Update content</string>
     <string name="update_last">Updated %1$s</string>
@@ -26,4 +21,16 @@
     <string name="back">Back</string>
     <string name="streak_desc">Streak: %1$d days</string>
     <string name="xp_desc">%1$d XP in total</string>
+    <string name="home_hello">Hello, %1$s</string>
+    <string name="home_subtitle">What will you learn today?</string>
+    <string name="ribbon_text">a little every day</string>
+    <string name="tile_start_title">Start learning</string>
+    <string name="tile_start_sub">Pick a course</string>
+    <string name="tile_review_title">Review</string>
+    <string name="tile_review_sub">Nothing due</string>
+    <string name="tile_goal_title">Daily goal</string>
+    <string name="onboarding_title">What should we call you?</string>
+    <string name="onboarding_body">We use it to greet you. It stays on this phone.</string>
+    <string name="onboarding_hint">Your name</string>
+    <string name="onboarding_action">Continue</string>
 </resources>

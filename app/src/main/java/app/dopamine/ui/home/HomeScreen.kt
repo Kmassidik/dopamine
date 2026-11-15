@@ -6,10 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -37,13 +41,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
-import app.dopamine.domain.content.ManifestDiff
 import app.dopamine.domain.model.CategoryDto
 import app.dopamine.domain.model.Manifest
 import app.dopamine.ui.components.AppIcon
-import app.dopamine.ui.components.ChunkyButton
+import app.dopamine.ui.components.InkButton
 import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.components.ProgressRing
+import app.dopamine.ui.components.RibbonCorner
 import app.dopamine.ui.components.StatChip
 import app.dopamine.ui.components.iconFor
 import app.dopamine.ui.theme.CardShape
@@ -51,38 +55,36 @@ import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.DopamineColors
 
 @Composable
-fun HomeScreen(vm: HomeViewModel, onOpenCategory: (String) -> Unit) {
+fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit) {
     val manifest by vm.manifest.collectAsStateWithLifecycle()
     val update by vm.update.collectAsStateWithLifecycle()
     val lastUpdated by vm.lastUpdated.collectAsStateWithLifecycle()
     val c = Dopamine.colors
+    val firstCategory = manifest?.categories?.minByOrNull { it.order }?.id
 
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                item { TopRow(c) }
+                item { Header(c, name) }
                 item {
-                    GoalBanner(c) { manifest?.categories?.minByOrNull { it.order }?.let { onOpenCategory(it.id) } }
+                    Bento(c, onStart = { firstCategory?.let(onOpenCategory) })
                 }
-                item { ReviewRow(c) }
                 item {
                     Text(
                         stringResource(R.string.section_courses),
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier.padding(top = 4.dp),
                     )
                 }
                 val m = manifest
                 if (m == null) {
                     item { Text(stringResource(R.string.loading), color = c.inkSoft) }
                 } else {
-                    items(m.categories.sortedBy { it.order }, key = { it.id }) { cat ->
-                        CategoryCard(c, m, cat, onOpenCategory)
-                    }
+                    items(m.categories.sortedBy { it.order }, key = { it.id }) { cat -> CourseRow(c, m, cat, onOpenCategory) }
                 }
             }
             UpdateBar(c, update, lastUpdated, vm::startUpdate, vm::cancelUpdate, vm::dismissMessage)
@@ -91,109 +93,138 @@ fun HomeScreen(vm: HomeViewModel, onOpenCategory: (String) -> Unit) {
 }
 
 @Composable
-private fun TopRow(c: DopamineColors) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(stringResource(R.string.home_title), style = MaterialTheme.typography.displayLarge, modifier = Modifier.weight(1f))
-        StatChip(R.drawable.ic_streak, "0", c.pinkText, c.pinkTint, c.ink, stringResource(R.string.streak_desc, 0))
-        Box(Modifier.width(8.dp))
-        StatChip(R.drawable.ic_xp, "0", c.yellowText, c.yellowTint, c.ink, stringResource(R.string.xp_desc, 0))
-    }
-}
-
-@Composable
-private fun GoalBanner(c: DopamineColors, onPick: () -> Unit) {
-    val goal = 20
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .clip(CardShape)
-            .background(c.yellow)
-            .drawBehind {
-                drawCircle(c.pink, radius = 70.dp.toPx(), center = Offset(size.width - 8.dp.toPx(), -10.dp.toPx()))
-                drawCircle(c.green, radius = 36.dp.toPx(), center = Offset(size.width - 4.dp.toPx(), size.height - 30.dp.toPx()))
-                drawCircle(Color.White.copy(alpha = 0.35f), radius = 90.dp.toPx(), center = Offset(-20.dp.toPx(), size.height))
+private fun Header(c: DopamineColors, name: String) {
+    Box(Modifier.fillMaxWidth()) {
+        RibbonCorner(stringResource(R.string.ribbon_text), c.greenTint, c.ink, Modifier.align(Alignment.TopEnd))
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    Modifier.clip(CircleShape).background(c.bg).heightIn(min = 48.dp).padding(end = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(Modifier.size(40.dp).clip(CircleShape).background(c.ink), contentAlignment = Alignment.Center) {
+                        AppIcon(R.drawable.ic_xp, c.yellow, size = 22.dp)
+                    }
+                    Text(
+                        stringResource(R.string.home_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 10.dp),
+                    )
+                }
+                Box(Modifier.weight(1f))
+                Box(
+                    Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(c.pink)
+                        .semantics { contentDescription = "" },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(name.take(1).uppercase(), style = MaterialTheme.typography.titleMedium, color = c.onAccent)
+                }
             }
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(stringResource(R.string.goal_label), style = MaterialTheme.typography.labelMedium, color = c.onAccent)
-                Text(stringResource(R.string.goal_progress, 0, goal), style = MaterialTheme.typography.titleLarge, color = c.onAccent)
-                Text(stringResource(R.string.goal_hint), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(stringResource(R.string.home_hello, name), style = MaterialTheme.typography.displayLarge)
+                Text(stringResource(R.string.home_subtitle), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
             }
-            Box(Modifier.width(12.dp))
-            Box(contentAlignment = Alignment.Center) {
-                ProgressRing(0f, 72.dp, 10.dp, Color.White.copy(alpha = 0.7f), c.onAccent)
-                AppIcon(R.drawable.ic_xp, c.onAccent, size = 28.dp)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                StatChip(R.drawable.ic_streak, "0", c.pinkText, c.pinkTint, c.ink, stringResource(R.string.streak_desc, 0))
+                StatChip(R.drawable.ic_xp, "0", c.yellowText, c.yellowTint, c.ink, stringResource(R.string.xp_desc, 0))
             }
         }
-        ChunkyButton(
-            text = stringResource(R.string.goal_action),
-            onClick = onPick,
-            container = c.onAccent,
-            lip = Color.Black.copy(alpha = 0.45f),
-            content = c.yellow,
-        )
     }
 }
 
 @Composable
-private fun ReviewRow(c: DopamineColors) {
+private fun Tile(bg: Color, modifier: Modifier, onClick: (() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        modifier
+            .clip(CardShape)
+            .background(bg)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(16.dp),
+        content = content,
+    )
+}
+
+@Composable
+private fun Badge(c: DopamineColors, icon: Int, fill: Color = Color.White) {
+    Box(Modifier.size(44.dp).clip(CircleShape).background(fill), contentAlignment = Alignment.Center) {
+        AppIcon(icon, c.onAccent, size = 22.dp)
+    }
+}
+
+@Composable
+private fun Bento(c: DopamineColors, onStart: () -> Unit) {
+    Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Tile(
+            c.green,
+            Modifier.weight(1f).fillMaxHeight().heightIn(min = 220.dp).drawBehind {
+                drawCircle(Color.White.copy(alpha = 0.22f), 70.dp.toPx(), Offset(size.width, size.height * 0.25f))
+                drawCircle(Color.White.copy(alpha = 0.16f), 44.dp.toPx(), Offset(10.dp.toPx(), size.height * 0.55f))
+            },
+            onClick = onStart,
+        ) {
+            Badge(c, R.drawable.ic_book)
+            Box(Modifier.weight(1f))
+            Text(stringResource(R.string.tile_start_title), style = MaterialTheme.typography.titleLarge, color = c.onAccent)
+            Text(stringResource(R.string.tile_start_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
+        }
+        Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Tile(c.yellow, Modifier.weight(1f).fillMaxWidth()) {
+                Badge(c, R.drawable.ic_review)
+                Box(Modifier.height(10.dp))
+                Text(stringResource(R.string.tile_review_title), style = MaterialTheme.typography.titleMedium, color = c.onAccent)
+                Text(stringResource(R.string.tile_review_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
+            }
+            Tile(c.onAccent, Modifier.weight(1f).fillMaxWidth()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(stringResource(R.string.tile_goal_title), style = MaterialTheme.typography.titleMedium, color = Color.White)
+                        Text(stringResource(R.string.goal_progress, 0, 20), style = MaterialTheme.typography.bodyMedium, color = Color.White)
+                    }
+                }
+                Box(Modifier.height(10.dp))
+                ProgressBar(0f, Color.White.copy(alpha = 0.25f), c.yellow, height = 10.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CourseRow(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpen: (String) -> Unit) {
+    val (tint, fill) = when (cat.order % 3) {
+        1 -> c.greenTint to c.green
+        2 -> c.yellowTint to c.yellow
+        else -> c.pinkTint to c.pink
+    }
+    val courses = m.courses.count { it.categoryId == cat.id }
+    val lessons = m.courses.filter { it.categoryId == cat.id }.flatMap { it.units }.sumOf { it.lessons.size }
     Row(
-        Modifier.fillMaxWidth().clip(CardShape).background(c.pinkTint).padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(Modifier.size(48.dp).clip(CircleShape).background(c.pink), contentAlignment = Alignment.Center) {
-            AppIcon(R.drawable.ic_review, c.onAccent, size = 24.dp)
-        }
-        Column(Modifier.padding(start = 16.dp)) {
-            Text(stringResource(R.string.review_title), style = MaterialTheme.typography.titleMedium)
-            Text(stringResource(R.string.review_empty), style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
-        }
-    }
-}
-
-@Composable
-private fun CategoryCard(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpen: (String) -> Unit) {
-    val (tint, fill, lip, text) = when (cat.order % 3) {
-        1 -> listOf(c.greenTint, c.green, c.greenLip, c.greenText)
-        2 -> listOf(c.yellowTint, c.yellow, c.yellowLip, c.yellowText)
-        else -> listOf(c.pinkTint, c.pink, c.pinkLip, c.pinkText)
-    }
-    val courses = m.courses.filter { it.categoryId == cat.id }
-    val lessons = courses.flatMap { it.units }.sumOf { it.lessons.size }
-    Column(
         Modifier
             .fillMaxWidth()
-            .clip(CardShape)
+            .clip(CircleShape)
             .background(tint)
             .clickable(onClickLabel = cat.name) { onOpen(cat.id) }
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+            .padding(start = 8.dp, end = 20.dp, top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(56.dp).clip(CircleShape).background(fill), contentAlignment = Alignment.Center) {
-                AppIcon(iconFor(cat.icon), c.onAccent, size = 28.dp)
-            }
-            Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
-                Text(cat.name, style = MaterialTheme.typography.titleLarge)
-                Text(
-                    stringResource(R.string.category_summary, pluralStringResource(R.plurals.n_courses, courses.size, courses.size), pluralStringResource(R.plurals.n_lessons, lessons, lessons)),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = c.inkSoft,
-                )
-            }
-            AppIcon(R.drawable.ic_chevron, text, size = 24.dp)
+        Box(Modifier.size(56.dp).clip(CircleShape).background(fill), contentAlignment = Alignment.Center) {
+            AppIcon(iconFor(cat.icon), c.onAccent, size = 28.dp)
         }
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            ProgressBar(0f, c.bg.copy(alpha = 0.8f), fill)
+        Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
+            Text(cat.name, style = MaterialTheme.typography.titleMedium)
             Text(
-                stringResource(R.string.category_progress, 0, lessons),
-                style = MaterialTheme.typography.labelSmall,
-                color = text,
+                stringResource(
+                    R.string.category_summary,
+                    pluralStringResource(R.plurals.n_courses, courses, courses),
+                    pluralStringResource(R.plurals.n_lessons, lessons, lessons),
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+                color = c.inkSoft,
             )
         }
+        AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
     }
 }
 
@@ -223,22 +254,18 @@ private fun UpdateBar(
                         Text(stringResource(R.string.update_cancel), color = c.pinkText)
                     }
                 }
-                ProgressBar(
-                    if (state.total == 0) 0f else state.done.toFloat() / state.total,
-                    c.greenTint, c.green,
-                )
+                ProgressBar(if (state.total == 0) 0f else state.done.toFloat() / state.total, c.greenTint, c.green)
             }
             is UpdateUi.Done -> Message(c.greenTint, c.greenText, R.drawable.ic_check, state.message, onDismiss)
             is UpdateUi.Failed -> Message(c.pinkTint, c.pinkText, R.drawable.ic_warning, state.message, onDismiss)
             UpdateUi.Idle -> Unit
         }
         if (state !is UpdateUi.Running) {
-            ChunkyButton(
+            InkButton(
                 text = stringResource(R.string.update_idle),
                 onClick = onUpdate,
-                container = c.green,
-                lip = c.greenLip,
-                content = c.onAccent,
+                container = c.onAccent,
+                content = Color.White,
                 leadingIcon = R.drawable.ic_download,
             )
             Text(

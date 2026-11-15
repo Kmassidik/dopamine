@@ -56,13 +56,16 @@ fun ChunkyButton(
     content: Color,
     modifier: Modifier = Modifier,
     leadingIcon: Int? = null,
+    enabled: Boolean = true,
 ) {
+    val fade = if (enabled) 1f else 0.4f
     Box(modifier.padding(bottom = 4.dp)) {
-        Box(Modifier.matchParentSize().offset(y = 4.dp).background(lip, ButtonShape))
+        Box(Modifier.matchParentSize().offset(y = 4.dp).background(lip.copy(alpha = fade), ButtonShape))
         Surface(
             onClick = onClick,
+            enabled = enabled,
             shape = ButtonShape,
-            color = container,
+            color = container.copy(alpha = fade),
             contentColor = content,
             modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
         ) {
@@ -115,3 +118,27 @@ fun ProgressBar(progress: Float, track: Color, color: Color, modifier: Modifier 
     }
 }
 
+
+/** Flat black pill, the primary action on the home screen. */
+@Composable
+fun InkButton(text: String, onClick: () -> Unit, container: Color, content: Color, modifier: Modifier = Modifier, leadingIcon: Int? = null) {
+    Surface(
+        onClick = onClick,
+        shape = PillShape,
+        color = container,
+        contentColor = content,
+        modifier = modifier.fillMaxWidth().heightIn(min = 56.dp),
+    ) {
+        Row(
+            Modifier.padding(horizontal = 24.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (leadingIcon != null) {
+                AppIcon(leadingIcon, content, size = 20.dp)
+                Box(Modifier.width(8.dp))
+            }
+            Text(text, style = MaterialTheme.typography.labelLarge, color = content)
+        }
+    }
+}
