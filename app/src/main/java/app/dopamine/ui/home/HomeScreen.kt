@@ -37,7 +37,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
+import app.dopamine.data.repo.HomeStats
 import app.dopamine.domain.model.CategoryDto
+import app.dopamine.domain.progress.goalFraction
 import app.dopamine.domain.model.Manifest
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.IconImage
@@ -53,6 +55,7 @@ import app.dopamine.ui.theme.DopamineColors
 @Composable
 fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit, onOpenSettings: () -> Unit) {
     val manifest by vm.manifest.collectAsStateWithLifecycle()
+    val stats by vm.stats.collectAsStateWithLifecycle()
     val c = Dopamine.colors
     val firstCategory = manifest?.categories?.minByOrNull { it.order }?.id
 
@@ -63,9 +66,9 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
                 contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 112.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
-                item { Header(c, name, onOpenSettings) }
+                item { Header(c, name, stats, onOpenSettings) }
                 item {
-                    Bento(c, onStart = { firstCategory?.let(onOpenCategory) })
+                    Bento(c, stats, onStart = { firstCategory?.let(onOpenCategory) })
                 }
                 item {
                     Text(
@@ -86,7 +89,7 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
 }
 
 @Composable
-private fun Header(c: DopamineColors, name: String, onOpenSettings: () -> Unit) {
+private fun Header(c: DopamineColors, name: String, stats: HomeStats, onOpenSettings: () -> Unit) {
     Box(Modifier.fillMaxWidth()) {
         RibbonCorner(stringResource(R.string.ribbon_text), c.greenTint, c.ink, Modifier.align(Alignment.TopEnd).offset(y = (-36).dp))
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -121,8 +124,8 @@ private fun Header(c: DopamineColors, name: String, onOpenSettings: () -> Unit) 
                 Text(stringResource(R.string.home_subtitle), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                StatChip(R.drawable.ic_streak, "0", c.pinkTint, c.ink, stringResource(R.string.streak_desc, 0))
-                StatChip(R.drawable.ic_xp, "0", c.yellowTint, c.ink, stringResource(R.string.xp_desc, 0))
+                StatChip(R.drawable.ic_streak, stats.streak.toString(), c.pinkTint, c.ink, stringResource(R.string.streak_desc, stats.streak))
+                StatChip(R.drawable.ic_xp, stats.totalXp.toString(), c.yellowTint, c.ink, stringResource(R.string.xp_desc, stats.totalXp))
             }
         }
     }
@@ -141,7 +144,7 @@ private fun Tile(bg: Color, modifier: Modifier, onClick: (() -> Unit)? = null, c
 }
 
 @Composable
-private fun Bento(c: DopamineColors, onStart: () -> Unit) {
+private fun Bento(c: DopamineColors, stats: HomeStats, onStart: () -> Unit) {
     Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Tile(
             c.green,
@@ -166,12 +169,12 @@ private fun Bento(c: DopamineColors, onStart: () -> Unit) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
                         Text(stringResource(R.string.tile_goal_title), style = MaterialTheme.typography.titleMedium, color = Color.White)
-                        Text(stringResource(R.string.goal_progress, 0, 20), style = MaterialTheme.typography.bodyMedium, color = Color.White)
+                        Text(stringResource(R.string.goal_progress, stats.todayXp, stats.goalXp), style = MaterialTheme.typography.bodyMedium, color = Color.White)
                     }
                     IconImage(R.drawable.ic_goal, size = 40.dp)
                 }
                 Box(Modifier.height(10.dp))
-                ProgressBar(0f, Color.White.copy(alpha = 0.25f), c.yellow, height = 10.dp)
+                ProgressBar(goalFraction(stats.todayXp, stats.goalXp), Color.White.copy(alpha = 0.25f), c.yellow, height = 10.dp)
             }
         }
     }

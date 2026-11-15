@@ -1,19 +1,16 @@
 package app.dopamine.ui.components
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.StartOffset
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.composed
@@ -49,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.dopamine.R
+import kotlinx.coroutines.delay
 import app.dopamine.ui.theme.ButtonShape
 import app.dopamine.ui.theme.PillShape
 
@@ -164,31 +162,34 @@ fun InkButton(text: String, onClick: () -> Unit, container: Color, content: Colo
     }
 }
 
-/** An illustrated icon. Bobs gently when [bob] is on, unless the system asks for reduced motion. */
+/**
+ * An illustrated icon. Bobs gently for [BOB_CYCLES] cycles after it appears, then rests, so an idle screen draws
+ * no frames (battery). Skipped entirely when the system asks for reduced motion.
+ */
 @Composable
 fun IconImage(@DrawableRes id: Int, modifier: Modifier = Modifier, size: Dp = 48.dp, description: String? = null, bob: Boolean = true) {
     val reduced = LocalReducedMotion.current
     val animated = if (bob && !reduced) {
-        val t = rememberInfiniteTransition(label = "bob")
-        val y = t.animateFloat(
-            initialValue = 0f,
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                tween(1100 + (id % 5) * 90, easing = Motion.EaseInOutSoft),
-                RepeatMode.Reverse,
-                StartOffset((id % 9) * 130),
-            ),
-            label = "y",
-        )
+        val y = remember(id) { Animatable(0f) }
+        LaunchedEffect(id) {
+            delay((id % 9) * 130L)
+            val spec = tween<Float>(1100 + (id % 5) * 90, easing = Motion.EaseInOutSoft)
+            repeat(BOB_CYCLES) {
+                y.animateTo(1f, spec)
+                y.animateTo(0f, spec)
+            }
+        }
         modifier.graphicsLayer {
             translationY = -3.dp.toPx() * y.value
-            rotationZ = (y.value - 0.5f) * 3f
+            rotationZ = y.value * 2f
         }
     } else {
         modifier
     }
     Image(painterResource(id), description, animated.size(size))
 }
+
+private const val BOB_CYCLES = 2
 
 /** Clickable with a quick squash on press. No squash when reduced motion is on. */
 fun Modifier.bounceClick(onClickLabel: String? = null, onClick: () -> Unit): Modifier = composed {

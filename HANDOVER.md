@@ -110,3 +110,8 @@ Measured: release APK 1.67 MB; debug APK 14 MB (includes tooling); icon weight a
 - App: `ui/learn/` (Learn screen; example steps reveal one at a time), course overview on the Course screen, `Lesson.learn` and `CourseDto.overview` models (optional, so old content still loads).
 - Planned next, in order: Notes (one-page cheat sheet per unit, the "book"), unit quiz, final test, completion screen, resume button (needs the saved-progress work).
 - Note: `LATEX_OK` in the content repo and `MathParser.kt` here must stay in sync.
+
+## Update 2026-11-16: saved progress and idle cost
+- Room is at version 2 (`lesson_progress`, `daily_stat`, `Migration(1, 2)`). A finished lesson saves best score, completion and the day's XP (`LessonViewModel.next`, via `ProgressRepository`). Home shows real total XP, streak and daily goal (20 XP); the Course screen shows `ic_complete` instead of the number for finished lessons.
+- Not done: hearts, review scheduling (`QuestionStat`, `dueAt`), `UpdateLog`, hidden-lesson marking, goal setting. Home streak/XP only refresh when the database changes (not at midnight while the screen stays open).
+- Icons now bob twice and rest, so an idle screen draws no frames. Course question counts are cached in memory.

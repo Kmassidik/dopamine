@@ -43,6 +43,7 @@ import app.dopamine.ui.theme.OutlineWidth
 fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String) -> Unit) {
     val manifest by vm.manifest.collectAsStateWithLifecycle()
     val info by vm.info.collectAsStateWithLifecycle()
+    val done by vm.done.collectAsStateWithLifecycle()
     val c = Dopamine.colors
     val course = manifest?.courses?.firstOrNull { it.id == vm.courseId }
     val cat = manifest?.categories?.firstOrNull { it.id == course?.categoryId }
@@ -94,7 +95,11 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Box(Modifier.size(48.dp).clip(CircleShape).background(tint), contentAlignment = Alignment.Center) {
-                                    Text(lesson.order.toString(), style = MaterialTheme.typography.titleMedium)
+                                    if (lesson.id in done) {
+                                        IconImage(R.drawable.ic_complete, size = 32.dp, description = stringResource(R.string.lesson_completed), bob = false)
+                                    } else {
+                                        Text(lesson.order.toString(), style = MaterialTheme.typography.titleMedium)
+                                    }
                                 }
                                 Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
                                     Text(lesson.title, style = MaterialTheme.typography.titleMedium)

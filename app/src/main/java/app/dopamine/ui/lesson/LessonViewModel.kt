@@ -6,6 +6,9 @@ import app.dopamine.AppContainer
 import app.dopamine.domain.model.KNOWN_QUESTION_TYPES
 import app.dopamine.domain.model.Lesson
 import app.dopamine.domain.model.Question
+import app.dopamine.domain.progress.earnedXp
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +25,7 @@ data class LessonState(
     val lastCorrect: Boolean = false,
 ) {
     val finished get() = !loading && questions.isNotEmpty() && index >= questions.size
-    val xpEarned get() = if (questions.isEmpty()) 0 else Math.round((lesson?.xp ?: 0) * correct.toFloat() / questions.size)
+    val xpEarned get() = earnedXp(lesson?.xp ?: 0, correct, questions.size)
 }
 
 class LessonViewModel(private val c: AppContainer, private val lessonId: String) : ViewModel() {
@@ -44,5 +47,17 @@ class LessonViewModel(private val c: AppContainer, private val lessonId: String)
         if (it.checked) it else it.copy(checked = true, lastCorrect = correct, correct = it.correct + if (correct) 1 else 0)
     }
 
-    fun next() = _state.update { it.copy(index = it.index + 1, checked = false) }
+    private var saved = false
+
+    fun next() {
+        _state.update { it.copy(index = it.index + 1, checked = false) }
+        val s = _state.value
+        if (s.finished && !saved) {
+            saved = true
+            // Saved once; Room runs it off the main thread and it is not cancelled if the screen closes right away.
+            viewModelScope.launch {
+                withContext(NonCancellable) { c.progress.recordLesson(lessonId, s.correct, s.questions.size, s.xpEarned) }
+            }
+        }
+    }
 }
