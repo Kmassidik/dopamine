@@ -56,3 +56,14 @@ Format: date, step, decision, options, reason, consequences / how to reverse.
 - **Decision:** write a small LaTeX-subset renderer (`ui/math/`) and drop the jlatexmath-android plan.
 - **Why:** that library is unmaintained since 2020; the lesson content only needs fractions, roots, scripts, Greek and common operators; our own code is about 500 lines, adds no APK size and is unit-tested.
 - **Consequences:** anything outside the subset shows as plain text (see "Known LaTeX limits" in HANDOVER.md). Revisit if lessons need matrices or aligned equations.
+
+## 2026-11-16: idle animation limit, no hand-written baseline profile
+- **Decision:** `IconImage` bobs for 2 cycles after it appears, then rests (was infinite). Idle Home went from about 60 frames/s (606 frames in 10 s) to 0 frames in 10 s on a release build.
+- **Tried and reverted:** a hand-written `baseline-prof.txt` with wildcard rules. Cold start was within noise (about 350 ms with or without it, same device, same session) and the generated `baseline.prof` did not grow, so it was dropped. Compose libraries already ship their own profiles. Revisit with a real Macrobenchmark-generated profile.
+- **Reverse:** raise `BOB_CYCLES` in `Components.kt`.
+
+## 2026-11-16: progress tables (Room 1 to 2)
+- **Decision:** `lesson_progress(lessonId, bestScore percent, completed, completedAt)` and `daily_stat(day = local epoch day, xp)`. Explicit `Migration(1, 2)`; `MigrationSqlTest` checks its SQL against the exported `2.json` (no instrumented test possible on the build laptop).
+- **Streak:** consecutive local days with a finished lesson (a `daily_stat` row exists even for 0 XP). Alive until a full empty day passes. The brief's later "daily goal met" rule (roadmap item 6) is not implemented yet.
+- **XP:** lesson XP x correct / total, rounded (`earnedXp`). Daily goal is the constant 20 until Settings exists.
+- **Days are epoch-day numbers, not `java.time`:** minSdk 24 has no `LocalDate` without desugaring.

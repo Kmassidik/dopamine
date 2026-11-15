@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import app.dopamine.AppContainer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class LessonInfo(val questions: Int, val xp: Int)
 
 class CourseViewModel(private val c: AppContainer, val courseId: String) : ViewModel() {
     val manifest = c.content.manifest
+    val done: StateFlow<Set<String>> = c.progress.completedLessons.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
     private val _info = MutableStateFlow<Map<String, LessonInfo>>(emptyMap())
     val info: StateFlow<Map<String, LessonInfo>> = _info.asStateFlow()
 

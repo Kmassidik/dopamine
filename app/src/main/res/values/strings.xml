@@ -54,6 +54,7 @@
     <string name="lesson_close">Leave lesson</string>
     <string name="lesson_correct">Correct</string>
     <string name="lesson_wrong">Not quite</string>
+    <string name="lesson_completed">Completed</string>
     <string name="lesson_done">Nice work</string>
     <string name="lesson_score">%1$d of %2$d correct</string>
     <string name="lesson_finish">Done</string>

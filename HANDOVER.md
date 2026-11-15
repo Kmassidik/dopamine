@@ -103,3 +103,8 @@ Measured: release APK 1.67 MB; debug APK 14 MB (includes tooling); icon weight a
 - Replaces the provisional jlatexmath-android plan: no dependency, ~1 file each, vector drawing so no bitmap cache is needed.
 - **Known LaTeX limits** (author lessons accordingly): no matrices, `align`, `cases`, `\\` line breaks, `\overline`, `\vec`, `\hat`, `\binom`, big operators with limits (`\sum_{i}^{n}` draws the sum sign as text with small scripts). `\left(` `\right)` are NOT scaled to the content height. Greek capitals and symbols like `∑ ≈ → ∞` rely on the system fallback font. Italic variables use a synthetic slant. Very long formulas do not wrap inside the `$...$` and can overflow on a narrow screen.
 - Possible next steps: scale delimiters, wrap long formulas, test at 320dp and 1.3x font.
+
+## Update 2026-11-16: saved progress and idle cost
+- Room is at version 2 (`lesson_progress`, `daily_stat`, `Migration(1, 2)`). A finished lesson saves best score, completion and the day's XP (`LessonViewModel.next`, via `ProgressRepository`). Home shows real total XP, streak and daily goal (20 XP); the Course screen shows `ic_complete` instead of the number for finished lessons.
+- Not done: hearts, review scheduling (`QuestionStat`, `dueAt`), `UpdateLog`, hidden-lesson marking, goal setting. Home streak/XP only refresh when the database changes (not at midnight while the screen stays open).
+- Icons now bob twice and rest, so an idle screen draws no frames. Course question counts are cached in memory.
