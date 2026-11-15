@@ -23,6 +23,8 @@ data class LessonState(
     val correct: Int = 0,
     val checked: Boolean = false,
     val lastCorrect: Boolean = false,
+    /** Questions left out because this version of the app cannot show them (for example a picture). */
+    val skipped: Int = 0,
 ) {
     val finished get() = !loading && questions.isNotEmpty() && index >= questions.size
     val xpEarned get() = earnedXp(lesson?.xp ?: 0, correct, questions.size)
@@ -39,7 +41,7 @@ class LessonViewModel(private val c: AppContainer, private val lessonId: String)
             val lesson = ref?.let { c.content.lesson(it) }
             // Unknown types are skipped by design. Questions with pictures wait for the image renderer.
             val qs = lesson?.questions?.filter { it.type in KNOWN_QUESTION_TYPES && it.image == null }.orEmpty()
-            _state.value = LessonState(loading = false, lesson = lesson, questions = qs)
+            _state.value = LessonState(loading = false, lesson = lesson, questions = qs, skipped = (lesson?.questions?.size ?: 0) - qs.size)
         }
     }
 

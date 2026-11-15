@@ -22,7 +22,7 @@ class CourseViewModel(private val c: AppContainer, val courseId: String) : ViewM
         viewModelScope.launch {
             c.content.load()
             val course = c.content.manifest.value?.courses?.firstOrNull { it.id == courseId } ?: return@launch
-            _info.value = course.units.flatMap { it.lessons }.mapNotNull { ref ->
+            _info.value = course.units.flatMap { it.lessons }.filter { !app.dopamine.domain.content.ContentContract.isLocked(it.minApp) }.mapNotNull { ref ->
                 // Counts are cached per lesson version+hash, so reopening a course reads no lesson files.
                 val key = "${ref.id}:${ref.version}:${ref.sha256}"
                 val info = infoCache[key] ?: c.content.lesson(ref)?.let { LessonInfo(it.questions.size, it.xp) }?.also { infoCache[key] = it }

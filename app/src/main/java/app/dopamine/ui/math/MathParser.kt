@@ -39,6 +39,11 @@ object MathParser {
 
     private val FUNCTIONS = setOf("sin", "cos", "tan", "log", "ln", "lim", "min", "max", "exp", "det")
     private val RAW_TEXT = setOf("text", "mathrm", "textbf", "mathbf", "operatorname")
+    private val STRUCTURAL = setOf("frac", "dfrac", "tfrac", "sqrt", "left", "right")
+
+    /** Every `\command` this parser understands. Must equal `latexCommands` in the content repo's contract.json. */
+    val supportedCommands: Set<String> = SYMBOLS.keys + FUNCTIONS + RAW_TEXT + STRUCTURAL
+
     private val THIN = "\u2009"
 
     private class Parser(private val s: String) {

@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
 import app.dopamine.ui.components.ChunkyButton
+import app.dopamine.ui.components.CodeBlock
 import app.dopamine.ui.components.FloatingNav
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.InkButton
@@ -150,5 +151,16 @@ fun SmallPhoneShot() = Page {
         ChunkyButton("Start course", {}, c.green, c.greenLip, c.onAccent)
         MathText("Solve \$2x+3=7\$ for \$x\$", style = MaterialTheme.typography.titleLarge)
         FloatingNav(Tab.Home, {}, Modifier.fillMaxWidth())
+    }
+}
+
+@PreviewTest
+@Preview(name = "code", showBackground = true, widthDp = 400, heightDp = 460)
+@Composable
+fun CodeShot() = Page {
+    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        CodeBlock("age = 12\nif age >= 18:\n    print(\"adult\")\nelse:\n    print(\"minor\")  # shows minor", "python")
+        MathText("Use `print(x)` to show \$x\$, then `x = 3` sets it.", style = MaterialTheme.typography.titleMedium)
+        CodeBlock("SELECT name FROM users WHERE id = 1;", "sql")
     }
 }

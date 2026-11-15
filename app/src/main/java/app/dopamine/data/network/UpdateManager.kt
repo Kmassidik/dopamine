@@ -7,6 +7,7 @@ import app.dopamine.domain.content.SafePath
 import app.dopamine.domain.model.Lesson
 import app.dopamine.domain.model.LessonRef
 import app.dopamine.domain.model.Notes
+import app.dopamine.domain.content.ManifestValidator
 import app.dopamine.domain.content.NotesValidator
 import app.dopamine.domain.model.Manifest
 import java.io.ByteArrayOutputStream
@@ -67,6 +68,7 @@ class UpdateManager(
         if (remote.schemaVersion != SUPPORTED_SCHEMA || remote.minAppVersion > appVersion) {
             throw UpdateException("This content needs a newer version of the app. Please update the app.")
         }
+        ManifestValidator.validate(remote)?.let { throw UpdateException("The content manifest failed a check ($it). Your lessons are unchanged.") }
         if (local == remote) {
             store.saveMeta(head.etag, now())
             return UpdateResult(0, 0, 0, upToDate = true)
@@ -89,7 +91,7 @@ class UpdateManager(
                 } catch (e: SerializationException) {
                     throw UpdateException("Lesson \"${ref.title}\" is not valid. Update stopped, nothing changed.")
                 }
-                LessonValidator.validate(lesson, ref)?.let {
+                LessonValidator.validate(lesson, ref, appVersion)?.let {
                     throw UpdateException("Lesson \"${ref.title}\" failed a check ($it). Update stopped, nothing changed.")
                 }
                 store.writeStaged(stage, ref.path, bytes)
@@ -103,7 +105,7 @@ class UpdateManager(
                 } catch (e: SerializationException) {
                     throw UpdateException("Notes \"${ref.title}\" are not valid. Update stopped, nothing changed.")
                 }
-                NotesValidator.validate(notes, ref)?.let {
+                NotesValidator.validate(notes, ref, appVersion)?.let {
                     throw UpdateException("Notes \"${ref.title}\" failed a check ($it). Update stopped, nothing changed.")
                 }
                 store.writeStaged(stage, ref.path, bytes)

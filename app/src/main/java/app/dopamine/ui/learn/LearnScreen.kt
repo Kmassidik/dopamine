@@ -40,6 +40,7 @@ import app.dopamine.R
 import app.dopamine.domain.model.LearnPage
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.ChunkyButton
+import app.dopamine.ui.components.CodeBlock
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.math.MathText
@@ -94,6 +95,8 @@ fun LearnScreen(vm: LearnViewModel, onBack: () -> Unit, onPractice: () -> Unit) 
                         when (p.kind) {
                             "example" -> ExamplePage(c, p, if (i == s.index) s.shown else p.steps.orEmpty().size)
                             "tip" -> TipPage(c, p)
+                            "code" -> CodePage(c, p)
+                            "unsupported" -> Unsupported(c)
                             else -> TextPage(c, p)
                         }
                     }
@@ -167,5 +170,21 @@ private fun ExamplePage(c: DopamineColors, p: LearnPage, shown: Int) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun CodePage(c: DopamineColors, p: LearnPage) {
+    Text(p.title.orEmpty(), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(bottom = 12.dp))
+    if (!p.body.isNullOrBlank()) MathText(p.body, style = BodyStyle, modifier = Modifier.padding(bottom = 16.dp))
+    CodeBlock(p.code.orEmpty(), p.language)
+}
+
+@Composable
+internal fun Unsupported(c: DopamineColors) {
+    Column(Modifier.fillMaxWidth().clip(CardShape).background(c.pinkTint).padding(24.dp)) {
+        IconImage(R.drawable.ic_locked, size = 56.dp, bob = false)
+        Text(stringResource(R.string.unsupported_title), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 12.dp, bottom = 6.dp))
+        Text(stringResource(R.string.unsupported_body), style = MaterialTheme.typography.bodyLarge)
     }
 }

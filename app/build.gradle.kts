@@ -15,8 +15,8 @@ android {
         applicationId = "app.dopamine"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
         buildConfigField(
             "String", "CONTENT_BASE_URL",
             "\"https://raw.githubusercontent.com/Kmassidik/dopamine-content/main/\""

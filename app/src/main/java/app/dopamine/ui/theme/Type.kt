@@ -21,6 +21,12 @@ val Nunito = FontFamily(
     Font(R.font.nunito_bold, FontWeight.Bold),
 )
 
+/** Code: monospace, for code blocks and `inline code`. */
+val JetBrainsMono = FontFamily(
+    Font(R.font.jetbrains_mono_regular, FontWeight.Normal),
+    Font(R.font.jetbrains_mono_bold, FontWeight.Bold),
+)
+
 private fun style(family: FontFamily, size: Int, line: Int, weight: FontWeight, spacing: Double = 0.0) = TextStyle(
     fontFamily = family,
     fontWeight = weight,

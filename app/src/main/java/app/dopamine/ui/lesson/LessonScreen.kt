@@ -96,6 +96,15 @@ private fun Done(c: DopamineColors, s: LessonState, onClose: () -> Unit) {
             color = c.inkSoft,
             modifier = Modifier.padding(top = 4.dp, bottom = 16.dp),
         )
+        if (s.skipped > 0) {
+            Text(
+                pluralStringResource(R.plurals.n_skipped, s.skipped, s.skipped),
+                style = MaterialTheme.typography.bodyMedium,
+                color = c.inkSoft,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp),
+            )
+        }
         StatChip(R.drawable.ic_xp, "+${s.xpEarned}", c.yellowTint, c.ink, stringResource(R.string.xp_desc, s.xpEarned))
         Box(Modifier.size(24.dp))
         ChunkyButton(stringResource(R.string.lesson_finish), onClose, c.green, c.greenLip, c.onAccent)

@@ -79,4 +79,8 @@
     <string name="notes_open">Unit notes</string>
     <string name="course_continue">Continue</string>
     <string name="course_review">Review the course</string>
+    <string name="unsupported_title">Needs a newer app</string>
+    <string name="unsupported_body">This part needs a newer version of the app. Update the app to see it.</string>
+    <string name="lesson_locked">Needs a newer app</string>
+    <plurals name="n_skipped"><item quantity="one">%d question could not be shown in this version of the app</item><item quantity="other">%d questions could not be shown in this version of the app</item></plurals>
 </resources>

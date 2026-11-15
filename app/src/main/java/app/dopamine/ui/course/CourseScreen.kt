@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
+import app.dopamine.domain.content.ContentContract
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.ChunkyButton
 import app.dopamine.ui.components.IconImage
@@ -69,13 +70,14 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                 course?.overview?.let { ov ->
                     item(key = "overview") {
                         val ordered = course.units.sortedBy { it.order }.flatMap { u -> u.lessons.sortedBy { it.order } }
-                        val next = ordered.firstOrNull { it.id !in done }
+                        val playable = ordered.filter { !ContentContract.isLocked(it.minApp) }
+                        val next = playable.firstOrNull { it.id !in done }
                         val label = when {
                             ordered.isEmpty() || done.isEmpty() -> R.string.course_start
                             next != null -> R.string.course_continue
                             else -> R.string.course_review
                         }
-                        Overview(c, tint, ov, label, onStart = { (next ?: ordered.firstOrNull())?.let { onOpenLesson(it.id) } })
+                        Overview(c, tint, ov, label, onStart = { (next ?: playable.firstOrNull())?.let { onOpenLesson(it.id) } })
                     }
                 }
                 course?.units?.sortedBy { it.order }?.forEach { unit ->
@@ -89,7 +91,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                             )
                         }
                     }
-                    if (unit.notes != null) {
+                    if (unit.notes != null && !ContentContract.isLocked(unit.notes.minApp)) {
                         item(key = "notes-${unit.id}") {
                             Row(
                                 Modifier
@@ -111,18 +113,21 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                         }
                     }
                     unit.lessons.sortedBy { it.order }.forEach { lesson ->
+                        val locked = ContentContract.isLocked(lesson.minApp)
                         item(key = "lesson-${lesson.id}") {
                             Row(
                                 Modifier
                                     .fillMaxWidth()
                                     .clip(CardShape)
                                     .border(OutlineWidth, c.line, CardShape)
-                                    .bounceClick(lesson.title) { onOpenLesson(lesson.id) }
+                                    .then(if (locked) Modifier else Modifier.bounceClick(lesson.title) { onOpenLesson(lesson.id) })
                                     .padding(horizontal = 20.dp, vertical = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Box(Modifier.size(48.dp).clip(CircleShape).background(tint), contentAlignment = Alignment.Center) {
-                                    if (lesson.id in done) {
+                                    if (locked) {
+                                        IconImage(R.drawable.ic_locked, size = 32.dp, description = stringResource(R.string.lesson_locked), bob = false)
+                                    } else if (lesson.id in done) {
                                         IconImage(R.drawable.ic_complete, size = 32.dp, description = stringResource(R.string.lesson_completed), bob = false)
                                     } else {
                                         Text(lesson.order.toString(), style = MaterialTheme.typography.titleMedium)
@@ -130,7 +135,10 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                 }
                                 Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
                                     Text(lesson.title, style = MaterialTheme.typography.titleMedium)
-                                    info[lesson.id]?.let {
+                                    if (locked) {
+                                        Text(stringResource(R.string.lesson_locked), style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
+                                    }
+                                    info[lesson.id]?.takeIf { !locked }?.let {
                                         Text(
                                             stringResource(R.string.lesson_summary, pluralStringResource(R.plurals.n_questions, it.questions, it.questions), it.xp),
                                             style = MaterialTheme.typography.bodyMedium,
@@ -138,7 +146,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                         )
                                     }
                                 }
-                                AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
+                                if (!locked) AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
                             }
                         }
                     }

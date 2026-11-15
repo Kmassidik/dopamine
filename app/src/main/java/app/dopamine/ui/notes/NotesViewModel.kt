@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.dopamine.AppContainer
 import app.dopamine.domain.model.KNOWN_NOTE_KINDS
+import app.dopamine.domain.model.NoteBlock
 import app.dopamine.domain.model.Notes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +23,7 @@ class NotesViewModel(private val c: AppContainer, private val unitId: String) : 
             val ref = c.content.manifest.value?.courses?.flatMap { it.units }?.firstOrNull { it.id == unitId }?.notes
             val notes = ref?.let { c.content.notes(it) }
             // Unknown block kinds are skipped, like unknown question types.
-            _state.value = NotesState(false, notes?.copy(blocks = notes.blocks.filter { it.kind in KNOWN_NOTE_KINDS }))
+            _state.value = NotesState(false, notes?.copy(blocks = notes.blocks.map { if (it.kind in KNOWN_NOTE_KINDS) it else NoteBlock(it.id, "unsupported") }))
         }
     }
 }

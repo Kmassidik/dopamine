@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
 import app.dopamine.domain.model.NoteBlock
 import app.dopamine.ui.components.AppIcon
+import app.dopamine.ui.components.CodeBlock
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.math.MathText
 import app.dopamine.ui.theme.CardShape
@@ -76,6 +77,8 @@ fun NotesScreen(vm: NotesViewModel, onBack: () -> Unit) {
                             "formula" -> Formula(c, b)
                             "list" -> ListBlock(c, b)
                             "tip" -> Tip(c, b)
+                            "code" -> CodeNote(c, b)
+                            "unsupported" -> app.dopamine.ui.learn.Unsupported(c)
                             else -> Prose(c, b)
                         }
                     }
@@ -121,5 +124,13 @@ private fun Tip(c: DopamineColors, b: NoteBlock) {
     Row(Modifier.fillMaxWidth().clip(CardShape).background(c.pinkTint).padding(20.dp), verticalAlignment = Alignment.Top) {
         IconImage(R.drawable.ic_bulb, size = 40.dp, bob = false)
         MathText(b.body.orEmpty(), style = BodyStyle, modifier = Modifier.weight(1f).padding(start = 12.dp))
+    }
+}
+
+@Composable
+private fun CodeNote(c: DopamineColors, b: NoteBlock) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        b.title?.let { Text(it, style = MaterialTheme.typography.titleLarge) }
+        CodeBlock(b.code.orEmpty(), b.language)
     }
 }

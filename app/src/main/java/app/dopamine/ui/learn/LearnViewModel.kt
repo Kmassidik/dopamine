@@ -31,7 +31,8 @@ class LearnViewModel(private val c: AppContainer, private val lessonId: String) 
         viewModelScope.launch {
             c.content.load()
             val ref = c.content.manifest.value?.courses?.flatMap { it.units }?.flatMap { it.lessons }?.firstOrNull { it.id == lessonId }
-            val pages = ref?.let { c.content.lesson(it) }?.learn.orEmpty().filter { it.kind in KNOWN_PAGE_KINDS }
+            val pages = ref?.let { c.content.lesson(it) }?.learn.orEmpty()
+                .map { if (it.kind in KNOWN_PAGE_KINDS) it else LearnPage(it.id, "unsupported") }
             _state.value = LearnState(loading = false, pages = pages)
         }
     }

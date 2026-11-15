@@ -21,7 +21,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
@@ -30,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.res.ResourcesCompat
 import app.dopamine.R
 import app.dopamine.ui.lesson.plainMath
+import app.dopamine.ui.theme.Dopamine
+import app.dopamine.ui.theme.JetBrainsMono
 
 private class Built(val text: AnnotatedString, val content: Map<String, InlineTextContent>, val descentPx: Float)
 
@@ -45,7 +49,7 @@ fun MathText(
     color: Color = Color.Unspecified,
     textAlign: TextAlign? = null,
 ) {
-    if (!text.contains('$')) {
+    if (!text.contains('$') && !text.contains('`')) {
         Text(text, modifier, color = color, style = style, textAlign = textAlign)
         return
     }
@@ -54,37 +58,38 @@ fun MathText(
     val face = remember { ResourcesCompat.getFont(context, R.font.nunito_semibold) }
     val ink = if (color == Color.Unspecified) LocalContentColor.current else color
     val sizePx = with(density) { (if (style.fontSize.isSpecified) style.fontSize else 16.sp).toPx() }
-    val built = remember(text, sizePx, ink) { build(text, sizePx, face, ink.toArgb(), density) }
+    val codeBg = Dopamine.colors.line
+    val codeStyle = remember(codeBg) { SpanStyle(fontFamily = JetBrainsMono, background = codeBg) }
+    val built = remember(text, sizePx, ink, codeStyle) { build(text, sizePx, face, ink.toArgb(), density, codeStyle) }
     // Math can hang below the baseline (fraction denominators); the line height does not know, so make room.
     val room = with(density) { built.descentPx.toDp() }
     Text(built.text, modifier.padding(bottom = room), color = ink, style = style, textAlign = textAlign, inlineContent = built.content)
 }
 
-private fun build(text: String, sizePx: Float, face: android.graphics.Typeface?, argb: Int, density: Density): Built {
+private fun build(text: String, sizePx: Float, face: android.graphics.Typeface?, argb: Int, density: Density, codeStyle: SpanStyle): Built {
     val layout = MathLayout(face, argb)
-    val parts = text.split('$')
     val content = HashMap<String, InlineTextContent>()
     var descent = 0f
     val annotated = buildAnnotatedString {
-        parts.forEachIndexed { i, part ->
-            val isMath = i % 2 == 1 && i < parts.size - 1
-            if (!isMath) {
-                // An unclosed `$` leaves its tail as plain text.
-                append(if (i % 2 == 1) "$part" else part)
-                return@forEachIndexed
+        splitInline(text).forEachIndexed { i, seg ->
+            when (seg) {
+                is Seg.Text -> append(seg.s)
+                is Seg.Code -> withStyle(codeStyle) { append(seg.s) }
+                is Seg.Math -> {
+                    val box = layout.layout(MathParser.parse(seg.s), sizePx)
+                    val id = "m$i"
+                    descent = maxOf(descent, box.desc)
+                    val (w, h) = with(density) { box.w.toSp() to box.asc.toSp() }
+                    content[id] = InlineTextContent(Placeholder(w, h, PlaceholderVerticalAlign.AboveBaseline)) {
+                        Box(
+                            Modifier.fillMaxSize().drawBehind {
+                                drawIntoCanvas { box.draw(it.nativeCanvas, 0f, box.asc) }
+                            },
+                        )
+                    }
+                    appendInlineContent(id, plainMath(seg.s))
+                }
             }
-            val box = layout.layout(MathParser.parse(part), sizePx)
-            val id = "m$i"
-            descent = maxOf(descent, box.desc)
-            val (w, h) = with(density) { box.w.toSp() to box.asc.toSp() }
-            content[id] = InlineTextContent(Placeholder(w, h, PlaceholderVerticalAlign.AboveBaseline)) {
-                Box(
-                    Modifier.fillMaxSize().drawBehind {
-                        drawIntoCanvas { box.draw(it.nativeCanvas, 0f, box.asc) }
-                    },
-                )
-            }
-            appendInlineContent(id, plainMath(part))
         }
     }
     return Built(annotated, content, descent)

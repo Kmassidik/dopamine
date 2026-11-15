@@ -1,5 +1,6 @@
 package app.dopamine.domain.model
 
+import app.dopamine.domain.content.ContentContract
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -53,11 +54,12 @@ data class NotesRef(
     val version: Int,
     val sha256: String,
     val sizeBytes: Long,
+    val minApp: Int = 1,
 )
 
 /** The unit cheat sheet: things to look up. block kind: text | formula | list | tip. */
 @Serializable
-data class Notes(val id: String, val version: Int, val title: String, val blocks: List<NoteBlock>)
+data class Notes(val id: String, val version: Int, val title: String, val blocks: List<NoteBlock>, val minApp: Int = 1)
 
 @Serializable
 data class NoteBlock(
@@ -66,6 +68,8 @@ data class NoteBlock(
     val title: String? = null,
     val body: String? = null,
     val items: List<String>? = null,
+    val code: String? = null,
+    val language: String? = null,
 )
 
 @Serializable
@@ -77,6 +81,8 @@ data class LessonRef(
     val sha256: String,
     val sizeBytes: Long,
     val order: Int,
+    /** Lowest app versionCode that can show this lesson. Older apps show it as locked. */
+    val minApp: Int = 1,
 )
 
 @Serializable
@@ -92,6 +98,7 @@ data class Lesson(
     val questions: List<Question>,
     /** Reading pages shown before the practice. Optional so older lessons still work. */
     val learn: List<LearnPage> = emptyList(),
+    val minApp: Int = 1,
 )
 
 /** One page of reading. kind: text | example (title + steps revealed one by one) | tip. */
@@ -103,6 +110,8 @@ data class LearnPage(
     val body: String? = null,
     val steps: List<String>? = null,
     val image: String? = null,
+    val code: String? = null,
+    val language: String? = null,
 )
 
 /** Flat on purpose: unknown question types still parse and are skipped by the player. */
@@ -121,6 +130,6 @@ data class Question(
     val image: String? = null,
 )
 
-val KNOWN_NOTE_KINDS = setOf("text", "formula", "list", "tip")
-val KNOWN_PAGE_KINDS = setOf("text", "example", "tip")
-val KNOWN_QUESTION_TYPES = setOf("multiple_choice", "type_answer", "fill_blank", "match_pairs", "order_steps")
+val KNOWN_NOTE_KINDS = ContentContract.NOTE_KINDS.filterValues { it <= ContentContract.APP_VERSION }.keys
+val KNOWN_PAGE_KINDS = ContentContract.PAGE_KINDS.filterValues { it <= ContentContract.APP_VERSION }.keys
+val KNOWN_QUESTION_TYPES = ContentContract.QUESTION_TYPES.filterValues { it <= ContentContract.APP_VERSION }.keys
