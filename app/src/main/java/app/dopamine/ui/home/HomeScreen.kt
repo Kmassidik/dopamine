@@ -1,6 +1,5 @@
 package app.dopamine.ui.home
 
-import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +23,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,8 +33,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
@@ -44,9 +40,7 @@ import app.dopamine.domain.model.CategoryDto
 import app.dopamine.domain.model.Manifest
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.IconImage
-import app.dopamine.ui.components.InkButton
 import app.dopamine.ui.components.bounceClick
-import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.components.RibbonCorner
 import app.dopamine.ui.components.StatChip
 import app.dopamine.ui.components.iconFor
@@ -55,10 +49,8 @@ import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.DopamineColors
 
 @Composable
-fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit) {
+fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit, onOpenSettings: () -> Unit) {
     val manifest by vm.manifest.collectAsStateWithLifecycle()
-    val update by vm.update.collectAsStateWithLifecycle()
-    val lastUpdated by vm.lastUpdated.collectAsStateWithLifecycle()
     val c = Dopamine.colors
     val firstCategory = manifest?.categories?.minByOrNull { it.order }?.id
 
@@ -66,10 +58,10 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                item { Header(c, name) }
+                item { Header(c, name, onOpenSettings) }
                 item {
                     Bento(c, onStart = { firstCategory?.let(onOpenCategory) })
                 }
@@ -87,13 +79,12 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
                     items(m.categories.sortedBy { it.order }, key = { it.id }) { cat -> CourseRow(c, m, cat, onOpenCategory) }
                 }
             }
-            UpdateBar(c, update, lastUpdated, vm::startUpdate, vm::cancelUpdate, vm::dismissMessage)
         }
     }
 }
 
 @Composable
-private fun Header(c: DopamineColors, name: String) {
+private fun Header(c: DopamineColors, name: String, onOpenSettings: () -> Unit) {
     Box(Modifier.fillMaxWidth()) {
         RibbonCorner(stringResource(R.string.ribbon_text), c.greenTint, c.ink, Modifier.align(Alignment.TopEnd))
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -117,7 +108,7 @@ private fun Header(c: DopamineColors, name: String) {
                         .size(48.dp)
                         .clip(CircleShape)
                         .background(c.pink)
-                        .semantics { contentDescription = "" },
+                        .bounceClick(stringResource(R.string.settings_open), onOpenSettings),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(name.take(1).uppercase(), style = MaterialTheme.typography.titleMedium, color = c.onAccent)
@@ -218,73 +209,5 @@ private fun CourseRow(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpen: 
             )
         }
         AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
-    }
-}
-
-@Composable
-private fun UpdateBar(
-    c: DopamineColors,
-    state: UpdateUi,
-    lastUpdated: Long,
-    onUpdate: () -> Unit,
-    onCancel: () -> Unit,
-    onDismiss: () -> Unit,
-) {
-    Column(
-        Modifier.fillMaxWidth().background(c.bg).padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        when (state) {
-            is UpdateUi.Running -> {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        if (state.total == 0) stringResource(R.string.update_checking)
-                        else stringResource(R.string.update_running, state.done, state.total),
-                        style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier.weight(1f),
-                    )
-                    TextButton(onClick = onCancel, modifier = Modifier.heightIn(min = 48.dp)) {
-                        Text(stringResource(R.string.update_cancel), color = c.pinkText)
-                    }
-                }
-                ProgressBar(if (state.total == 0) 0f else state.done.toFloat() / state.total, c.greenTint, c.green)
-            }
-            is UpdateUi.Done -> Message(c.greenTint, c.greenText, R.drawable.ic_check, state.message, onDismiss)
-            is UpdateUi.Failed -> Message(c.pinkTint, c.pinkText, R.drawable.ic_warning, state.message, onDismiss)
-            UpdateUi.Idle -> Unit
-        }
-        if (state !is UpdateUi.Running) {
-            InkButton(
-                text = stringResource(R.string.update_idle),
-                onClick = onUpdate,
-                container = c.onAccent,
-                content = Color.White,
-                leadingIcon = R.drawable.ic_download,
-            )
-            Text(
-                if (lastUpdated == 0L) stringResource(R.string.update_bundled)
-                else stringResource(
-                    R.string.update_last,
-                    DateUtils.getRelativeTimeSpanString(lastUpdated, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
-                ),
-                style = MaterialTheme.typography.labelSmall,
-                color = c.inkSoft,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-    }
-}
-
-@Composable
-private fun Message(bg: Color, fg: Color, icon: Int, text: String, onDismiss: () -> Unit) {
-    Row(
-        Modifier.fillMaxWidth().clip(CardShape).background(bg).padding(start = 16.dp, top = 4.dp, bottom = 4.dp, end = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        AppIcon(icon, fg, size = 24.dp)
-        Text(text, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f).padding(horizontal = 12.dp, vertical = 8.dp))
-        TextButton(onClick = onDismiss, modifier = Modifier.heightIn(min = 48.dp)) {
-            Text(stringResource(R.string.update_dismiss), color = fg)
-        }
     }
 }

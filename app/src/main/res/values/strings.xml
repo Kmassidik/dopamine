@@ -33,4 +33,15 @@
     <string name="onboarding_body">We use it to greet you. It stays on this phone.</string>
     <string name="onboarding_hint">Your name</string>
     <string name="onboarding_action">Continue</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_open">Open settings</string>
+    <string name="settings_name">Your name</string>
+    <string name="settings_change_name">Change name</string>
+    <string name="settings_save">Save</string>
+    <string name="settings_cancel">Cancel</string>
+    <string name="settings_content">Lessons</string>
+    <string name="settings_content_hint">Lessons update only when you tap the button. Nothing downloads in the background.</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_privacy">No ads, no accounts, no tracking. The update button is the only thing that uses the internet.</string>
 </resources>

@@ -204,3 +204,18 @@ fun Modifier.bounceClick(onClickLabel: String? = null, onClick: () -> Unit): Mod
         .graphicsLayer { scaleX = scale; scaleY = scale }
         .clickable(interactionSource = source, indication = null, onClickLabel = onClickLabel, onClick = onClick)
 }
+
+/** A soft banner for a result: green for success, pink for a problem. */
+@Composable
+fun Message(bg: Color, fg: Color, icon: Int, text: String, dismissLabel: String, onDismiss: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().clip(app.dopamine.ui.theme.CardShape).background(bg).padding(start = 16.dp, top = 4.dp, bottom = 4.dp, end = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        AppIcon(icon, fg, size = 24.dp)
+        Text(text, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f).padding(horizontal = 12.dp, vertical = 8.dp))
+        androidx.compose.material3.TextButton(onClick = onDismiss, modifier = Modifier.heightIn(min = 48.dp)) {
+            Text(dismissLabel, color = fg)
+        }
+    }
+}

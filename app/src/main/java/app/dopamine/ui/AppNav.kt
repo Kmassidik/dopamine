@@ -21,6 +21,8 @@ import app.dopamine.ui.home.HomeScreen
 import app.dopamine.ui.home.HomeViewModel
 import app.dopamine.ui.onboarding.OnboardingScreen
 import app.dopamine.ui.onboarding.OnboardingViewModel
+import app.dopamine.ui.settings.SettingsScreen
+import app.dopamine.ui.settings.SettingsViewModel
 import app.dopamine.ui.theme.Dopamine
 
 @Composable
@@ -40,9 +42,14 @@ fun AppNav(container: AppContainer) {
 private fun Main(container: AppContainer, name: String) {
     val nav = rememberNavController()
     val home: HomeViewModel = viewModel(factory = viewModelFactory { initializer { HomeViewModel(container) } })
+    // Activity-scoped so an update keeps running while you move between screens.
+    val settings: SettingsViewModel = viewModel(factory = viewModelFactory { initializer { SettingsViewModel(container) } })
     NavHost(nav, startDestination = "home") {
         composable("home") {
-            HomeScreen(name, home, onOpenCategory = { nav.navigate("category/$it") })
+            HomeScreen(name, home, onOpenCategory = { nav.navigate("category/$it") }, onOpenSettings = { nav.navigate("settings") })
+        }
+        composable("settings") {
+            SettingsScreen(settings, onBack = { nav.popBackStack() })
         }
         composable("category/{id}") { entry ->
             val id = entry.arguments?.getString("id").orEmpty()

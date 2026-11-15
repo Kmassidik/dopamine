@@ -11,12 +11,8 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,18 +23,15 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
 import app.dopamine.domain.model.ProfileName
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.ChunkyButton
-import app.dopamine.ui.theme.ButtonShape
+import app.dopamine.ui.components.NameField
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
-import app.dopamine.ui.theme.OutlineWidth
 
 @Composable
 fun OnboardingScreen(vm: OnboardingViewModel) {
@@ -70,23 +63,11 @@ fun OnboardingScreen(vm: OnboardingViewModel) {
                 Text(stringResource(R.string.onboarding_title), style = MaterialTheme.typography.displayLarge)
                 Text(stringResource(R.string.onboarding_body), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
             }
-            OutlinedTextField(
+            NameField(
                 value = text,
-                onValueChange = { if (it.length <= ProfileName.MAX) vm.set(it) },
-                singleLine = true,
-                shape = ButtonShape,
-                placeholder = { Text(stringResource(R.string.onboarding_hint)) },
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { vm.save() }),
-                textStyle = MaterialTheme.typography.titleMedium,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = c.green,
-                    unfocusedBorderColor = c.line,
-                    cursorColor = c.greenText,
-                    focusedPlaceholderColor = c.inkSoft,
-                    unfocusedPlaceholderColor = c.inkSoft,
-                ),
-                modifier = Modifier.fillMaxWidth(),
+                onChange = vm::set,
+                hint = stringResource(R.string.onboarding_hint),
+                onDone = vm::save,
             )
             ChunkyButton(
                 text = stringResource(R.string.onboarding_action),
