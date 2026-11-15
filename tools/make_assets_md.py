@@ -212,40 +212,17 @@ def prompt(key, idx, title, icons):
 
 
 def main():
+    key = "B-color"  # the chosen style: Bots, colorful
     out = ["# ASSETS", "",
-           "Illustrated icons for Dopamine. You generate the sheets; the app ships WebP icons sliced from them.", "",
-           "Until a sheet exists, the app uses the monochrome vector placeholders in `res/drawable/` "
-           "(marked PLACEHOLDER).", "",
-           "## 1. Choose a style (render sheet 01 in two or three, then pick)", ""]
-    for k, st in STYLES.items():
-        out += [f"- **{st['title']}**: {st['blurb']}",
-                f"  - copy: `pbcopy < tools/sheets/sheet01.{k}.prompt.txt`"]
-    out += ["",
-            "Tell me the letter you pick. Then render sheets 02 to 07 with the same style: "
-            "`pbcopy < tools/sheets/sheet0N.<style>.prompt.txt`.", "",
-            "## 2. Workflow", "",
-            "1. Paste a sheet prompt into the image generator and save as `sheets-src/sheetNN.png` (not committed).",
-            "2. Check: 4x4 grid, flat solid background, same size, no text.",
-            "3. Slice (any flat background color is detected automatically): "
-            "`python3 tools/slice_sheet.py sheets-src/sheet01.png tools/sheets/sheet01.txt app/src/main/res/drawable-nodpi`",
-            "4. Names come from `tools/sheets/sheetNN.txt` (row-major). Output: `<name>.webp`, 256 px.",
-            "5. Budget: all icons together under 1 MB. The script prints the total.",
-            "6. Optional: `rembg` can replace the flood-fill key if an edge is rough.", "",
-            "Pipeline: `tools/slice_sheet.py` (Pillow) splits 4x4, removes the flat background by flood fill with "
-            "edge cleanup, trims, re-pads to a square, resizes, exports WebP.", "",
-            "## 3. Prompts", ""]
-    for key, st in STYLES.items():
-        sheets = BOTS_SHEETS if st["sheets"] == "bots" else TOY_SHEETS
-        out += [f"### Style {st['title']}", ""]
-        for idx, title, icons in sheets:
-            txt = prompt(key, idx, title, icons)
-            (ROOT / "tools" / "sheets" / f"sheet{idx}.{key}.prompt.txt").write_text(txt + "\n")
-            (ROOT / "tools" / "sheets" / f"sheet{idx}.txt").write_text("\n".join(n for n, _ in icons) + "\n")
-            out += [f"<details><summary>Sheet {idx}: {title}</summary>", "",
-                    "Files: " + ", ".join(f"`{n}.webp`" for n, _ in icons), "",
-                    "```text", txt, "```", "", "</details>", ""]
+           "Copy a prompt, paste it into the image generator, save the image as `sheets-src/sheetNN.png`.",
+           "Style: Bots mini illustrations, colorful. 7 sheets, 16 icons each (4x4).", ""]
+    for idx, title, icons in BOTS_SHEETS:
+        txt = prompt(key, idx, title, icons)
+        (ROOT / "tools" / "sheets" / f"sheet{idx}.prompt.txt").write_text(txt + "\n")
+        (ROOT / "tools" / "sheets" / f"sheet{idx}.txt").write_text("\n".join(n for n, _ in icons) + "\n")
+        out += [f"## Sheet {idx}: {title}", "", "```text", txt, "```", ""]
     (ROOT / "ASSETS.md").write_text("\n".join(out))
-    print("wrote ASSETS.md;", len(STYLES), "styles x 7 sheets")
+    print("wrote ASSETS.md:", len(BOTS_SHEETS), "sheets")
 
 
 if __name__ == "__main__":
