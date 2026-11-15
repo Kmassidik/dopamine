@@ -20,8 +20,15 @@ class CourseViewModel(private val c: AppContainer, val courseId: String) : ViewM
             c.content.load()
             val course = c.content.manifest.value?.courses?.firstOrNull { it.id == courseId } ?: return@launch
             _info.value = course.units.flatMap { it.lessons }.mapNotNull { ref ->
-                c.content.lesson(ref)?.let { ref.id to LessonInfo(it.questions.size, it.xp) }
+                // Counts are cached per lesson version+hash, so reopening a course reads no lesson files.
+                val key = "${ref.id}:${ref.version}:${ref.sha256}"
+                val info = infoCache[key] ?: c.content.lesson(ref)?.let { LessonInfo(it.questions.size, it.xp) }?.also { infoCache[key] = it }
+                info?.let { ref.id to it }
             }.toMap()
         }
+    }
+
+    private companion object {
+        val infoCache = java.util.concurrent.ConcurrentHashMap<String, LessonInfo>()
     }
 }
