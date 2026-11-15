@@ -10,17 +10,15 @@
 
 Current unit tests (21, all passing): `ContrastTest` (WCAG AA for every text pair, light and dark), `ManifestDiffTest` (new / changed / removed / unchanged, missing image re-fetch, unsafe path rejection), `LessonValidatorTest`, `ProfileNameTest`.
 
-Planned (see `HANDOVER.md`): LaTeX tokenizer, SM-2, answer normalization and numeric equivalence, streak logic, hearts regeneration, XP, Room migrations (schemas in `app/schemas/`), update flow against MockWebServer (bad hash rollback, interrupted download), Compose UI test of a full lesson, rotation keeps state.
+Planned: LaTeX tokenizer, SM-2, answer normalization and numeric equivalence, streak logic, hearts regeneration, XP, Room migrations (schemas in `app/schemas/`), update flow against MockWebServer (bad hash rollback, interrupted download), Compose UI test of a full lesson, rotation keeps state.
 
-## On a device (the owner's setup)
-
+## On a device
 ```bash
-ssh kurnia-laptop 'cd ~/Desktop/dopamine && git pull -q && ./build.sh assembleDebug'
-ssh kurnia-laptop '~/Android/Sdk/platform-tools/adb install -r ~/Desktop/dopamine/app/build/outputs/apk/debug/app-debug.apk'
-ssh kurnia-laptop '~/Android/Sdk/platform-tools/adb exec-out screencap -p > /tmp/s.png' && scp kurnia-laptop:/tmp/s.png .
+adb devices                                                        # must say "device"
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb exec-out screencap -p > screenshot.png
 ```
-
-Check `adb devices` shows `device` (not `unauthorized` or `no permissions`) and that the phone is unlocked. Do not `pm clear` the owner's phone (it erases their saved name).
+Make sure the phone is unlocked first. Do not `pm clear` a phone that holds real progress (it erases the saved name and progress); use a throwaway name on a fresh install.
 
 ## Small-phone recipe (320x640dp, 1.3x font)
 

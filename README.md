@@ -4,18 +4,15 @@ An offline-first, fully native Android app (Kotlin + Jetpack Compose) for short,
 
 Lessons live in a separate repository, [`Kmassidik/dopamine-content`](https://github.com/Kmassidik/dopamine-content), and arrive through a user-initiated **Update content** button. The app is usable on first launch with bundled sample content.
 
-> **Status: early.** Home, onboarding (name), settings, content loading and the update flow work. **Lessons cannot be played yet** (no lesson player, no math renderer). See [`HANDOVER.md`](HANDOVER.md) for exactly what is done and what is next.
+> **Status: early but usable.** Home, onboarding, lessons with reading pages and practice, unit cheat sheets, saved XP and streak, and the update flow work. Review scheduling, hearts and a final test are not built yet.
 
 ## Documents
 
 | File | Read it for |
 |---|---|
-| [`AGENTS.md`](AGENTS.md) | Rules, environment, commands and pitfalls. **Start here if you are an AI agent.** |
-| [`HANDOVER.md`](HANDOVER.md) | Current state, known issues, and the roadmap with acceptance criteria |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to build, test and send a change |
 | [`DESIGN.md`](DESIGN.md) | Colors, type, shapes, motion, components |
-| [`DECISIONS.md`](DECISIONS.md) | Why things are the way they are, with how to reverse them |
-| [`TESTING.md`](TESTING.md) | Test commands and the manual checklist |
-| [`ASSETS.md`](ASSETS.md) | Image-generator prompts for the icon sheets, and the slicing pipeline |
+| [`TESTING.md`](TESTING.md) | Test commands, the design guard (screenshot tests) and the manual checklist |
 
 ## Build and run
 
@@ -35,12 +32,12 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb shell am start -n app.dopamine/.MainActivity
 ```
 
-On Xiaomi/MIUI, turn on *Developer options → Install via USB* and *USB debugging (Security settings)*, and tap Install on the phone promptly. See `AGENTS.md` for the full set of device gotchas.
+On Xiaomi/MIUI, turn on *Developer options → Install via USB* and *USB debugging (Security settings)*, and tap Install on the phone promptly.
 
 ## How it works
 
 ```
- first launch        Update content (Settings)                 lesson list / (player: not built yet)
+ first launch        Update content (Settings)                 lessons, notes and practice
       |                         |                                          ^
  assets/content  ->  filesDir/content  <-- swap <-- stage <-- verified downloads
  (bundled seed)       (what the app reads)                  (https, sha256, size, schema, path checks)
