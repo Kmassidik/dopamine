@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -178,7 +179,7 @@ private fun CategoryCard(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpe
             Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
                 Text(cat.name, style = MaterialTheme.typography.titleLarge)
                 Text(
-                    stringResource(R.string.category_summary, courses.size, lessons),
+                    stringResource(R.string.category_summary, pluralStringResource(R.plurals.n_courses, courses.size, courses.size), pluralStringResource(R.plurals.n_lessons, lessons, lessons)),
                     style = MaterialTheme.typography.bodyMedium,
                     color = c.inkSoft,
                 )
@@ -186,7 +187,7 @@ private fun CategoryCard(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpe
             AppIcon(R.drawable.ic_chevron, text, size = 24.dp)
         }
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            ProgressBar(0f, Color.White.copy(alpha = 0.8f), fill)
+            ProgressBar(0f, c.bg.copy(alpha = 0.8f), fill)
             Text(
                 stringResource(R.string.category_progress, 0, lessons),
                 style = MaterialTheme.typography.labelSmall,

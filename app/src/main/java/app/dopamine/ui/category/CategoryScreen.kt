@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -81,7 +82,7 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit) {
                             Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Text(unit.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
                                 Text(
-                                    stringResource(R.string.unit_lessons, unit.lessons.size),
+                                    pluralStringResource(R.plurals.n_lessons, unit.lessons.size, unit.lessons.size),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = c.inkSoft,
                                 )
@@ -104,7 +105,7 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit) {
                                         Text(lesson.title, style = MaterialTheme.typography.titleMedium)
                                         info[lesson.id]?.let {
                                             Text(
-                                                stringResource(R.string.lesson_summary, it.questions, it.xp),
+                                                stringResource(R.string.lesson_summary, pluralStringResource(R.plurals.n_questions, it.questions, it.questions), it.xp),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 color = c.inkSoft,
                                             )

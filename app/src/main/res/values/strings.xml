@@ -10,11 +10,13 @@
     <string name="review_empty">Nothing due. Come back after your next lesson.</string>
     <string name="section_courses">Courses</string>
     <string name="loading">Loading lessons</string>
-    <string name="category_summary">%1$d courses · %2$d lessons</string>
-    <string name="category_progress">%1$d of %2$d lessons done</string>
-    <string name="lesson_summary">%1$d questions · %2$d XP</string>
-    <string name="unit_lessons">%1$d lessons</string>
-    <string name="update_idle">Update content</string>
+    <string name="category_summary">%1$s · %2$s</string>
+    <plurals name="n_courses"><item quantity="one">%d course</item><item quantity="other">%d courses</item></plurals>
+    <plurals name="n_lessons"><item quantity="one">%d lesson</item><item quantity="other">%d lessons</item></plurals>
+    <plurals name="n_questions"><item quantity="one">%d question</item><item quantity="other">%d questions</item></plurals>
+    <string name="category_progress">%1$d of %2$d done</string>
+    <string name="lesson_summary">%1$s · %2$d XP</string>
+        <string name="update_idle">Update content</string>
     <string name="update_last">Updated %1$s</string>
     <string name="update_bundled">Using the bundled lessons</string>
     <string name="update_running">Downloading %1$d of %2$d</string>
