@@ -1,0 +1,26 @@
+STYLE
+Mini illustration icon set in the style of a cute 'Bots' sticker pack. Thick uniform black outline with rounded joins and a slightly hand-drawn wobble. Simple cel shading: a few white highlight dashes and one or two flat shade planes, solid black accents (bases, buttons, small parts). Every object is a tiny living character: it has a face made of two small black dot eyes (some use tiny x eyes or a small curved mouth), no nose. Under each object a solid black oval ground shadow (omit only if the object clearly floats). Two to four short spark or motion tick lines near it. Chunky, friendly, playful, slightly imperfect. No gradients, no 3D render, no photorealism, no glow. No text, no letters, no numbers. Only pure black, white and two flat mid-greys: NO color at all inside the icons.
+
+LAYOUT
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid warm yellow #F9D56B background across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows crossing cells. Never use yellow inside an icon.
+
+OUTPUT
+Highest square resolution available, ideally 3072x3072. PNG.
+
+SHEET 05: Electronics. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
+1. a lightning bolt with two dot eyes and a small spark
+2. a resistor with colored-band stripes drawn as grey and black bands, two wire legs, two dot eyes
+3. an electrolytic capacitor can with a stripe and two legs, two dot eyes
+4. a coil of wire with five loops and two dot eyes
+5. a diode symbol: triangle pointing into a bar with wires, two dot eyes in the triangle
+6. a round-top LED glowing with rays and two dot eyes
+7. a half-round transistor with three legs and two dot eyes
+8. a chunky battery with a plus end and a lightning bolt, two dot eyes
+9. a toggle switch in the on position with two dot eyes
+10. a breadboard with a grid of holes and two jumper wires, two holes are eyes
+11. a small circuit board with a chip and pins, two dot eyes on the chip
+12. an oscilloscope screen showing a sine wave, two dot eyes under the wave
+13. a multimeter with a dial and a tiny screen, two dot eyes on the screen
+14. a soldering iron with a curl of smoke and a drop of solder, two dot eyes
+15. two coils around an iron core with two dot eyes
+16. a light bulb with a bright filament and small rays, two dot eyes

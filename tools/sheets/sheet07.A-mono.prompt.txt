@@ -1,0 +1,28 @@
+STYLE
+Mini illustration icon set in the style of a cute 'Bots' sticker pack. Thick uniform black outline with rounded joins and a slightly hand-drawn wobble. Simple cel shading: a few white highlight dashes and one or two flat shade planes, solid black accents (bases, buttons, small parts). Every object is a tiny living character: it has a face made of two small black dot eyes (some use tiny x eyes or a small curved mouth), no nose. Under each object a solid black oval ground shadow (omit only if the object clearly floats). Two to four short spark or motion tick lines near it. Chunky, friendly, playful, slightly imperfect. No gradients, no 3D render, no photorealism, no glow. No text, no letters, no numbers. Only pure black, white and two flat mid-greys: NO color at all inside the icons.
+
+LAYOUT
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid warm yellow #F9D56B background across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows crossing cells. Never use yellow inside an icon.
+
+OUTPUT
+Highest square resolution available, ideally 3072x3072. PNG.
+
+SHEET 07: Mascot (optional): the Bot. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
+1. the Bot standing, smiling with a curved mouth on its screen face
+2. the Bot with both arms up cheering
+3. the Bot with one hand on its chin, eyes looking up
+4. the Bot asleep with a small sleep bubble and flat eyes
+5. the Bot waving hello
+6. the Bot looking down with a tiny tear
+7. the Bot with wide eyes and an open round mouth
+8. the Bot holding an open book
+9. the Bot sitting on a small flame
+10. the Bot holding a small cup
+11. the Bot hugging a heart
+12. the Bot looking nervous with a sweat drop
+13. the Bot with a light bulb glowing above its antenna
+14. the Bot sipping from a tiny cup
+15. the Bot peeking from the bottom edge, only head and hands visible
+16. the Bot mid-dance with small music-note shapes
+
+The Bot: a small friendly robot with a rounded body, a screen face showing two dot eyes, a short antenna, round ear discs, stubby arms and legs, same style. First generate ONE character reference, then reuse that exact robot in every cell. Consistency across 16 cells is hard; if it drifts, generate 4 cells at a time and merge them, or skip this sheet.

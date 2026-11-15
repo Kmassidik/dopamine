@@ -1,0 +1,26 @@
+STYLE
+Mini illustration icon set in the style of a cute 'Bots' sticker pack. Thick uniform black outline with rounded joins and a slightly hand-drawn wobble. Simple cel shading: a few white highlight dashes and one or two flat shade planes, solid black accents (bases, buttons, small parts). Every object is a tiny living character: it has a face made of two small black dot eyes (some use tiny x eyes or a small curved mouth), no nose. Under each object a solid black oval ground shadow (omit only if the object clearly floats). Two to four short spark or motion tick lines near it. Chunky, friendly, playful, slightly imperfect. No gradients, no 3D render, no photorealism, no glow. No text, no letters, no numbers. Fill colors: use only fresh green #35C46F, sunny yellow #FFC93C, bubblegum pink #FF7FAE and white, with a deeper tone of the same color for the shade plane. Each icon is mostly one main color; spread green, yellow and pink evenly across the sheet. The black outline stays.
+
+LAYOUT
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid pale blue-grey #DCE6F2 background across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows crossing cells. Never use that blue-grey inside an icon.
+
+OUTPUT
+Highest square resolution available, ideally 3072x3072. PNG.
+
+SHEET 03: English. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
+1. an open book with a small speech bubble above it, the book has two dot eyes
+2. a pair of chunky quotation marks with two dot eyes
+3. a stack of three word cards with blank lines, top card has two dot eyes
+4. a fat pencil drawing a wavy line, two dot eyes on the barrel
+5. a thick closed book with a magnifying glass, the book has two dot eyes
+6. over-ear headphones with two dot eyes on the headband
+7. a rounded microphone with small sound arcs and two dot eyes
+8. two overlapping speech bubbles with three dots, each bubble has two dot eyes
+9. a pair of round glasses resting on an open book, two dot eyes in the lenses
+10. a sheet of paper with wavy lines and a feather quill, two dot eyes on the paper
+11. five blank square tiles in a row with a check mark above, the middle tile has two dot eyes
+12. two speech bubbles joined by curved arrows, two dot eyes on one bubble
+13. a folded newspaper with blank headline bars and a picture block, two dot eyes
+14. a sealed envelope with a heart stamp and two dot eyes
+15. a thick bookmark ribbon with a star and two dot eyes
+16. a globe on a small stand with a pin, two dot eyes on the globe

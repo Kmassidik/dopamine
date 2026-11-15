@@ -1,0 +1,26 @@
+STYLE
+Modern 2026 mobile-app icon illustration. Chunky rounded shapes, thick soft dark-green ink outline (#14201A), flat fills with one subtle top-left highlight and a soft bottom shade for a gentle toy-like volume. NOT glossy, NOT photorealistic, NO neon, NO glassmorphism, NO full-icon gradients. Palette: fresh green #35C46F, sunny yellow #FFC93C, bubblegum pink #FF7FAE, white, ink #14201A, plus pale tints of those three (#E4F8EC, #FFF3CC, #FFE4EE). One light source from the top left. Friendly, playful, clean. No text, no letters, no numbers. Math and code symbols are allowed only where the icon list names them.
+
+LAYOUT
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid pale blue-grey #DCE6F2 background across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows crossing cells. Never use magenta or purple inside an icon.
+
+OUTPUT
+Highest square resolution available, ideally 3072x3072. PNG.
+
+SHEET 03: English. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
+1. an open book with a small speech bubble above it, green
+2. a pair of chunky quotation marks on a yellow round tile
+3. a stack of three rounded word cards, pink yellow green, blank lines instead of text
+4. a fat pencil writing a wavy line, pink and yellow
+5. a closed thick book with a magnifying glass, green
+6. round over-ear headphones, pink with yellow cushions
+7. a rounded microphone with small sound arcs, green
+8. two overlapping speech bubbles, one pink one green, with three dots
+9. a pair of round glasses resting on an open book, yellow
+10. a sheet of paper with wavy lines and a feather quill, pink
+11. five small square tiles in a row with a green check mark above, tiles blank
+12. two speech bubbles joined by curved arrows, green and yellow
+13. a folded newspaper with blank headline bars and a small picture block, pale yellow
+14. a sealed envelope with a pink heart stamp
+15. a thick rounded bookmark ribbon, pink with a yellow star
+16. a friendly globe on a small stand, green continents on a pale mint ocean, pink pin

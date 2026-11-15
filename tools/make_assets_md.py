@@ -4,25 +4,72 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-STYLE = (
-    "Monochrome mini illustration icon set in the style of a cute 'Bots' sticker pack. Thick uniform black "
-    "outline with rounded joins and a slightly hand-drawn wobble. Only pure black, white and two flat "
-    "mid-greys: NO color at all inside the icons. Simple cel shading: a few white highlight dashes, one or two "
-    "flat grey shade planes, solid black accents (bases, buttons, small parts). Every object is a tiny living "
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from sheet_data_toy import TOY_MASCOT, TOY_SHEETS, TOY_STYLE  # noqa: E402
+
+BOTS_CORE = (
+    "Mini illustration icon set in the style of a cute 'Bots' sticker pack. Thick uniform black outline with "
+    "rounded joins and a slightly hand-drawn wobble. Simple cel shading: a few white highlight dashes and one or "
+    "two flat shade planes, solid black accents (bases, buttons, small parts). Every object is a tiny living "
     "character: it has a face made of two small black dot eyes (some use tiny x eyes or a small curved mouth), "
     "no nose. Under each object a solid black oval ground shadow (omit only if the object clearly floats). "
     "Two to four short spark or motion tick lines near it. Chunky, friendly, playful, slightly imperfect. "
     "No gradients, no 3D render, no photorealism, no glow. No text, no letters, no numbers."
 )
-LAYOUT = (
-    "Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, "
-    "about 12% padding, all icons the same visual size, each a single object. Flat solid warm yellow #F9D56B "
-    "background across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows "
-    "crossing cells. Never use yellow inside an icon."
+MONO = " Only pure black, white and two flat mid-greys: NO color at all inside the icons."
+COLOR = (
+    " Fill colors: use only fresh green #35C46F, sunny yellow #FFC93C, bubblegum pink #FF7FAE and white, with a "
+    "deeper tone of the same color for the shade plane. Each icon is mostly one main color; spread green, yellow "
+    "and pink evenly across the sheet. The black outline stays."
+)
+ACCENT = (
+    " Only pure black, white and two flat mid-greys, plus exactly ONE accent color, bubblegum pink #FF7FAE, used "
+    "sparingly on a single part of each icon (a cheek, a tip, a button)."
+)
+
+
+def layout(bg, forbid):
+    return (
+        "Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, "
+        f"about 12% padding, all icons the same visual size, each a single object. Flat solid {bg} background "
+        "across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows crossing "
+        f"cells. Never use {forbid} inside an icon."
+    )
+
+
+YELLOW = ("warm yellow #F9D56B", "yellow")
+PALE = ("pale blue-grey #DCE6F2", "that blue-grey")
+
+STYLES = {
+    "A-mono": dict(
+        title="A. Bots mono (matches your sample)",
+        blurb="Black, white and grey only, faces on every object. Color comes from the tiles behind the icons.",
+        style=BOTS_CORE + MONO, bg=YELLOW, sheets="bots", mascot="bot"),
+    "B-color": dict(
+        title="B. Bots color",
+        blurb="Same Bots line style and faces, filled with the app's green, yellow and pink.",
+        style=BOTS_CORE + COLOR, bg=PALE, sheets="bots", mascot="bot"),
+    "C-toy": dict(
+        title="C. Toy 3D (no faces)",
+        blurb="Soft colorful toy-like icons with a green ink outline. No faces. The very first style.",
+        style=TOY_STYLE, bg=("pale blue-grey #DCE6F2", "magenta or purple"), sheets="toy", mascot="toy"),
+    "D-accent": dict(
+        title="D. Bots mono + pink accent",
+        blurb="Like A, with one pink accent on each icon. A middle path.",
+        style=BOTS_CORE + ACCENT, bg=YELLOW, sheets="bots", mascot="bot"),
+}
+
+BOT_NOTE = (
+    "The Bot: a small friendly robot with a rounded body, a screen face showing two dot eyes, a short antenna, "
+    "round ear discs, stubby arms and legs, same style. First generate ONE character reference, then reuse that "
+    "exact robot in every cell. Consistency across 16 cells is hard; if it drifts, generate 4 cells at a time and "
+    "merge them, or skip this sheet."
 )
 OUTPUT = "Highest square resolution available, ideally 3072x3072. PNG."
 
-SHEETS = [
+BOTS_SHEETS = [
     ("01", "Core UI", [
         ("ic_streak", "a small flame with two dot eyes and a tiny happy mouth, the tip wobbling"),
         ("ic_xp", "a chunky five-point star with two dot eyes and a spark"),
@@ -151,50 +198,54 @@ SHEETS = [
     ]),
 ]
 
-MASCOT_NOTE = (
-    "The Bot: a small friendly robot with a rounded body, a screen face showing two dot eyes, a short antenna, "
-    "round ear discs, stubby arms and legs, same monochrome style. First generate ONE character reference, then "
-    "reuse that exact robot in every cell. Consistency across 16 cells is hard; if it drifts, generate 4 cells "
-    "at a time and merge them, or skip this sheet."
-)
 
 
-def prompt(idx, title, icons):
+def prompt(key, idx, title, icons):
+    st = STYLES[key]
     lines = [f"{i + 1}. {d}" for i, (_, d) in enumerate(icons)]
-    extra = f"\n\n{MASCOT_NOTE}" if idx == "07" else ""
-    return (f"STYLE\n{STYLE}\n\nLAYOUT\n{LAYOUT}\n\nOUTPUT\n{OUTPUT}\n\n"
+    extra = ""
+    if idx == "07":
+        extra = "\n\n" + (BOT_NOTE if st["mascot"] == "bot" else TOY_MASCOT)
+    return (f"STYLE\n{st['style']}\n\nLAYOUT\n{layout(*st['bg'])}\n\nOUTPUT\n{OUTPUT}\n\n"
             f"SHEET {idx}: {title}. Draw exactly these 16 icons in row-major order "
             f"(left to right, top to bottom):\n" + "\n".join(lines) + extra)
 
 
 def main():
     out = ["# ASSETS", "",
-           "Illustrated icons for Dopamine. You generate the sheets; the app ships WebP icons sliced from them.",
-           "",
+           "Illustrated icons for Dopamine. You generate the sheets; the app ships WebP icons sliced from them.", "",
            "Until a sheet exists, the app uses the monochrome vector placeholders in `res/drawable/` "
-           "(marked PLACEHOLDER). Each sheet below has a complete prompt to paste into the image generator.",
-           "",
-           "## Workflow", "",
-           "1. Paste a sheet prompt, generate, save as `sheets-src/sheetNN.png` (not committed).",
-           "2. Check: 4x4 grid, flat solid yellow background, same size, no text. Render sheet 01 first as a style test.",
-           "3. Slice (the flat background color is detected automatically, any flat color works): `python3 tools/slice_sheet.py sheets-src/sheet01.png tools/sheets/sheet01.txt app/src/main/res/drawable-nodpi`",
-           "4. Names come from `tools/sheets/sheetNN.txt` (row-major, one per line). Output: `<name>.webp`, 256 px.",
-           "5. Budget: all icons together under 1 MB. The script prints the total.",
-           "6. Optional: `rembg` can replace the flood-fill key if an edge is rough: `pip install rembg`.",
-           "",
-           "Pipeline: `tools/slice_sheet.py` (Pillow) splits 4x4, removes the flat background by flood fill with edge cleanup, trims, "
-           "re-pads to a square, resizes, exports WebP.",
-           "",
-           "## Shared blocks (already included in each prompt below)", "",
-           "**STYLE** " + STYLE, "", "**LAYOUT** " + LAYOUT, "", "**OUTPUT** " + OUTPUT, "",
-           "## Sheets", ""]
-    for idx, title, icons in SHEETS:
-        out += [f"### Sheet {idx}: {title}", "", "Files: " + ", ".join(f"`{n}.webp`" for n, _ in icons), "",
-                "```text", prompt(idx, title, icons), "```", ""]
-        (ROOT / "tools" / "sheets" / f"sheet{idx}.txt").write_text("\n".join(n for n, _ in icons) + "\n")
-        (ROOT / "tools" / "sheets" / f"sheet{idx}.prompt.txt").write_text(prompt(idx, title, icons) + "\n")
+           "(marked PLACEHOLDER).", "",
+           "## 1. Choose a style (render sheet 01 in two or three, then pick)", ""]
+    for k, st in STYLES.items():
+        out += [f"- **{st['title']}**: {st['blurb']}",
+                f"  - copy: `pbcopy < tools/sheets/sheet01.{k}.prompt.txt`"]
+    out += ["",
+            "Tell me the letter you pick. Then render sheets 02 to 07 with the same style: "
+            "`pbcopy < tools/sheets/sheet0N.<style>.prompt.txt`.", "",
+            "## 2. Workflow", "",
+            "1. Paste a sheet prompt into the image generator and save as `sheets-src/sheetNN.png` (not committed).",
+            "2. Check: 4x4 grid, flat solid background, same size, no text.",
+            "3. Slice (any flat background color is detected automatically): "
+            "`python3 tools/slice_sheet.py sheets-src/sheet01.png tools/sheets/sheet01.txt app/src/main/res/drawable-nodpi`",
+            "4. Names come from `tools/sheets/sheetNN.txt` (row-major). Output: `<name>.webp`, 256 px.",
+            "5. Budget: all icons together under 1 MB. The script prints the total.",
+            "6. Optional: `rembg` can replace the flood-fill key if an edge is rough.", "",
+            "Pipeline: `tools/slice_sheet.py` (Pillow) splits 4x4, removes the flat background by flood fill with "
+            "edge cleanup, trims, re-pads to a square, resizes, exports WebP.", "",
+            "## 3. Prompts", ""]
+    for key, st in STYLES.items():
+        sheets = BOTS_SHEETS if st["sheets"] == "bots" else TOY_SHEETS
+        out += [f"### Style {st['title']}", ""]
+        for idx, title, icons in sheets:
+            txt = prompt(key, idx, title, icons)
+            (ROOT / "tools" / "sheets" / f"sheet{idx}.{key}.prompt.txt").write_text(txt + "\n")
+            (ROOT / "tools" / "sheets" / f"sheet{idx}.txt").write_text("\n".join(n for n, _ in icons) + "\n")
+            out += [f"<details><summary>Sheet {idx}: {title}</summary>", "",
+                    "Files: " + ", ".join(f"`{n}.webp`" for n, _ in icons), "",
+                    "```text", txt, "```", "", "</details>", ""]
     (ROOT / "ASSETS.md").write_text("\n".join(out))
-    print("wrote ASSETS.md and", len(SHEETS), "name lists;", sum(len(s[2]) for s in SHEETS), "icons")
+    print("wrote ASSETS.md;", len(STYLES), "styles x 7 sheets")
 
 
 if __name__ == "__main__":
