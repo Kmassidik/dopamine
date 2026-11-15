@@ -3,6 +3,9 @@ package app.dopamine.data.content
 import android.content.Context
 import android.util.Log
 import app.dopamine.domain.content.LessonValidator
+import app.dopamine.domain.content.NotesValidator
+import app.dopamine.domain.model.Notes
+import app.dopamine.domain.model.NotesRef
 import app.dopamine.domain.model.Lesson
 import app.dopamine.domain.model.LessonRef
 import app.dopamine.domain.model.Manifest
@@ -61,6 +64,15 @@ class ContentStore(private val context: Context) {
         }
     } catch (e: Exception) {
         Log.w(TAG, "skipping ${ref.id}: ${e.message}")
+        null
+    }
+
+    fun readNotes(ref: NotesRef): Notes? = try {
+        val notes: Notes = json.decodeFromString(File(root, ref.path).readText())
+        val problem = NotesValidator.validate(notes, null)
+        if (problem != null) { Log.w(TAG, "skipping notes ${ref.id}: $problem"); null } else notes
+    } catch (e: Exception) {
+        Log.w(TAG, "skipping notes ${ref.id}: ${e.message}")
         null
     }
 

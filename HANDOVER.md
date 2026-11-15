@@ -115,3 +115,12 @@ Measured: release APK 1.67 MB; debug APK 14 MB (includes tooling); icon weight a
 - Room is at version 2 (`lesson_progress`, `daily_stat`, `Migration(1, 2)`). A finished lesson saves best score, completion and the day's XP (`LessonViewModel.next`, via `ProgressRepository`). Home shows real total XP, streak and daily goal (20 XP); the Course screen shows `ic_complete` instead of the number for finished lessons.
 - Not done: hearts, review scheduling (`QuestionStat`, `dueAt`), `UpdateLog`, hidden-lesson marking, goal setting. Home streak/XP only refresh when the database changes (not at midnight while the screen stays open).
 - Icons now bob twice and rest, so an idle screen draws no frames. Course question counts are cached in memory.
+
+## Roadmap (agreed 2026-11-16)
+Done: navigation, 5 question types, math renderer, fonts/spacing, loading screen, Learn pages + course overview, saved XP/streak/goal, content standard + CI, design guard (screenshot tests), **Resume button and unit Notes** (code done; see below).
+
+1. **Learning loop.** (a) Resume: DONE (button says Start / Continue / Review the course from saved progress). (b) Notes: DONE (`unit.notes` in the manifest, `ui/notes/`, updater downloads and verifies them, content standard rules NOTES-*). Next: link a wrong answer to "Read the page about this"; (c) unit quiz (mixes the unit's questions, pass mark, no hearts).
+2. **Finish the course.** Final test with pass mark and mistake review; completion screen (local only); course map (outline to jump around, progress per unit).
+3. **Make it stick.** Hearts (regenerate over time); review scheduling (SM-2) so the Review tab and Home tile become real; math keypad and safe answer checker.
+4. **Polish and safety.** Settings (goal, sound, haptics, reduced motion, dark theme, clear/export progress); 320dp + 1.3x font pass and screen-level screenshot tests (extract stateless `XContent` composables first); CI for unit tests, lint and screenshots.
+5. **Content.** More courses with real reading (Algebra beyond equations, English, SWE, Electronics); SVG diagrams so questions with pictures return. The standard in the content repo checks every course.

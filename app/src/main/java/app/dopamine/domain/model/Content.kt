@@ -36,7 +36,37 @@ data class Overview(
 )
 
 @Serializable
-data class UnitDto(val id: String, val title: String, val order: Int, val lessons: List<LessonRef>)
+data class UnitDto(
+    val id: String,
+    val title: String,
+    val order: Int,
+    val lessons: List<LessonRef>,
+    val notes: NotesRef? = null,
+)
+
+/** Where a unit's cheat sheet lives. Verified by sha256 like a lesson. */
+@Serializable
+data class NotesRef(
+    val id: String,
+    val title: String,
+    val path: String,
+    val version: Int,
+    val sha256: String,
+    val sizeBytes: Long,
+)
+
+/** The unit cheat sheet: things to look up. block kind: text | formula | list | tip. */
+@Serializable
+data class Notes(val id: String, val version: Int, val title: String, val blocks: List<NoteBlock>)
+
+@Serializable
+data class NoteBlock(
+    val id: String,
+    val kind: String,
+    val title: String? = null,
+    val body: String? = null,
+    val items: List<String>? = null,
+)
 
 @Serializable
 data class LessonRef(
@@ -91,5 +121,6 @@ data class Question(
     val image: String? = null,
 )
 
+val KNOWN_NOTE_KINDS = setOf("text", "formula", "list", "tip")
 val KNOWN_PAGE_KINDS = setOf("text", "example", "tip")
 val KNOWN_QUESTION_TYPES = setOf("multiple_choice", "type_answer", "fill_blank", "match_pairs", "order_steps")

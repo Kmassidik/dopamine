@@ -74,4 +74,9 @@
     <string name="course_before">Before you start</string>
     <string name="course_start">Start course</string>
     <string name="course_lessons">Lessons</string>
+    <string name="notes_title">Notes</string>
+    <string name="notes_missing">There are no notes for this unit yet. Try Update content in Settings.</string>
+    <string name="notes_open">Unit notes</string>
+    <string name="course_continue">Continue</string>
+    <string name="course_review">Review the course</string>
 </resources>

@@ -6,6 +6,8 @@ import app.dopamine.domain.content.ManifestDiff
 import app.dopamine.domain.content.SafePath
 import app.dopamine.domain.model.Lesson
 import app.dopamine.domain.model.LessonRef
+import app.dopamine.domain.model.Notes
+import app.dopamine.domain.content.NotesValidator
 import app.dopamine.domain.model.Manifest
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -71,7 +73,7 @@ class UpdateManager(
         }
 
         val diff = ManifestDiff.compute(local, remote) { store.hasFile(it) }
-        val paths = diff.newLessons.map { it.path } + diff.changedLessons.map { it.path } + diff.imagesToFetch.map { it.path }
+        val paths = diff.newLessons.map { it.path } + diff.changedLessons.map { it.path } + diff.imagesToFetch.map { it.path } + diff.notesToFetch.map { it.path }
         paths.firstOrNull { !SafePath.isSafe(it) }?.let { throw UpdateException("The manifest contains an unsafe path. Update stopped.") }
 
         val total = diff.downloadCount
@@ -93,6 +95,20 @@ class UpdateManager(
                 store.writeStaged(stage, ref.path, bytes)
                 onProgress(++done, total)
             }
+            for (ref in diff.notesToFetch) {
+                currentCoroutineContext().ensureActive()
+                val bytes = download(base, ref.path, ref.sha256, ref.sizeBytes, MAX_LESSON)
+                val notes: Notes = try {
+                    json.decodeFromString(bytes.decodeToString())
+                } catch (e: SerializationException) {
+                    throw UpdateException("Notes \"${ref.title}\" are not valid. Update stopped, nothing changed.")
+                }
+                NotesValidator.validate(notes, ref)?.let {
+                    throw UpdateException("Notes \"${ref.title}\" failed a check ($it). Update stopped, nothing changed.")
+                }
+                store.writeStaged(stage, ref.path, bytes)
+                onProgress(++done, total)
+            }
             for (img in diff.imagesToFetch) {
                 currentCoroutineContext().ensureActive()
                 store.writeStaged(stage, img.path, download(base, img.path, img.sha256, img.sizeBytes, MAX_IMAGE))
@@ -106,7 +122,7 @@ class UpdateManager(
             throw e
         }
         store.saveMeta(head.etag, now())
-        return UpdateResult(diff.newLessons.size, diff.changedLessons.size, diff.removedIds.size, upToDate = false)
+        return UpdateResult(diff.newLessons.size, diff.changedLessons.size + diff.notesToFetch.size, diff.removedIds.size, upToDate = false)
     }
 
     private fun download(base: String, path: String, sha: String, declared: Long, max: Int): ByteArray {

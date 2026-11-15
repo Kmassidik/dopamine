@@ -23,5 +23,7 @@ class ContentRepository(private val store: ContentStore) {
         _manifest.value = store.readManifest()
     }
 
+    suspend fun notes(ref: app.dopamine.domain.model.NotesRef) = withContext(Dispatchers.IO) { store.readNotes(ref) }
+
     suspend fun lesson(ref: LessonRef): Lesson? = withContext(Dispatchers.IO) { store.readLesson(ref) }
 }

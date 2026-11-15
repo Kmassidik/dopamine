@@ -4,6 +4,19 @@ import app.dopamine.domain.model.KNOWN_QUESTION_TYPES
 import app.dopamine.domain.model.Lesson
 import app.dopamine.domain.model.LessonRef
 
+object NotesValidator {
+    fun validate(notes: app.dopamine.domain.model.Notes, ref: app.dopamine.domain.model.NotesRef? = null): String? {
+        if (ref != null && (notes.id != ref.id || notes.version != ref.version)) return "id or version differs from the manifest"
+        if (notes.blocks.isEmpty()) return "no blocks"
+        val seen = HashSet<String>()
+        for (b in notes.blocks) {
+            if (!seen.add(b.id)) return "duplicate block id ${b.id}"
+            if ((b.body?.length ?: 0) > 2000 || (b.items?.size ?: 0) > 30) return "block ${b.id} is too large"
+        }
+        return null
+    }
+}
+
 object LessonValidator {
     /** Returns a human-readable problem, or null when the lesson is usable. */
     fun validate(lesson: Lesson, ref: LessonRef? = null): String? {

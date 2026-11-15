@@ -22,6 +22,8 @@ import app.dopamine.ui.components.Tab
 import app.dopamine.ui.course.CourseScreen
 import app.dopamine.ui.course.CourseViewModel
 import app.dopamine.ui.learn.LearnScreen
+import app.dopamine.ui.notes.NotesScreen
+import app.dopamine.ui.notes.NotesViewModel
 import app.dopamine.ui.learn.LearnViewModel
 import app.dopamine.ui.lesson.LessonScreen
 import app.dopamine.ui.lesson.LessonViewModel
@@ -91,7 +93,14 @@ private fun Main(container: AppContainer, name: String) {
                 val vm: CourseViewModel = viewModel(key = "course-$id", factory = viewModelFactory {
                     initializer { CourseViewModel(container, id) }
                 })
-                CourseScreen(vm, onBack = { nav.popBackStack() }, onOpenLesson = { nav.navigate("learn/$it") })
+                CourseScreen(vm, onBack = { nav.popBackStack() }, onOpenLesson = { nav.navigate("learn/$it") }, onOpenNotes = { nav.navigate("notes/$it") })
+            }
+            composable("notes/{id}") { entry ->
+                val id = entry.arguments?.getString("id").orEmpty()
+                val vm: NotesViewModel = viewModel(key = "notes-$id", factory = viewModelFactory {
+                    initializer { NotesViewModel(container, id) }
+                })
+                NotesScreen(vm, onBack = { nav.popBackStack() })
             }
             composable("learn/{id}") { entry ->
                 val id = entry.arguments?.getString("id").orEmpty()

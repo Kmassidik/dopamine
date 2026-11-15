@@ -40,7 +40,7 @@ import app.dopamine.ui.theme.OutlineWidth
 
 /** Step 3: the units and lessons of one course. Tap a lesson to play it. */
 @Composable
-fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String) -> Unit) {
+fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String) -> Unit, onOpenNotes: (String) -> Unit) {
     val manifest by vm.manifest.collectAsStateWithLifecycle()
     val info by vm.info.collectAsStateWithLifecycle()
     val done by vm.done.collectAsStateWithLifecycle()
@@ -68,8 +68,14 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
             ) {
                 course?.overview?.let { ov ->
                     item(key = "overview") {
-                        val first = course.units.sortedBy { it.order }.flatMap { u -> u.lessons.sortedBy { it.order } }.firstOrNull()
-                        Overview(c, tint, ov, onStart = { first?.let { onOpenLesson(it.id) } })
+                        val ordered = course.units.sortedBy { it.order }.flatMap { u -> u.lessons.sortedBy { it.order } }
+                        val next = ordered.firstOrNull { it.id !in done }
+                        val label = when {
+                            ordered.isEmpty() || done.isEmpty() -> R.string.course_start
+                            next != null -> R.string.course_continue
+                            else -> R.string.course_review
+                        }
+                        Overview(c, tint, ov, label, onStart = { (next ?: ordered.firstOrNull())?.let { onOpenLesson(it.id) } })
                     }
                 }
                 course?.units?.sortedBy { it.order }?.forEach { unit ->
@@ -81,6 +87,27 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                 style = MaterialTheme.typography.labelMedium,
                                 color = c.inkSoft,
                             )
+                        }
+                    }
+                    if (unit.notes != null) {
+                        item(key = "notes-${unit.id}") {
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clip(CircleShape)
+                                    .background(c.yellowTint)
+                                    .bounceClick(stringResource(R.string.notes_open)) { onOpenNotes(unit.id) }
+                                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                IconImage(R.drawable.ic_dictionary, size = 32.dp, bob = false)
+                                Text(
+                                    stringResource(R.string.notes_open),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.weight(1f).padding(start = 12.dp),
+                                )
+                                AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
+                            }
                         }
                     }
                     unit.lessons.sortedBy { it.order }.forEach { lesson ->
@@ -122,7 +149,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
 }
 
 @Composable
-private fun Overview(c: DopamineColors, tint: Color, ov: app.dopamine.domain.model.Overview, onStart: () -> Unit) {
+private fun Overview(c: DopamineColors, tint: Color, ov: app.dopamine.domain.model.Overview, @androidx.annotation.StringRes startLabel: Int, onStart: () -> Unit) {
     Column(Modifier.fillMaxWidth().clip(CardShape).background(tint).padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (ov.summary.isNotBlank()) Text(ov.summary, style = MaterialTheme.typography.bodyLarge)
         if (ov.minutes > 0) {
@@ -141,7 +168,7 @@ private fun Overview(c: DopamineColors, tint: Color, ov: app.dopamine.domain.mod
             Text(stringResource(R.string.course_before), style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 4.dp))
             ov.requirements.forEach { Bullet(c, it, R.drawable.ic_bulb) }
         }
-        ChunkyButton(stringResource(R.string.course_start), onStart, c.green, c.greenLip, c.onAccent, Modifier.padding(top = 8.dp))
+        ChunkyButton(stringResource(startLabel), onStart, c.green, c.greenLip, c.onAccent, Modifier.padding(top = 8.dp))
     }
     Text(stringResource(R.string.course_lessons), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 12.dp))
 }

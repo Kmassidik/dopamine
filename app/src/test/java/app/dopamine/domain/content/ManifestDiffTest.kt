@@ -4,6 +4,7 @@ import app.dopamine.domain.model.CourseDto
 import app.dopamine.domain.model.ImageDto
 import app.dopamine.domain.model.LessonRef
 import app.dopamine.domain.model.Manifest
+import app.dopamine.domain.model.NotesRef
 import app.dopamine.domain.model.UnitDto
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -58,5 +59,30 @@ class ManifestDiffTest {
             "../etc/passwd.json", "/abs/lesson.json", "a/../b.json", "a//b.json", "a/b.txt",
             "a/b.json/../../c.json", "..\\x.json", "a/.hidden.json", "",
         ).forEach { assertFalse("should reject $it", SafePath.isSafe(it)) }
+    }
+
+    private fun withNotes(n: NotesRef?) = Manifest(
+        1, "v", 1, emptyList(),
+        listOf(CourseDto("c", "m", "C", "", 1, listOf(UnitDto("u", "U", 1, listOf(ref("a")), n)))),
+        emptyList(),
+    )
+
+    private fun notes(v: Int = 1, sha: String = "n") = NotesRef("n-1", "Notes", "m/c/u/notes.json", v, sha, 100)
+
+    @Test fun newNotesAreFetched() {
+        val d = ManifestDiff.compute(withNotes(null), withNotes(notes()))
+        assertEquals(1, d.notesToFetch.size)
+        assertEquals(1, d.downloadCount)
+    }
+
+    @Test fun changedNotesAreFetchedButUnchangedAreNot() {
+        assertEquals(1, ManifestDiff.compute(withNotes(notes()), withNotes(notes(v = 2))).notesToFetch.size)
+        assertEquals(1, ManifestDiff.compute(withNotes(notes()), withNotes(notes(sha = "z"))).notesToFetch.size)
+        assertEquals(0, ManifestDiff.compute(withNotes(notes()), withNotes(notes())).notesToFetch.size)
+    }
+
+    @Test fun missingNotesFileIsFetchedAgain() {
+        val d = ManifestDiff.compute(withNotes(notes()), withNotes(notes())) { false }
+        assertEquals(1, d.notesToFetch.size)
     }
 }
