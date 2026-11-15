@@ -9,3 +9,5 @@ captures/
 *.jks
 crash-*.log
 sheets-src/
+__pycache__/
+*.pyc
