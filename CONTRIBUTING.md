@@ -22,6 +22,8 @@ You need a JDK 21+ and the Android SDK (platform 37). All checks must pass befor
 Screenshot tests compare the design system with reference images. If your change alters the look on purpose, update the references (`updateDebugScreenshotTestDefaultTestSuite`), look at them yourself, commit them and say why in the pull request. If it fails and you did not mean to change the look, fix the change, not the images.
 
 ## Content
+The app and the content repo share a generated `contract.json` (allowed kinds, limits, math commands). After the content repo changes it, run `tools/sync_contract.sh` and the unit tests; `ContractTest` fails if the app no longer matches. `tools/check_contract.sh` compares the app's copy with GitHub.
+
 Lessons live in [dopamine-content](https://github.com/Kmassidik/dopamine-content). Read its `STANDARD.md`; CI there rejects content that does not fit the layout.
 
 ## Commits and pull requests
