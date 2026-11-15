@@ -21,6 +21,8 @@ import app.dopamine.ui.components.FloatingNav
 import app.dopamine.ui.components.Tab
 import app.dopamine.ui.course.CourseScreen
 import app.dopamine.ui.course.CourseViewModel
+import app.dopamine.ui.learn.LearnScreen
+import app.dopamine.ui.learn.LearnViewModel
 import app.dopamine.ui.lesson.LessonScreen
 import app.dopamine.ui.lesson.LessonViewModel
 import app.dopamine.ui.math.FormulaTestScreen
@@ -58,7 +60,7 @@ private fun Main(container: AppContainer, name: String) {
     val settings: SettingsViewModel = viewModel(factory = viewModelFactory { initializer { SettingsViewModel(container) } })
 
     val route = nav.currentBackStackEntryAsState().value?.destination?.route
-    val inLesson = route?.startsWith("lesson/") == true
+    val inLesson = route?.startsWith("lesson/") == true || route?.startsWith("learn/") == true
     val selected = when (route) {
         "review" -> Tab.Review
         "settings" -> Tab.Settings
@@ -89,7 +91,16 @@ private fun Main(container: AppContainer, name: String) {
                 val vm: CourseViewModel = viewModel(key = "course-$id", factory = viewModelFactory {
                     initializer { CourseViewModel(container, id) }
                 })
-                CourseScreen(vm, onBack = { nav.popBackStack() }, onOpenLesson = { nav.navigate("lesson/$it") })
+                CourseScreen(vm, onBack = { nav.popBackStack() }, onOpenLesson = { nav.navigate("learn/$it") })
+            }
+            composable("learn/{id}") { entry ->
+                val id = entry.arguments?.getString("id").orEmpty()
+                val vm: LearnViewModel = viewModel(key = "learn-$id", factory = viewModelFactory {
+                    initializer { LearnViewModel(container, id) }
+                })
+                LearnScreen(vm, onBack = { nav.popBackStack() }, onPractice = {
+                    nav.navigate("lesson/$id") { popUpTo("learn/{id}") { inclusive = true } }
+                })
             }
             composable("lesson/{id}") { entry ->
                 val id = entry.arguments?.getString("id").orEmpty()

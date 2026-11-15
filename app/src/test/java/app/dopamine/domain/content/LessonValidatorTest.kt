@@ -25,6 +25,16 @@ class LessonValidatorTest {
         assertNull(LessonValidator.validate(lesson(mc(), Question("q9", "hologram", explanation = "e"))))
     }
 
+    @Test fun duplicateLearnPageIdsFail() {
+        val page = app.dopamine.domain.model.LearnPage("p1", "text", body = "b")
+        assertNotNull(LessonValidator.validate(lesson(mc()).copy(learn = listOf(page, page))))
+    }
+
+    @Test fun unknownPageKindIsAllowed() {
+        val page = app.dopamine.domain.model.LearnPage("p1", "hologram", body = "b")
+        assertNull(LessonValidator.validate(lesson(mc()).copy(learn = listOf(page))))
+    }
+
     @Test fun manifestMismatchFails() {
         val ref = LessonRef("other", "t", "x/y.json", 1, "h", 1, 1)
         assertNotNull(LessonValidator.validate(lesson(mc()), ref))

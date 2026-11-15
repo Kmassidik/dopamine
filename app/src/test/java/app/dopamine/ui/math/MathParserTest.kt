@@ -48,6 +48,10 @@ class MathParserTest {
         assertEquals(Sym("−", Kind.OP), items("-").single())
     }
 
+    @Test fun degreeCircleIsKnown() {
+        assertEquals(Sym("∘", Kind.TEXT), items("\\circ").single())
+    }
+
     @Test fun leftRightAreDroppedButDelimitersStay() {
         val texts = items("\\left(x\\right)").filterIsInstance<Sym>().map { it.text }.filter { it.isNotEmpty() }
         assertEquals(listOf("(", "x", ")"), texts)

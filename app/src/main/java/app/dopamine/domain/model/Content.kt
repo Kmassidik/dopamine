@@ -23,6 +23,16 @@ data class CourseDto(
     val description: String = "",
     val order: Int,
     val units: List<UnitDto>,
+    val overview: Overview? = null,
+)
+
+/** The "course landing page": what it is, what you will learn, what you need, how long. */
+@Serializable
+data class Overview(
+    val summary: String = "",
+    val outcomes: List<String> = emptyList(),
+    val requirements: List<String> = emptyList(),
+    val minutes: Int = 0,
 )
 
 @Serializable
@@ -50,6 +60,19 @@ data class Lesson(
     val xp: Int,
     val tags: List<String> = emptyList(),
     val questions: List<Question>,
+    /** Reading pages shown before the practice. Optional so older lessons still work. */
+    val learn: List<LearnPage> = emptyList(),
+)
+
+/** One page of reading. kind: text | example (title + steps revealed one by one) | tip. */
+@Serializable
+data class LearnPage(
+    val id: String,
+    val kind: String,
+    val title: String? = null,
+    val body: String? = null,
+    val steps: List<String>? = null,
+    val image: String? = null,
 )
 
 /** Flat on purpose: unknown question types still parse and are skipped by the player. */
@@ -68,4 +91,5 @@ data class Question(
     val image: String? = null,
 )
 
+val KNOWN_PAGE_KINDS = setOf("text", "example", "tip")
 val KNOWN_QUESTION_TYPES = setOf("multiple_choice", "type_answer", "fill_blank", "match_pairs", "order_steps")

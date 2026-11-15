@@ -103,3 +103,10 @@ Measured: release APK 1.67 MB; debug APK 14 MB (includes tooling); icon weight a
 - Replaces the provisional jlatexmath-android plan: no dependency, ~1 file each, vector drawing so no bitmap cache is needed.
 - **Known LaTeX limits** (author lessons accordingly): no matrices, `align`, `cases`, `\\` line breaks, `\overline`, `\vec`, `\hat`, `\binom`, big operators with limits (`\sum_{i}^{n}` draws the sum sign as text with small scripts). `\left(` `\right)` are NOT scaled to the content height. Greek capitals and symbols like `∑ ≈ → ∞` rely on the system fallback font. Italic variables use a synthetic slant. Very long formulas do not wrap inside the `$...$` and can overflow on a narrow screen.
 - Possible next steps: scale delimiters, wrap long formulas, test at 320dp and 1.3x font.
+
+## Update 2026-11-16: course structure (Udemy-style, adapted)
+- Course = overview (summary, what you'll learn, before you start, minutes) -> units -> lessons. Each lesson = **Learn pages** (text / example / tip) then **Practice** questions. Tapping a lesson opens the Learn pages first; "Skip" goes straight to practice; lessons without `learn` go straight to practice.
+- The layout is a standard enforced in the content repo (`STANDARD.md`, `tools/standard.py`, CI). Contributors whose content does not fit fail CI with a rule id.
+- App: `ui/learn/` (Learn screen; example steps reveal one at a time), course overview on the Course screen, `Lesson.learn` and `CourseDto.overview` models (optional, so old content still loads).
+- Planned next, in order: Notes (one-page cheat sheet per unit, the "book"), unit quiz, final test, completion screen, resume button (needs the saved-progress work).
+- Note: `LATEX_OK` in the content repo and `MathParser.kt` here must stay in sync.

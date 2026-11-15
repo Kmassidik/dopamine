@@ -61,4 +61,16 @@
     <string name="lesson_answer_was">Answer: %1$s</string>
     <string name="lesson_order_hint">Tap the steps in the right order. Tap a placed step to take it back.</string>
     <string name="loading_tagline">a little every day</string>
+    <string name="learn_next">Got it</string>
+    <string name="learn_next_step">Show next step</string>
+    <string name="learn_start">Start practice</string>
+    <string name="learn_skip">Skip</string>
+    <string name="learn_example">Worked example</string>
+    <string name="learn_tip">Tip</string>
+    <string name="learn_page">%1$d of %2$d</string>
+    <string name="course_minutes">About %1$d min</string>
+    <string name="course_learn">What you\'ll learn</string>
+    <string name="course_before">Before you start</string>
+    <string name="course_start">Start course</string>
+    <string name="course_lessons">Lessons</string>
 </resources>

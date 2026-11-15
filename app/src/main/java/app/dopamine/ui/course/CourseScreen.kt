@@ -23,15 +23,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
 import app.dopamine.ui.components.AppIcon
+import app.dopamine.ui.components.ChunkyButton
+import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.bounceClick
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
+import app.dopamine.ui.theme.DopamineColors
 import app.dopamine.ui.theme.OutlineWidth
 
 /** Step 3: the units and lessons of one course. Tap a lesson to play it. */
@@ -61,6 +65,12 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                 contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 112.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+                course?.overview?.let { ov ->
+                    item(key = "overview") {
+                        val first = course.units.sortedBy { it.order }.flatMap { u -> u.lessons.sortedBy { it.order } }.firstOrNull()
+                        Overview(c, tint, ov, onStart = { first?.let { onOpenLesson(it.id) } })
+                    }
+                }
                 course?.units?.sortedBy { it.order }?.forEach { unit ->
                     item(key = "unit-${unit.id}") {
                         Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -103,5 +113,38 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Overview(c: DopamineColors, tint: Color, ov: app.dopamine.domain.model.Overview, onStart: () -> Unit) {
+    Column(Modifier.fillMaxWidth().clip(CardShape).background(tint).padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        if (ov.summary.isNotBlank()) Text(ov.summary, style = MaterialTheme.typography.bodyLarge)
+        if (ov.minutes > 0) {
+            Text(
+                stringResource(R.string.course_minutes, ov.minutes),
+                style = MaterialTheme.typography.labelMedium,
+                color = c.ink,
+                modifier = Modifier.clip(CircleShape).background(Color.White).padding(horizontal = 12.dp, vertical = 6.dp),
+            )
+        }
+        if (ov.outcomes.isNotEmpty()) {
+            Text(stringResource(R.string.course_learn), style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 4.dp))
+            ov.outcomes.forEach { Bullet(c, it, R.drawable.ic_correct) }
+        }
+        if (ov.requirements.isNotEmpty()) {
+            Text(stringResource(R.string.course_before), style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 4.dp))
+            ov.requirements.forEach { Bullet(c, it, R.drawable.ic_bulb) }
+        }
+        ChunkyButton(stringResource(R.string.course_start), onStart, c.green, c.greenLip, c.onAccent, Modifier.padding(top = 8.dp))
+    }
+    Text(stringResource(R.string.course_lessons), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 12.dp))
+}
+
+@Composable
+private fun Bullet(c: DopamineColors, text: String, icon: Int) {
+    Row(verticalAlignment = Alignment.Top) {
+        IconImage(icon, size = 24.dp, bob = false)
+        Text(text, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f).padding(start = 10.dp))
     }
 }

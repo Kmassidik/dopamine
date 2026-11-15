@@ -11,6 +11,11 @@ object LessonValidator {
             return "id or version differs from the manifest"
         }
         if (lesson.questions.isEmpty()) return "no questions"
+        val pageIds = HashSet<String>()
+        for (p in lesson.learn) {
+            if (!pageIds.add(p.id)) return "duplicate learn page id ${p.id}"
+            if ((p.body?.length ?: 0) > 2000 || (p.steps?.size ?: 0) > 20) return "learn page ${p.id} is too large"
+        }
         val seen = HashSet<String>()
         for (q in lesson.questions) {
             if (!seen.add(q.id)) return "duplicate question id ${q.id}"

@@ -28,7 +28,7 @@ object MathParser {
         put(Kind.REL, "le" to "≤", "leq" to "≤", "ge" to "≥", "geq" to "≥", "ne" to "≠", "neq" to "≠",
             "approx" to "≈", "equiv" to "≡", "to" to "→", "rightarrow" to "→", "Rightarrow" to "⇒",
             "leftarrow" to "←", "in" to "∈")
-        put(Kind.TEXT, "infty" to "∞", "degree" to "°", "ldots" to "…", "dots" to "…", "cdots" to "…",
+        put(Kind.TEXT, "infty" to "∞", "degree" to "°", "circ" to "∘", "ldots" to "…", "dots" to "…", "cdots" to "…",
             "sum" to "∑", "int" to "∫", "prod" to "∏", "partial" to "∂", "nabla" to "∇", "angle" to "∠",
             "triangle" to "△", "perp" to "⊥", "parallel" to "∥",
             "Delta" to "Δ", "Omega" to "Ω", "Sigma" to "Σ", "Pi" to "Π", "Theta" to "Θ")
