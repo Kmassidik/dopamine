@@ -191,6 +191,7 @@ def main():
         out += [f"### Sheet {idx}: {title}", "", "Files: " + ", ".join(f"`{n}.webp`" for n, _ in icons), "",
                 "```text", prompt(idx, title, icons), "```", ""]
         (ROOT / "tools" / "sheets" / f"sheet{idx}.txt").write_text("\n".join(n for n, _ in icons) + "\n")
+        (ROOT / "tools" / "sheets" / f"sheet{idx}.prompt.txt").write_text(prompt(idx, title, icons) + "\n")
     (ROOT / "ASSETS.md").write_text("\n".join(out))
     print("wrote ASSETS.md and", len(SHEETS), "name lists;", sum(len(s[2]) for s in SHEETS), "icons")
 

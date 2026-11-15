@@ -1,0 +1,26 @@
+STYLE
+Modern 2026 mobile-app icon illustration. Chunky rounded shapes, thick soft dark-green ink outline (#14201A), flat fills with one subtle top-left highlight and a soft bottom shade for a gentle toy-like volume. NOT glossy, NOT photorealistic, NO neon, NO glassmorphism, NO full-icon gradients. Palette: fresh green #35C46F, sunny yellow #FFC93C, bubblegum pink #FF7FAE, white, ink #14201A, plus pale tints of those three (#E4F8EC, #FFF3CC, #FFE4EE). One light source from the top left. Friendly, playful, clean. No text, no letters, no numbers. Math and code symbols are allowed only where the icon list names them.
+
+LAYOUT
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid #FF00FF background across the whole image. No grid lines, no labels, no captions, no shadows crossing cells. Never use magenta or purple inside an icon.
+
+OUTPUT
+Highest square resolution available, ideally 3072x3072. PNG.
+
+SHEET 06: Path nodes and states. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
+1. a round node with a half-filled progress ring and a play triangle, green
+2. a round pink badge with a sparkle star and tiny burst lines
+3. a golden star badge with a green check and small sparkles
+4. a chunky ice crystal snowflake in a rounded square, pale green tint
+5. a plump bell with a small ring arc, yellow
+6. a small treasure chest with a heart lock, pink and yellow
+7. a rounded crown with three star points, yellow
+8. a little flag on a hill, pink flag
+9. a double chevron arrow in a rounded square, green
+10. a small light bulb with a question mark spark, yellow
+11. a thick circular arrow, pink
+12. a rounded dumbbell with a small sweat drop, green
+13. a big round start button with a thick play triangle, green
+14. a rounded shield with a star, pink
+15. a faceted rounded gem, green with a yellow highlight
+16. a rounded calendar page with a binding and a green check on one day, blank grid

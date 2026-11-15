@@ -1,0 +1,26 @@
+STYLE
+Modern 2026 mobile-app icon illustration. Chunky rounded shapes, thick soft dark-green ink outline (#14201A), flat fills with one subtle top-left highlight and a soft bottom shade for a gentle toy-like volume. NOT glossy, NOT photorealistic, NO neon, NO glassmorphism, NO full-icon gradients. Palette: fresh green #35C46F, sunny yellow #FFC93C, bubblegum pink #FF7FAE, white, ink #14201A, plus pale tints of those three (#E4F8EC, #FFF3CC, #FFE4EE). One light source from the top left. Friendly, playful, clean. No text, no letters, no numbers. Math and code symbols are allowed only where the icon list names them.
+
+LAYOUT
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid #FF00FF background across the whole image. No grid lines, no labels, no captions, no shadows crossing cells. Never use magenta or purple inside an icon.
+
+OUTPUT
+Highest square resolution available, ideally 3072x3072. PNG.
+
+SHEET 05: Electronics. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
+1. a rounded lightning bolt inside a yellow circle, with a small spark
+2. a rounded resistor with colored bands and two wire legs, pink body
+3. a rounded electrolytic capacitor can with a stripe, green, two legs
+4. a coil of copper wire with five loops, yellow
+5. a diode symbol: triangle pointing into a bar, wires on both sides, green
+6. a round-top LED glowing with soft rays, pink
+7. a small black-half-round transistor with three legs, yellow label dot
+8. a chunky battery with a plus end and a lightning bolt, green
+9. a rounded toggle switch in the on position, pink and white
+10. a rounded breadboard with a grid of holes and two jumper wires, green
+11. a small circuit board with a black chip and gold pins, green board
+12. a rounded oscilloscope screen showing a sine wave, yellow frame
+13. a rounded multimeter with a dial and a tiny screen, pink
+14. a soldering iron with a small curl of smoke and a drop of solder, yellow
+15. two coils around a rounded iron core, green
+16. a round light bulb with a bright filament and small rays, yellow
