@@ -1,0 +1,16 @@
+ic_electronics
+ic_resistor
+ic_capacitor
+ic_inductor
+ic_diode
+ic_led
+ic_transistor
+ic_battery
+ic_switch
+ic_breadboard
+ic_microcontroller
+ic_oscilloscope
+ic_multimeter
+ic_solder
+ic_transformer
+ic_bulb

@@ -1,0 +1,16 @@
+mascot_happy
+mascot_cheer
+mascot_think
+mascot_sleep
+mascot_wave
+mascot_sad
+mascot_wow
+mascot_study
+mascot_flame
+mascot_trophy
+mascot_heart
+mascot_sweat
+mascot_idea
+mascot_coffee
+mascot_peek
+mascot_dance

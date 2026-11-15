@@ -1,0 +1,16 @@
+ic_streak
+ic_xp
+ic_heart
+ic_goal
+ic_complete
+ic_locked
+ic_review
+ic_trophy
+ic_update
+ic_offline
+ic_correct
+ic_wrong
+ic_settings
+ic_stats
+ic_home
+ic_path

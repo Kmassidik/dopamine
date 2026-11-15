@@ -1,0 +1,16 @@
+ic_math
+ic_fraction
+ic_sqrt
+ic_pi
+ic_algebra
+ic_geometry
+ic_compass
+ic_protractor
+ic_graph
+ic_integral
+ic_sigma
+ic_infinity
+ic_matrix
+ic_probability
+ic_statistics
+ic_abacus

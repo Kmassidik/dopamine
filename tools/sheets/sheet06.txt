@@ -1,0 +1,16 @@
+ic_inprogress
+ic_new
+ic_perfect
+ic_freeze
+ic_reminder
+ic_chest
+ic_unit
+ic_checkpoint
+ic_skip
+ic_hint
+ic_retry
+ic_practice
+ic_start
+ic_shield
+ic_gem
+ic_calendar

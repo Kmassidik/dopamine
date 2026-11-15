@@ -1,0 +1,16 @@
+ic_swe
+ic_terminal
+ic_git
+ic_bug
+ic_database
+ic_server
+ic_api
+ic_algorithm
+ic_function
+ic_test
+ic_deploy
+ic_security
+ic_container
+ic_cpu
+ic_keyboard
+ic_network
