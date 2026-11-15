@@ -2,7 +2,6 @@ package app.dopamine.ui.home
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,9 +43,11 @@ import app.dopamine.R
 import app.dopamine.domain.model.CategoryDto
 import app.dopamine.domain.model.Manifest
 import app.dopamine.ui.components.AppIcon
+import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.InkButton
+import app.dopamine.ui.components.bounceClick
+import app.dopamine
 import app.dopamine.ui.components.ProgressBar
-import app.dopamine.ui.components.ProgressRing
 import app.dopamine.ui.components.RibbonCorner
 import app.dopamine.ui.components.StatChip
 import app.dopamine.ui.components.iconFor
@@ -102,8 +103,8 @@ private fun Header(c: DopamineColors, name: String) {
                     Modifier.clip(CircleShape).background(c.bg).heightIn(min = 48.dp).padding(end = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Box(Modifier.size(40.dp).clip(CircleShape).background(c.ink), contentAlignment = Alignment.Center) {
-                        AppIcon(R.drawable.ic_xp, c.yellow, size = 22.dp)
+                    Box(Modifier.size(44.dp).clip(CircleShape).background(c.yellow), contentAlignment = Alignment.Center) {
+                        IconImage(R.drawable.mascot_happy, size = 36.dp, bob = false)
                     }
                     Text(
                         stringResource(R.string.home_title),
@@ -128,8 +129,8 @@ private fun Header(c: DopamineColors, name: String) {
                 Text(stringResource(R.string.home_subtitle), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                StatChip(R.drawable.ic_streak, "0", c.pinkText, c.pinkTint, c.ink, stringResource(R.string.streak_desc, 0))
-                StatChip(R.drawable.ic_xp, "0", c.yellowText, c.yellowTint, c.ink, stringResource(R.string.xp_desc, 0))
+                StatChip(R.drawable.ic_streak, "0", c.pinkTint, c.ink, stringResource(R.string.streak_desc, 0))
+                StatChip(R.drawable.ic_xp, "0", c.yellowTint, c.ink, stringResource(R.string.xp_desc, 0))
             }
         }
     }
@@ -141,17 +142,10 @@ private fun Tile(bg: Color, modifier: Modifier, onClick: (() -> Unit)? = null, c
         modifier
             .clip(CardShape)
             .background(bg)
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .then(if (onClick != null) Modifier.bounceClick(onClick = onClick) else Modifier)
             .padding(16.dp),
         content = content,
     )
-}
-
-@Composable
-private fun Badge(c: DopamineColors, icon: Int, fill: Color = Color.White) {
-    Box(Modifier.size(44.dp).clip(CircleShape).background(fill), contentAlignment = Alignment.Center) {
-        AppIcon(icon, c.onAccent, size = 22.dp)
-    }
 }
 
 @Composable
@@ -165,15 +159,14 @@ private fun Bento(c: DopamineColors, onStart: () -> Unit) {
             },
             onClick = onStart,
         ) {
-            Badge(c, R.drawable.ic_book)
+            IconImage(R.drawable.mascot_study, size = 84.dp)
             Box(Modifier.weight(1f))
             Text(stringResource(R.string.tile_start_title), style = MaterialTheme.typography.titleLarge, color = c.onAccent)
             Text(stringResource(R.string.tile_start_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
         }
         Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Tile(c.yellow, Modifier.weight(1f).fillMaxWidth()) {
-                Badge(c, R.drawable.ic_review)
-                Box(Modifier.height(10.dp))
+                IconImage(R.drawable.ic_review, size = 48.dp)
                 Text(stringResource(R.string.tile_review_title), style = MaterialTheme.typography.titleMedium, color = c.onAccent)
                 Text(stringResource(R.string.tile_review_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
             }
@@ -183,6 +176,7 @@ private fun Bento(c: DopamineColors, onStart: () -> Unit) {
                         Text(stringResource(R.string.tile_goal_title), style = MaterialTheme.typography.titleMedium, color = Color.White)
                         Text(stringResource(R.string.goal_progress, 0, 20), style = MaterialTheme.typography.bodyMedium, color = Color.White)
                     }
+                    IconImage(R.drawable.ic_goal, size = 40.dp)
                 }
                 Box(Modifier.height(10.dp))
                 ProgressBar(0f, Color.White.copy(alpha = 0.25f), c.yellow, height = 10.dp)
@@ -193,10 +187,10 @@ private fun Bento(c: DopamineColors, onStart: () -> Unit) {
 
 @Composable
 private fun CourseRow(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpen: (String) -> Unit) {
-    val (tint, fill) = when (cat.order % 3) {
-        1 -> c.greenTint to c.green
-        2 -> c.yellowTint to c.yellow
-        else -> c.pinkTint to c.pink
+    val tint = when (cat.order % 3) {
+        1 -> c.greenTint
+        2 -> c.yellowTint
+        else -> c.pinkTint
     }
     val courses = m.courses.count { it.categoryId == cat.id }
     val lessons = m.courses.filter { it.categoryId == cat.id }.flatMap { it.units }.sumOf { it.lessons.size }
@@ -205,12 +199,12 @@ private fun CourseRow(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpen: 
             .fillMaxWidth()
             .clip(CircleShape)
             .background(tint)
-            .clickable(onClickLabel = cat.name) { onOpen(cat.id) }
+            .bounceClick(cat.name) { onOpen(cat.id) }
             .padding(start = 8.dp, end = 20.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.size(56.dp).clip(CircleShape).background(fill), contentAlignment = Alignment.Center) {
-            AppIcon(iconFor(cat.icon), c.onAccent, size = 28.dp)
+        Box(Modifier.size(56.dp).clip(CircleShape).background(Color.White), contentAlignment = Alignment.Center) {
+            IconImage(iconFor(cat.icon), size = 44.dp)
         }
         Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
             Text(cat.name, style = MaterialTheme.typography.titleMedium)

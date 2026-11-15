@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="window_bg">#FFFFFFFF</color>
-    <color name="launcher_bg">#FF35C46F</color>
+    <color name="launcher_bg">#FFFFC93C</color>
 </resources>

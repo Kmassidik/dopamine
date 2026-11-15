@@ -23,12 +23,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
 import app.dopamine.ui.components.AppIcon
+import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.iconFor
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
@@ -66,8 +68,8 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit) {
                             Modifier.fillMaxWidth().clip(CardShape).background(accent[0]).padding(20.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Box(Modifier.size(48.dp).clip(CircleShape).background(accent[1]), contentAlignment = Alignment.Center) {
-                                AppIcon(iconFor(cat?.icon.orEmpty()), c.onAccent, size = 24.dp)
+                            Box(Modifier.size(56.dp).clip(CircleShape).background(Color.White), contentAlignment = Alignment.Center) {
+                                IconImage(iconFor(cat?.icon.orEmpty()), size = 44.dp)
                             }
                             Column(Modifier.padding(start = 16.dp)) {
                                 Text(course.title, style = MaterialTheme.typography.titleLarge)

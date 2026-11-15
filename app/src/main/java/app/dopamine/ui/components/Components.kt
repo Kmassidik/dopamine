@@ -1,7 +1,25 @@
 package app.dopamine.ui.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.StartOffset
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.graphicsLayer
+import app.dopamine.ui.theme.LocalReducedMotion
+import app.dopamine.ui.theme.Motion
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,8 +55,11 @@ import app.dopamine.ui.theme.PillShape
 @DrawableRes
 fun iconFor(name: String): Int = when (name) {
     "ic_math" -> R.drawable.ic_math
-    "ic_science" -> R.drawable.ic_science
-    else -> R.drawable.ic_book // unknown names fall back to a default icon
+    "ic_science" -> R.drawable.ic_test
+    "ic_english" -> R.drawable.ic_english
+    "ic_swe" -> R.drawable.ic_swe
+    "ic_electronics" -> R.drawable.ic_electronics
+    else -> R.drawable.ic_english // unknown names fall back to a default icon
 }
 
 @Composable
@@ -85,12 +106,12 @@ fun ChunkyButton(
 }
 
 @Composable
-fun StatChip(@DrawableRes icon: Int, value: String, tint: Color, fill: Color, textColor: Color, description: String) {
+fun StatChip(@DrawableRes icon: Int, value: String, fill: Color, textColor: Color, description: String) {
     Row(
-        Modifier.clip(PillShape).background(fill).heightIn(min = 40.dp).padding(horizontal = 12.dp),
+        Modifier.clip(PillShape).background(fill).heightIn(min = 40.dp).padding(start = 8.dp, end = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        AppIcon(icon, tint, size = 20.dp, description = description)
+        IconImage(icon, size = 28.dp, description = description, bob = false)
         Box(Modifier.width(6.dp))
         Text(value, style = MaterialTheme.typography.labelLarge, color = textColor)
     }
@@ -141,4 +162,45 @@ fun InkButton(text: String, onClick: () -> Unit, container: Color, content: Colo
             Text(text, style = MaterialTheme.typography.labelLarge, color = content)
         }
     }
+}
+
+/** An illustrated icon. Bobs gently when [bob] is on, unless the system asks for reduced motion. */
+@Composable
+fun IconImage(@DrawableRes id: Int, modifier: Modifier = Modifier, size: Dp = 48.dp, description: String? = null, bob: Boolean = true) {
+    val reduced = LocalReducedMotion.current
+    val animated = if (bob && !reduced) {
+        val t = rememberInfiniteTransition(label = "bob")
+        val y = t.animateFloat(
+            initialValue = 0f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                tween(1100 + (id % 5) * 90, easing = Motion.EaseInOutSoft),
+                RepeatMode.Reverse,
+                StartOffset((id % 9) * 130),
+            ),
+            label = "y",
+        )
+        modifier.graphicsLayer {
+            translationY = -3.dp.toPx() * y.value
+            rotationZ = (y.value - 0.5f) * 3f
+        }
+    } else {
+        modifier
+    }
+    Image(painterResource(id), description, animated.size(size))
+}
+
+/** Clickable with a quick squash on press. No squash when reduced motion is on. */
+fun Modifier.bounceClick(onClickLabel: String? = null, onClick: () -> Unit): Modifier = composed {
+    val source = remember { MutableInteractionSource() }
+    val pressed by source.collectIsPressedAsState()
+    val reduced = LocalReducedMotion.current
+    val scale by animateFloatAsState(
+        if (pressed && !reduced) 0.95f else 1f,
+        spring(dampingRatio = 0.45f, stiffness = 600f),
+        label = "press",
+    )
+    this
+        .graphicsLayer { scaleX = scale; scaleY = scale }
+        .clickable(interactionSource = source, indication = null, onClickLabel = onClickLabel, onClick = onClick)
 }

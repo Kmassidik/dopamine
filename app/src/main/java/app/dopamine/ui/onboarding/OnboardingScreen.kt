@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
 import app.dopamine.domain.model.ProfileName
-import app.dopamine.ui.components.AppIcon
+import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.ChunkyButton
 import app.dopamine.ui.theme.ButtonShape
 import app.dopamine.ui.theme.CardShape
@@ -64,7 +64,7 @@ fun OnboardingScreen(vm: OnboardingViewModel) {
                     },
                 contentAlignment = androidx.compose.ui.Alignment.Center,
             ) {
-                AppIcon(R.drawable.ic_xp, c.onAccent, size = 72.dp)
+                IconImage(R.drawable.mascot_wave, size = 150.dp)
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(stringResource(R.string.onboarding_title), style = MaterialTheme.typography.displayLarge)

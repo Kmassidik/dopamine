@@ -72,6 +72,7 @@ def main():
     ap.add_argument("--grid", type=int, default=4)
     ap.add_argument("--size", type=int, default=256)
     ap.add_argument("--also", type=int, help="also export this size into OUT/<size>/")
+    ap.add_argument("--quality", type=int, default=80)
     a = ap.parse_args()
 
     names = [n.strip() for n in Path(a.names).read_text().splitlines() if n.strip()]
@@ -96,7 +97,7 @@ def main():
                 break
             dest.mkdir(parents=True, exist_ok=True)
             f = dest / f"{name}.webp"
-            icon.save(f, "WEBP", quality=90, method=6)
+            icon.save(f, "WEBP", quality=a.quality, method=6)
             if size == a.size:
                 total += f.stat().st_size
     print(f"wrote {len(names) - len(bad)} icons, {total / 1024:.0f} KB total")
