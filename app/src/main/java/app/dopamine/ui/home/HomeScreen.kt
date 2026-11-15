@@ -46,7 +46,6 @@ import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.InkButton
 import app.dopamine.ui.components.bounceClick
-import app.dopamine
 import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.components.RibbonCorner
 import app.dopamine.ui.components.StatChip
