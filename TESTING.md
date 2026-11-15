@@ -47,3 +47,14 @@ An emulator `pixel_api35` exists on the laptop (`/dev/kvm` available; the host G
 - [ ] TalkBack pass through onboarding, home, category, settings (and later the lesson)
 - [ ] Low-memory device or emulator
 - [ ] Release APK: install, launch, update, no crash (R8)
+
+
+## Design guard (screenshot tests)
+Purpose: make sure the UI keeps the design and nothing sloppy slips in. Not a general UI test suite.
+
+- Tests live in `app/src/screenshotTest/kotlin/app/dopamine/DesignScreenshots.kt` (Google's Compose Preview Screenshot Testing, built into AGP 9.5). Each `@PreviewTest @Preview` renders a piece of the design system (palette, type scale, buttons and chips, floating nav, loading screen, math, and a 320dp / 1.3x font case) and compares it pixel by pixel with the reference image in `app/src/screenshotTestDefaultDebug/reference/`.
+- **Check:** `./build.sh testDebugScreenshotTestDefaultTestSuite`. On a mismatch the failure lists the expected image, the actual image and a diff image under `app/build/intermediates/debug/testDebugScreenshotTestDefaultTestSuite/results/`, and an HTML report under `app/build/reports/tests/`.
+- **Change the design on purpose:** `./build.sh updateDebugScreenshotTestDefaultTestSuite`, look at the new images in `reference/` yourself, commit them, and say in the commit message why the look changed. Never update references just to make a failure go away.
+- Record and validate on Linux (the Fedora laptop or CI). Fonts and anti-aliasing can differ on other systems.
+- When you add a reusable component or a design token, add a preview for it. Screens that need a ViewModel are not covered yet; extract a stateless `XContent` composable first.
+- Requires `android.experimental.enableScreenshotTest` and `android.experimental.testSuiteSupport` in `gradle.properties`, `unitTests.isIncludeAndroidResources = true`, and unit tests enabled for every variant (`androidComponents` block in `app/build.gradle.kts`). AGP prints "experimental" warnings; that is expected.

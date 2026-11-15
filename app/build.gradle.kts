@@ -1,3 +1,5 @@
+import com.android.build.api.variant.HostTestBuilder
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -50,10 +52,28 @@ android {
         resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "/META-INF/*.version", "DebugProbesKt.bin")
     }
 
+    testOptions {
+        unitTests.isIncludeAndroidResources = true // the screenshot engine needs compiled resources
+        // Design guard: screenshots of the design system are compared with reference images. See TESTING.md.
+        screenshotTests.create("screenshotTest") {
+            engineVersion = "0.0.1-alpha16"
+            targetVariants.add("debug")
+            dependencies {
+                implementation(libs.compose.ui.tooling)
+                implementation("com.android.tools.screenshot:screenshot-validation-api:0.0.1-alpha16")
+            }
+        }
+    }
+
     lint {
         abortOnError = true
         warningsAsErrors = false
     }
+}
+
+androidComponents {
+    // The screenshot engine builds a Compose Preview task per variant and needs unit tests on for each.
+    beforeVariants { variant -> variant.hostTests[HostTestBuilder.UNIT_TEST_TYPE]?.enable = true }
 }
 
 dependencies {

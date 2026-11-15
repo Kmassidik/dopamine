@@ -91,3 +91,6 @@ Layering: composables hold no business logic; ViewModels expose immutable `State
 ## Definition of done for a change
 
 Builds, tests and lint pass; you ran it on a device or emulator if it is UI; `DECISIONS.md` updated if you decided something; `HANDOVER.md` status updated if scope moved; committed and pushed without AI attribution.
+
+## Design guard
+UI changes must keep `./build.sh testDebugScreenshotTestDefaultTestSuite` green, or update the reference images on purpose with a reason in the commit message. See TESTING.md.
