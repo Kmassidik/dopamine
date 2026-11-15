@@ -48,6 +48,7 @@ import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.components.StatChip
 import app.dopamine.ui.components.bounceClick
+import app.dopamine.ui.math.MathText
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.DopamineColors
@@ -116,7 +117,7 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
         Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        Text(plainMath(q.prompt.orEmpty()), style = MaterialTheme.typography.titleLarge)
+        MathText(q.prompt.orEmpty(), style = MaterialTheme.typography.titleLarge)
         when (q.type) {
             "multiple_choice", "fill_blank" -> ChoiceBody(c, q, ans, s.checked)
             "type_answer" -> TypeBody(c, q, ans, s.checked)
@@ -140,7 +141,7 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
                         modifier = Modifier.padding(start = 8.dp),
                     )
                 }
-                if (q.explanation.isNotBlank()) Text(plainMath(q.explanation), style = MaterialTheme.typography.bodyMedium)
+                if (q.explanation.isNotBlank()) MathText(q.explanation, style = MaterialTheme.typography.bodyMedium)
             }
             ChunkyButton(
                 stringResource(R.string.lesson_continue), vm::next,
@@ -167,7 +168,7 @@ private fun Option(c: DopamineColors, text: String, bg: Color, border: Color, on
             .heightIn(min = 56.dp)
             .padding(horizontal = 20.dp, vertical = 16.dp),
         contentAlignment = Alignment.CenterStart,
-    ) { Text(text, style = MaterialTheme.typography.titleMedium, color = c.ink) }
+    ) { MathText(text, style = MaterialTheme.typography.titleMedium, color = c.ink) }
 }
 
 @Composable
@@ -182,7 +183,7 @@ private fun ChoiceBody(c: DopamineColors, q: Question, ans: Answer, checked: Boo
                 sel == i -> c.yellowTint to c.yellow
                 else -> Color.White to c.line
             }
-            Option(c, plainMath(choice), bg, line, if (checked) null else ({ sel = i }))
+            Option(c, choice, bg, line, if (checked) null else ({ sel = i }))
         }
     }
 }
@@ -241,7 +242,7 @@ private fun MatchBody(c: DopamineColors, q: Question, ans: Answer, checked: Bool
                     left == i -> c.yellowTint to c.yellow
                     else -> Color.White to c.line
                 }
-                Option(c, plainMath(pairs[i][0]), bg, line, if (checked || i in matched) null else ({ left = i; wrong = null }))
+                Option(c, pairs[i][0], bg, line, if (checked || i in matched) null else ({ left = i; wrong = null }))
             }
         }
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -251,7 +252,7 @@ private fun MatchBody(c: DopamineColors, q: Question, ans: Answer, checked: Bool
                     wrong == r -> c.pinkTint to c.pink
                     else -> Color.White to c.line
                 }
-                Option(c, plainMath(pairs[r][1]), bg, line, if (checked || r in matched) null else ({
+                Option(c, pairs[r][1], bg, line, if (checked || r in matched) null else ({
                     val l = left
                     if (l != null) {
                         if (l == r) matched.add(r) else { mistakes++; wrong = r }
@@ -274,10 +275,10 @@ private fun OrderBody(c: DopamineColors, q: Question, ans: Answer, checked: Bool
         chosen.forEachIndexed { n, idx ->
             val line = if (!checked) c.yellow else if (idx == n) c.green else c.pink
             val bg = if (!checked) c.yellowTint else if (idx == n) c.greenTint else c.pinkTint
-            Option(c, "${n + 1}. ${plainMath(steps[idx])}", bg, line, if (checked) null else ({ chosen.remove(idx) }))
+            Option(c, "${n + 1}. ${steps[idx]}", bg, line, if (checked) null else ({ chosen.remove(idx) }))
         }
         order.filter { it !in chosen }.forEach { idx ->
-            Option(c, plainMath(steps[idx]), Color.White, c.line, if (checked) null else ({ chosen.add(idx) }))
+            Option(c, steps[idx], Color.White, c.line, if (checked) null else ({ chosen.add(idx) }))
         }
     }
 }

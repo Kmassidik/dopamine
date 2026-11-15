@@ -51,3 +51,8 @@ Format: date, step, decision, options, reason, consequences / how to reverse.
 - **Size:** 192 px icons, 256 px mascot, WebP q80. Total about 1.05 MB, a little over the 1 MB target; the release APK is 1.66 MB, far under 15 MB.
 - **Gaps:** no dedicated science icon, so `ic_science` maps to the lab flask (`ic_test`). Functional glyphs (back, chevron, check, download, warning) remain tinted vectors.
 - **Motion:** icons bob gently and cards squash on press; both are disabled when the system animator scale is 0. Raw sheets live in `sheets-src/` (not committed).
+
+## 2026-11-16: native math renderer instead of jlatexmath-android
+- **Decision:** write a small LaTeX-subset renderer (`ui/math/`) and drop the jlatexmath-android plan.
+- **Why:** that library is unmaintained since 2020; the lesson content only needs fractions, roots, scripts, Greek and common operators; our own code is about 500 lines, adds no APK size and is unit-tested.
+- **Consequences:** anything outside the subset shows as plain text (see "Known LaTeX limits" in HANDOVER.md). Revisit if lessons need matrices or aligned equations.

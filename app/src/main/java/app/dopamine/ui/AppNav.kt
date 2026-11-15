@@ -23,6 +23,7 @@ import app.dopamine.ui.course.CourseScreen
 import app.dopamine.ui.course.CourseViewModel
 import app.dopamine.ui.lesson.LessonScreen
 import app.dopamine.ui.lesson.LessonViewModel
+import app.dopamine.ui.math.FormulaTestScreen
 import app.dopamine.ui.review.ReviewScreen
 import app.dopamine.AppContainer
 import app.dopamine.data.repo.ProfileState
@@ -74,7 +75,8 @@ private fun Main(container: AppContainer, name: String) {
                 HomeScreen(name, home, onOpenCategory = { nav.navigate("category/$it") }, onOpenSettings = { goTab(Tab.Settings) })
             }
             composable("review") { ReviewScreen() }
-            composable("settings") { SettingsScreen(settings) }
+            composable("settings") { SettingsScreen(settings, onOpenFormulas = { nav.navigate("formulas") }) }
+            composable("formulas") { FormulaTestScreen(onBack = { nav.popBackStack() }) }
             composable("category/{id}") { entry ->
                 val id = entry.arguments?.getString("id").orEmpty()
                 val vm: CategoryViewModel = viewModel(key = "category-$id", factory = viewModelFactory {

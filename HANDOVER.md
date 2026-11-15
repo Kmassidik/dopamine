@@ -97,3 +97,9 @@ Measured: release APK 1.67 MB; debug APK 14 MB (includes tooling); icon weight a
 - Lessons open and play all 5 question types. LaTeX is shown as plain text via `ui/lesson/PlainMath.kt` until the native renderer exists.
 - Questions with an `image` are skipped for now (no SVG renderer yet).
 - Results are not saved yet (no hearts, XP or streak persistence). Review tab is a placeholder.
+
+## Update 2026-11-16: native math renderer
+- `ui/math/`: `MathParser` (pure Kotlin, never throws, input capped at 400 chars and 12 nesting levels), `MathLayout` (draws on an Android Canvas), `MathText` (inline `$...$` in any text), `FormulaTestScreen` (long-press the version in Settings). Covered by `MathParserTest`.
+- Replaces the provisional jlatexmath-android plan: no dependency, ~1 file each, vector drawing so no bitmap cache is needed.
+- **Known LaTeX limits** (author lessons accordingly): no matrices, `align`, `cases`, `\\` line breaks, `\overline`, `\vec`, `\hat`, `\binom`, big operators with limits (`\sum_{i}^{n}` draws the sum sign as text with small scripts). `\left(` `\right)` are NOT scaled to the content height. Greek capitals and symbols like `∑ ≈ → ∞` rely on the system fallback font. Italic variables use a synthetic slant. Very long formulas do not wrap inside the `$...$` and can overflow on a narrow screen.
+- Possible next steps: scale delimiters, wrap long formulas, test at 320dp and 1.3x font.

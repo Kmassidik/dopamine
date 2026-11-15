@@ -3,6 +3,7 @@ package app.dopamine.ui.settings
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,7 +44,7 @@ import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
 
 @Composable
-fun SettingsScreen(vm: SettingsViewModel) {
+fun SettingsScreen(vm: SettingsViewModel, onOpenFormulas: () -> Unit) {
     val c = Dopamine.colors
     val name by vm.name.collectAsStateWithLifecycle()
     val draft by vm.draft.collectAsStateWithLifecycle()
@@ -61,7 +62,7 @@ fun SettingsScreen(vm: SettingsViewModel) {
             ) {
                 item { ProfileCard(c, name, draft, vm) }
                 item { ContentCard(c, update, lastUpdated, vm) }
-                item { AboutCard(c, vm.versionName) }
+                item { AboutCard(c, vm.versionName, onOpenFormulas) }
             }
         }
     }
@@ -163,10 +164,14 @@ private fun ContentCard(c: app.dopamine.ui.theme.DopamineColors, state: UpdateUi
 }
 
 @Composable
-private fun AboutCard(c: app.dopamine.ui.theme.DopamineColors, version: String) {
+private fun AboutCard(c: app.dopamine.ui.theme.DopamineColors, version: String, onOpenFormulas: () -> Unit) {
     Card(c.yellowTint) {
         Text(stringResource(R.string.settings_about), style = MaterialTheme.typography.titleLarge)
-        Text(stringResource(R.string.settings_version, version), style = MaterialTheme.typography.titleSmall)
+        Text(
+            stringResource(R.string.settings_version, version),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.combinedClickable(onClick = {}, onLongClick = onOpenFormulas),
+        )
         Text(stringResource(R.string.settings_privacy), style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
     }
 }
