@@ -1,28 +1,28 @@
 STYLE
-Modern 2026 mobile-app icon illustration. Chunky rounded shapes, thick soft dark-green ink outline (#14201A), flat fills with one subtle top-left highlight and a soft bottom shade for a gentle toy-like volume. NOT glossy, NOT photorealistic, NO neon, NO glassmorphism, NO full-icon gradients. Palette: fresh green #35C46F, sunny yellow #FFC93C, bubblegum pink #FF7FAE, white, ink #14201A, plus pale tints of those three (#E4F8EC, #FFF3CC, #FFE4EE). One light source from the top left. Friendly, playful, clean. No text, no letters, no numbers. Math and code symbols are allowed only where the icon list names them.
+Monochrome mini illustration icon set in the style of a cute 'Bots' sticker pack. Thick uniform black outline with rounded joins and a slightly hand-drawn wobble. Only pure black, white and two flat mid-greys: NO color at all inside the icons. Simple cel shading: a few white highlight dashes, one or two flat grey shade planes, solid black accents (bases, buttons, small parts). Every object is a tiny living character: it has a face made of two small black dot eyes (some use tiny x eyes or a small curved mouth), no nose. Under each object a solid black oval ground shadow (omit only if the object clearly floats). Two to four short spark or motion tick lines near it. Chunky, friendly, playful, slightly imperfect. No gradients, no 3D render, no photorealism, no glow. No text, no letters, no numbers.
 
 LAYOUT
-Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid #FF00FF background across the whole image. No grid lines, no labels, no captions, no shadows crossing cells. Never use magenta or purple inside an icon.
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid warm yellow #F9D56B background across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows crossing cells. Never use yellow inside an icon.
 
 OUTPUT
 Highest square resolution available, ideally 3072x3072. PNG.
 
-SHEET 07: Mascot (optional). Draw exactly these 16 icons in row-major order (left to right, top to bottom):
-1. the mascot smiling with eyes closed
-2. the mascot with both arms up cheering
-3. the mascot with one hand on chin, eyes looking up
-4. the mascot asleep with a small sleep bubble
-5. the mascot waving hello
-6. the mascot looking down, a small tear
-7. the mascot with wide eyes and open mouth
-8. the mascot holding an open book
-9. the mascot sitting on a small pink flame
-10. the mascot holding a small golden cup
-11. the mascot hugging a pink heart
-12. the mascot looking nervous with a sweat drop
-13. the mascot with a glowing lightbulb above
-14. the mascot sipping from a tiny cup
-15. the mascot peeking from the bottom edge, only head and hands
-16. the mascot mid-dance with small music notes as shapes
+SHEET 07: Mascot (optional): the Bot. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
+1. the Bot standing, smiling with a curved mouth on its screen face
+2. the Bot with both arms up cheering
+3. the Bot with one hand on its chin, eyes looking up
+4. the Bot asleep with a small sleep bubble and flat eyes
+5. the Bot waving hello
+6. the Bot looking down with a tiny tear
+7. the Bot with wide eyes and an open round mouth
+8. the Bot holding an open book
+9. the Bot sitting on a small flame
+10. the Bot holding a small cup
+11. the Bot hugging a heart
+12. the Bot looking nervous with a sweat drop
+13. the Bot with a light bulb glowing above its antenna
+14. the Bot sipping from a tiny cup
+15. the Bot peeking from the bottom edge, only head and hands visible
+16. the Bot mid-dance with small music-note shapes
 
-Mascot sheet: first generate ONE character reference (a round, soft green blob-like study buddy with two big eyes, tiny pink cheeks, a small yellow leaf tuft on top, no text), then reuse that exact character in every cell. Consistency across 16 cells is hard; if it drifts, generate 4 cells at a time and merge them, or skip this sheet.
+The Bot: a small friendly robot with a rounded body, a screen face showing two dot eyes, a short antenna, round ear discs, stubby arms and legs, same monochrome style. First generate ONE character reference, then reuse that exact robot in every cell. Consistency across 16 cells is hard; if it drifts, generate 4 cells at a time and merge them, or skip this sheet.

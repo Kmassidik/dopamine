@@ -1,26 +1,26 @@
 STYLE
-Modern 2026 mobile-app icon illustration. Chunky rounded shapes, thick soft dark-green ink outline (#14201A), flat fills with one subtle top-left highlight and a soft bottom shade for a gentle toy-like volume. NOT glossy, NOT photorealistic, NO neon, NO glassmorphism, NO full-icon gradients. Palette: fresh green #35C46F, sunny yellow #FFC93C, bubblegum pink #FF7FAE, white, ink #14201A, plus pale tints of those three (#E4F8EC, #FFF3CC, #FFE4EE). One light source from the top left. Friendly, playful, clean. No text, no letters, no numbers. Math and code symbols are allowed only where the icon list names them.
+Monochrome mini illustration icon set in the style of a cute 'Bots' sticker pack. Thick uniform black outline with rounded joins and a slightly hand-drawn wobble. Only pure black, white and two flat mid-greys: NO color at all inside the icons. Simple cel shading: a few white highlight dashes, one or two flat grey shade planes, solid black accents (bases, buttons, small parts). Every object is a tiny living character: it has a face made of two small black dot eyes (some use tiny x eyes or a small curved mouth), no nose. Under each object a solid black oval ground shadow (omit only if the object clearly floats). Two to four short spark or motion tick lines near it. Chunky, friendly, playful, slightly imperfect. No gradients, no 3D render, no photorealism, no glow. No text, no letters, no numbers.
 
 LAYOUT
-Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid #FF00FF background across the whole image. No grid lines, no labels, no captions, no shadows crossing cells. Never use magenta or purple inside an icon.
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid warm yellow #F9D56B background across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows crossing cells. Never use yellow inside an icon.
 
 OUTPUT
 Highest square resolution available, ideally 3072x3072. PNG.
 
 SHEET 04: Software engineering. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
-1. a rounded laptop with angle brackets and a slash on the screen, green
-2. a rounded terminal window with a greater-than prompt and a cursor block, ink and green
-3. a git branch: three round nodes joined by a forked line, pink and green
-4. a cute rounded beetle bug with antennae, pink
-5. a stacked cylinder database, yellow with green bands
-6. a rounded cloud with a small server rack inside, green
-7. a plug meeting a socket with a small spark, yellow and pink
-8. a small flowchart: a diamond splitting into two rounded boxes, green and yellow
-9. a pair of chunky curly braces around a dot, pink
-10. a rounded lab flask with a green check mark bubble
-11. a plump rocket launching with a small flame, pink and yellow
-12. a rounded shield with a keyhole, green
-13. a stack of three rounded shipping boxes, yellow, pink and green
-14. a square chip with pins on all sides and a small star core, green
-15. a rounded keyboard with chunky keys, one key pink, one yellow
-16. five round nodes connected by lines in a star pattern, green with a pink hub
+1. a laptop with angle brackets and a slash on the screen, two dot eyes under the brackets
+2. a terminal window with a greater-than prompt and a cursor block, the cursor has two dot eyes
+3. a git branch: three round nodes joined by a forked line, each node has two dot eyes
+4. a cute round beetle bug with antennae and two big dot eyes
+5. a stacked cylinder database with two dot eyes on the top disc
+6. a stack of server boxes with tiny lights, two dot eyes on the top box
+7. a plug meeting a socket with a small spark, two dot eyes on the plug
+8. a small flowchart: a diamond splitting into two boxes, the diamond has two dot eyes
+9. a pair of chunky curly braces around two dot eyes
+10. a lab flask with a check mark bubble and two dot eyes
+11. a plump rocket launching with a small flame, two dot eyes in its window
+12. a shield with a keyhole that has two dot eyes
+13. a stack of three shipping boxes, the top box has two dot eyes
+14. a square chip with pins on all sides, two dot eyes on the core
+15. a keyboard with chunky keys, two keys are dot eyes
+16. five round nodes connected in a star pattern, the hub has two dot eyes

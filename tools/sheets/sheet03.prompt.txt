@@ -1,26 +1,26 @@
 STYLE
-Modern 2026 mobile-app icon illustration. Chunky rounded shapes, thick soft dark-green ink outline (#14201A), flat fills with one subtle top-left highlight and a soft bottom shade for a gentle toy-like volume. NOT glossy, NOT photorealistic, NO neon, NO glassmorphism, NO full-icon gradients. Palette: fresh green #35C46F, sunny yellow #FFC93C, bubblegum pink #FF7FAE, white, ink #14201A, plus pale tints of those three (#E4F8EC, #FFF3CC, #FFE4EE). One light source from the top left. Friendly, playful, clean. No text, no letters, no numbers. Math and code symbols are allowed only where the icon list names them.
+Monochrome mini illustration icon set in the style of a cute 'Bots' sticker pack. Thick uniform black outline with rounded joins and a slightly hand-drawn wobble. Only pure black, white and two flat mid-greys: NO color at all inside the icons. Simple cel shading: a few white highlight dashes, one or two flat grey shade planes, solid black accents (bases, buttons, small parts). Every object is a tiny living character: it has a face made of two small black dot eyes (some use tiny x eyes or a small curved mouth), no nose. Under each object a solid black oval ground shadow (omit only if the object clearly floats). Two to four short spark or motion tick lines near it. Chunky, friendly, playful, slightly imperfect. No gradients, no 3D render, no photorealism, no glow. No text, no letters, no numbers.
 
 LAYOUT
-Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid #FF00FF background across the whole image. No grid lines, no labels, no captions, no shadows crossing cells. Never use magenta or purple inside an icon.
+Square image with exactly 4 columns and 4 rows of equal cells (16 cells). One icon per cell, centered, about 12% padding, all icons the same visual size, each a single object. Flat solid warm yellow #F9D56B background across the whole image. No grid lines, no labels, no captions, no cell borders, no shadows crossing cells. Never use yellow inside an icon.
 
 OUTPUT
 Highest square resolution available, ideally 3072x3072. PNG.
 
 SHEET 03: English. Draw exactly these 16 icons in row-major order (left to right, top to bottom):
-1. an open book with a small speech bubble above it, green
-2. a pair of chunky quotation marks on a yellow round tile
-3. a stack of three rounded word cards, pink yellow green, blank lines instead of text
-4. a fat pencil writing a wavy line, pink and yellow
-5. a closed thick book with a magnifying glass, green
-6. round over-ear headphones, pink with yellow cushions
-7. a rounded microphone with small sound arcs, green
-8. two overlapping speech bubbles, one pink one green, with three dots
-9. a pair of round glasses resting on an open book, yellow
-10. a sheet of paper with wavy lines and a feather quill, pink
-11. five small square tiles in a row with a green check mark above, tiles blank
-12. two speech bubbles joined by curved arrows, green and yellow
-13. a folded newspaper with blank headline bars and a small picture block, pale yellow
-14. a sealed envelope with a pink heart stamp
-15. a thick rounded bookmark ribbon, pink with a yellow star
-16. a friendly globe on a small stand, green continents on a pale mint ocean, pink pin
+1. an open book with a small speech bubble above it, the book has two dot eyes
+2. a pair of chunky quotation marks with two dot eyes
+3. a stack of three word cards with blank lines, top card has two dot eyes
+4. a fat pencil drawing a wavy line, two dot eyes on the barrel
+5. a thick closed book with a magnifying glass, the book has two dot eyes
+6. over-ear headphones with two dot eyes on the headband
+7. a rounded microphone with small sound arcs and two dot eyes
+8. two overlapping speech bubbles with three dots, each bubble has two dot eyes
+9. a pair of round glasses resting on an open book, two dot eyes in the lenses
+10. a sheet of paper with wavy lines and a feather quill, two dot eyes on the paper
+11. five blank square tiles in a row with a check mark above, the middle tile has two dot eyes
+12. two speech bubbles joined by curved arrows, two dot eyes on one bubble
+13. a folded newspaper with blank headline bars and a picture block, two dot eyes
+14. a sealed envelope with a heart stamp and two dot eyes
+15. a thick bookmark ribbon with a star and two dot eyes
+16. a globe on a small stand with a pin, two dot eyes on the globe
