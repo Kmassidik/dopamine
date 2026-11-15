@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Single source for icon sheets. Writes ASSETS.md and tools/sheets/sheetNN.txt (names, row-major)."""
+"""Single source for icon sheets. Writes the prompts document to the path given as the first argument (default: prints it) and tools/sheets/sheetNN.txt (names, row-major)."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -221,8 +221,12 @@ def main():
         (ROOT / "tools" / "sheets" / f"sheet{idx}.prompt.txt").write_text(txt + "\n")
         (ROOT / "tools" / "sheets" / f"sheet{idx}.txt").write_text("\n".join(n for n, _ in icons) + "\n")
         out += [f"## Sheet {idx}: {title}", "", "```text", txt, "```", ""]
-    (ROOT / "ASSETS.md").write_text("\n".join(out))
-    print("wrote ASSETS.md:", len(BOTS_SHEETS), "sheets")
+    doc = "\n".join(out)
+    if len(sys.argv) > 1:
+        Path(sys.argv[1]).write_text(doc)
+        print("wrote", sys.argv[1], len(BOTS_SHEETS), "sheets")
+    else:
+        print(doc)
 
 
 if __name__ == "__main__":
