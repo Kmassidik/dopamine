@@ -94,7 +94,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                             )
                         }
                     }
-                    if (unit.notes != null && !ContentContract.isLocked(unit.notes.minApp)) {
+                    if (unit.notes?.let { !ContentContract.isLocked(it.minApp) } == true) {
                         item(key = "notes-${unit.id}") {
                             Row(
                                 Modifier

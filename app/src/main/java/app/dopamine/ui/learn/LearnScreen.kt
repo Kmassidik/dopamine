@@ -160,7 +160,7 @@ private fun ExamplePage(c: DopamineColors, p: LearnPage, shown: Int) {
         modifier = Modifier.clip(CircleShape).background(c.yellowTint).padding(horizontal = 14.dp, vertical = 6.dp),
     )
     MathText(p.title.orEmpty(), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(top = 12.dp, bottom = 8.dp).heading())
-    if (!p.body.isNullOrBlank()) MathText(p.body, style = BodyStyle, color = c.inkSoft)
+    if (!p.body.isNullOrBlank()) MathText(p.body.orEmpty(), style = BodyStyle, color = c.inkSoft)
     p.image?.let { SvgImage(it, p.alt.orEmpty(), Modifier.padding(top = 16.dp)) }
     Column(Modifier.padding(top = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         p.steps.orEmpty().forEachIndexed { n, step ->
@@ -182,7 +182,7 @@ private fun ExamplePage(c: DopamineColors, p: LearnPage, shown: Int) {
 @Composable
 private fun CodePage(c: DopamineColors, p: LearnPage) {
     Text(p.title.orEmpty(), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(bottom = 12.dp).heading())
-    if (!p.body.isNullOrBlank()) MathText(p.body, style = BodyStyle, modifier = Modifier.padding(bottom = 16.dp))
+    if (!p.body.isNullOrBlank()) MathText(p.body.orEmpty(), style = BodyStyle, modifier = Modifier.padding(bottom = 16.dp))
     CodeBlock(p.code.orEmpty(), p.language)
 }
 
