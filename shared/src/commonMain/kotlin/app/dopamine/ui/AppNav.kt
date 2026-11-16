@@ -51,7 +51,7 @@ import app.dopamine.ui.settings.SettingsScreen
 import app.dopamine.ui.settings.SettingsViewModel
 
 @Composable
-fun AppNav(container: AppContainer) {
+fun AppNav(container: AppContainer, startRoute: String = "home") {
     val profile by container.profile.state.collectAsStateWithLifecycle(ProfileState.Loading)
     when (val p = profile) {
         ProfileState.Loading -> LoadingScreen()
@@ -59,12 +59,12 @@ fun AppNav(container: AppContainer) {
             val vm: OnboardingViewModel = viewModel(factory = viewModelFactory { initializer { OnboardingViewModel(container) } })
             OnboardingScreen(vm)
         }
-        is ProfileState.Ready -> Main(container, p.name)
+        is ProfileState.Ready -> Main(container, p.name, startRoute)
     }
 }
 
 @Composable
-private fun Main(container: AppContainer, name: String) {
+private fun Main(container: AppContainer, name: String, startRoute: String) {
     val nav = rememberNavController()
     val home: HomeViewModel = viewModel(factory = viewModelFactory { initializer { HomeViewModel(container) } })
     // Activity-scoped so an update keeps running while you move between screens.
@@ -87,7 +87,7 @@ private fun Main(container: AppContainer, name: String) {
     Box(Modifier.fillMaxSize()) {
       // The screen content is recorded once so the bottom bar can draw a blurred copy of it (glass).
       Box(Modifier.fillMaxSize().drawWithContent { backdrop.record { this@drawWithContent.drawContent() }; drawLayer(backdrop) }) {
-        NavHost(nav, startDestination = "home") {
+        NavHost(nav, startDestination = startRoute) {
             composable("home") {
                 HomeScreen(name, home, onOpenCategory = { nav.navigate("category/$it") }, onOpenSettings = { goTab(Tab.Settings) })
             }

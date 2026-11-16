@@ -17,8 +17,12 @@ kotlin {
         withHostTest { isReturnDefaultValues = true } // android.util.Log in the shared code returns defaults in JVM tests
         androidResources { enable = true } // native fonts on Android: loaded synchronously, no flash of the system font
     }
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
+        target.binaries.framework {
+            baseName = "Shared" // imported by iosApp as `import Shared`
+            isStatic = true
+        }
+    }
 
     sourceSets {
         commonMain.dependencies {

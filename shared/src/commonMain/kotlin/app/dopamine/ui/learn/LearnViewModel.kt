@@ -33,7 +33,7 @@ class LearnViewModel(private val c: AppContainer, private val lessonId: String) 
             val ref = c.content.manifest.value?.courses?.flatMap { it.units }?.flatMap { it.lessons }?.firstOrNull { it.id == lessonId }
             val pages = ref?.let { c.content.lesson(it) }?.learn.orEmpty()
                 .map { if (it.kind in KNOWN_PAGE_KINDS) it else LearnPage(it.id, "unsupported") }
-            _state.value = LearnState(loading = false, pages = pages)
+            _state.value = LearnState(loading = false, pages = pages, index = app.dopamine.DevHooks.learnPage.coerceIn(0, maxOf(0, pages.lastIndex)))
         }
     }
 
