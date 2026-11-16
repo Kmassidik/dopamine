@@ -26,13 +26,14 @@ class CourseViewModel(private val c: AppContainer, val courseId: String) : ViewM
             _info.value = course.units.flatMap { it.lessons }.filter { !app.dopamine.domain.content.ContentContract.isLocked(it.minApp) }.mapNotNull { ref ->
                 // Counts are cached per lesson version+hash, so reopening a course reads no lesson files.
                 val key = "${ref.id}:${ref.version}:${ref.sha256}"
-                val info = infoCache[key] ?: c.content.lesson(ref)?.let { LessonInfo(it.questions.count { q -> q.type in app.dopamine.domain.model.KNOWN_QUESTION_TYPES }, it.xp) }?.also { infoCache[key] = it }
+                val info = infoLock.withLock { infoCache[key] } ?: c.content.lesson(ref)?.let { LessonInfo(it.questions.count { q -> q.type in app.dopamine.domain.model.KNOWN_QUESTION_TYPES }, it.xp) }?.also { infoLock.withLock { infoCache[key] = it } }
                 info?.let { ref.id to it }
             }.toMap()
         }
     }
 
     private companion object {
-        val infoCache = java.util.concurrent.ConcurrentHashMap<String, LessonInfo>()
+        val infoCache = HashMap<String, LessonInfo>()
+        val infoLock = app.dopamine.platform.SimpleLock()
     }
 }

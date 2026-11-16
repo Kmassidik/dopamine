@@ -10,7 +10,7 @@ import okio.Path.Companion.toPath
 import platform.Foundation.NSBundle
 
 /** [appVersion] is the build number (like Android's versionCode); the manifest's minAppVersion is compared with it. */
-fun createAppContainer(contentBaseUrl: String, appVersion: Int): AppContainer {
+fun createAppContainer(contentBaseUrl: String, appVersion: Int, appVersionName: String): AppContainer {
     val bundled = requireNotNull(NSBundle.mainBundle.resourcePath) { "no bundle path" }.toPath() / "content"
     return AppContainer(
         fs = FileSystem.SYSTEM,
@@ -21,5 +21,6 @@ fun createAppContainer(contentBaseUrl: String, appVersion: Int): AppContainer {
         http = createHttpClient(),
         contentBaseUrl = contentBaseUrl,
         appVersion = appVersion,
+        appVersionName = appVersionName,
     )
 }

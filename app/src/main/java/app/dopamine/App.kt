@@ -8,6 +8,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        container = createAppContainer(this, BuildConfig.CONTENT_BASE_URL, BuildConfig.VERSION_CODE)
+        container = createAppContainer(this, BuildConfig.CONTENT_BASE_URL, BuildConfig.VERSION_CODE, BuildConfig.VERSION_NAME)
     }
 }

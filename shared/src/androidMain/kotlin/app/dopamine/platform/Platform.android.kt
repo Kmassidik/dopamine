@@ -29,3 +29,6 @@ class AssetsSeedSource(private val context: Context, private val root: String = 
     override fun read(path: String): ByteArray = context.assets.open("$root/$path".trimEnd('/')).use { it.readBytes() }
 }
 actual val IoDispatcher: kotlinx.coroutines.CoroutineDispatcher = kotlinx.coroutines.Dispatchers.IO
+
+actual fun relativeTimeText(thenMillis: Long, nowMillis: Long): String =
+    android.text.format.DateUtils.getRelativeTimeSpanString(thenMillis, nowMillis, android.text.format.DateUtils.MINUTE_IN_MILLIS).toString()

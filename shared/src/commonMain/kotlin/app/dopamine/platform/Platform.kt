@@ -33,3 +33,6 @@ interface SeedSource {
 
 /** The dispatcher for blocking file and database work. */
 expect val IoDispatcher: kotlinx.coroutines.CoroutineDispatcher
+
+/** "5 minutes ago", "yesterday": a short relative time in the user's language. */
+expect fun relativeTimeText(thenMillis: Long, nowMillis: Long): String

@@ -3,7 +3,6 @@ package app.dopamine.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.dopamine.AppContainer
-import app.dopamine.BuildConfig
 import app.dopamine.data.network.UpdateException
 import app.dopamine.data.repo.ProfileState
 import app.dopamine.domain.model.ProfileName
@@ -25,7 +24,7 @@ sealed interface UpdateUi {
 }
 
 class SettingsViewModel(private val c: AppContainer) : ViewModel() {
-    val versionName: String = BuildConfig.VERSION_NAME
+    val versionName: String = c.appVersionName
 
     // --- name ---------------------------------------------------------------
     val name: StateFlow<String> = c.profile.state

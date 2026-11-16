@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.savedstate.read
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -94,28 +95,28 @@ private fun Main(container: AppContainer, name: String) {
             composable("settings") { SettingsScreen(settings, onOpenFormulas = { nav.navigate("formulas") }) }
             composable("formulas") { FormulaTestScreen(onBack = { nav.popBackStack() }) }
             composable("category/{id}") { entry ->
-                val id = entry.arguments?.getString("id").orEmpty()
+                val id = entry.arguments?.read { getString("id") }.orEmpty()
                 val vm: CategoryViewModel = viewModel(key = "category-$id", factory = viewModelFactory {
                     initializer { CategoryViewModel(container, id) }
                 })
                 CategoryScreen(vm, onBack = { nav.popBackStack() }, onOpenCourse = { nav.navigate("course/$it") })
             }
             composable("course/{id}") { entry ->
-                val id = entry.arguments?.getString("id").orEmpty()
+                val id = entry.arguments?.read { getString("id") }.orEmpty()
                 val vm: CourseViewModel = viewModel(key = "course-$id", factory = viewModelFactory {
                     initializer { CourseViewModel(container, id) }
                 })
                 CourseScreen(vm, onBack = { nav.popBackStack() }, onOpenLesson = { nav.navigate("learn/$it") }, onOpenNotes = { nav.navigate("notes/$it") }, onOpenQuiz = { nav.navigate("quiz/$it") })
             }
             composable("notes/{id}") { entry ->
-                val id = entry.arguments?.getString("id").orEmpty()
+                val id = entry.arguments?.read { getString("id") }.orEmpty()
                 val vm: NotesViewModel = viewModel(key = "notes-$id", factory = viewModelFactory {
                     initializer { NotesViewModel(container, id) }
                 })
                 NotesScreen(vm, onBack = { nav.popBackStack() })
             }
             composable("learn/{id}") { entry ->
-                val id = entry.arguments?.getString("id").orEmpty()
+                val id = entry.arguments?.read { getString("id") }.orEmpty()
                 val vm: LearnViewModel = viewModel(key = "learn-$id", factory = viewModelFactory {
                     initializer { LearnViewModel(container, id) }
                 })
@@ -124,7 +125,7 @@ private fun Main(container: AppContainer, name: String) {
                 })
             }
             composable("quiz/{id}") { entry ->
-                val id = entry.arguments?.getString("id").orEmpty()
+                val id = entry.arguments?.read { getString("id") }.orEmpty()
                 val vm: LessonViewModel = viewModel(key = "quiz-$id", factory = viewModelFactory {
                     initializer { LessonViewModel(container, id, quiz = true) }
                 })
@@ -136,7 +137,7 @@ private fun Main(container: AppContainer, name: String) {
                 )
             }
             composable("lesson/{id}") { entry ->
-                val id = entry.arguments?.getString("id").orEmpty()
+                val id = entry.arguments?.read { getString("id") }.orEmpty()
                 val vm: LessonViewModel = viewModel(key = "lesson-$id", factory = viewModelFactory {
                     initializer { LessonViewModel(container, id) }
                 })

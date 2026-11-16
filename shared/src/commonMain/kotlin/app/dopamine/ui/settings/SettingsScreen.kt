@@ -1,6 +1,7 @@
 package app.dopamine.ui.settings
 
-import android.text.format.DateUtils
+import app.dopamine.platform.relativeTimeText
+import app.dopamine.platform.nowMillis
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -129,7 +130,7 @@ private fun ContentCard(c: app.dopamine.ui.theme.DopamineColors, state: UpdateUi
                     if (lastUpdated == 0L) stringResource(Res.string.update_bundled)
                     else stringResource(
                         Res.string.update_last,
-                        DateUtils.getRelativeTimeSpanString(lastUpdated, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
+                        relativeTimeText(lastUpdated, nowMillis()),
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = c.inkSoft,

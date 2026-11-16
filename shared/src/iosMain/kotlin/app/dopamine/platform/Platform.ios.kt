@@ -49,3 +49,13 @@ class BundleSeedSource(private val root: Path) : SeedSource {
 }
 
 actual val IoDispatcher: kotlinx.coroutines.CoroutineDispatcher = kotlinx.coroutines.Dispatchers.IO
+
+actual fun relativeTimeText(thenMillis: Long, nowMillis: Long): String {
+    val formatter = platform.Foundation.NSRelativeDateTimeFormatter()
+    formatter.unitsStyle = platform.Foundation.NSRelativeDateTimeFormatterUnitsStyleFull
+    formatter.dateTimeStyle = platform.Foundation.NSRelativeDateTimeFormatterStyleNumeric
+    return formatter.localizedStringForDate(
+        NSDate.dateWithTimeIntervalSince1970(thenMillis / 1000.0),
+        relativeToDate = NSDate.dateWithTimeIntervalSince1970(nowMillis / 1000.0),
+    )
+}

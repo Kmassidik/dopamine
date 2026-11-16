@@ -8,7 +8,7 @@ import app.dopamine.platform.SharedPrefsKeyValueStore
 import okio.FileSystem
 import okio.Path.Companion.toPath
 
-fun createAppContainer(context: Context, contentBaseUrl: String, appVersion: Int): AppContainer {
+fun createAppContainer(context: Context, contentBaseUrl: String, appVersion: Int, appVersionName: String): AppContainer {
     val app = context.applicationContext
     return AppContainer(
         fs = FileSystem.SYSTEM,
@@ -19,5 +19,6 @@ fun createAppContainer(context: Context, contentBaseUrl: String, appVersion: Int
         http = createHttpClient(),
         contentBaseUrl = contentBaseUrl,
         appVersion = appVersion,
+        appVersionName = appVersionName,
     )
 }

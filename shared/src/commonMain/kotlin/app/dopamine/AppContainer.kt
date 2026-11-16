@@ -26,6 +26,7 @@ class AppContainer(
     http: HttpClient,
     contentBaseUrl: String,
     appVersion: Int,
+    val appVersionName: String,
 ) {
     val store = ContentStore(fs, filesDir, seed, meta)
     val content = ContentRepository(store)
