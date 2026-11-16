@@ -7,9 +7,9 @@
     <string name="section_courses">Courses</string>
     <string name="loading">Loading lessons</string>
     <string name="category_summary">%1$s · %2$s</string>
-    <plurals name="n_courses"><item quantity="one">%d course</item><item quantity="other">%d courses</item></plurals>
-    <plurals name="n_lessons"><item quantity="one">%d lesson</item><item quantity="other">%d lessons</item></plurals>
-    <plurals name="n_questions"><item quantity="one">%d question</item><item quantity="other">%d questions</item></plurals>
+    <plurals name="n_courses"><item quantity="one">%1$d course</item><item quantity="other">%1$d courses</item></plurals>
+    <plurals name="n_lessons"><item quantity="one">%1$d lesson</item><item quantity="other">%1$d lessons</item></plurals>
+    <plurals name="n_questions"><item quantity="one">%1$d question</item><item quantity="other">%1$d questions</item></plurals>
     <string name="lesson_summary">%1$s · %2$d XP</string>
         <string name="update_idle">Update content</string>
     <string name="update_last">Updated %1$s</string>
@@ -82,13 +82,13 @@
     <string name="unsupported_title">Needs a newer app</string>
     <string name="unsupported_body">This part needs a newer version of the app. Update the app to see it.</string>
     <string name="lesson_locked">Needs a newer app</string>
-    <plurals name="n_skipped"><item quantity="one">%d question could not be shown in this version of the app</item><item quantity="other">%d questions could not be shown in this version of the app</item></plurals>
+    <plurals name="n_skipped"><item quantity="one">%1$d question could not be shown in this version of the app</item><item quantity="other">%1$d questions could not be shown in this version of the app</item></plurals>
     <string name="unit_quiz">Unit quiz</string>
-    <string name="unit_quiz_sub">%1$d questions, pass at %2$d%%</string>
+    <string name="unit_quiz_sub">%1$d questions, pass at %2$d%</string>
     <string name="unit_quiz_passed">Passed. Tap to try again</string>
     <string name="quiz_passed">Quiz passed</string>
     <string name="quiz_failed">Not yet</string>
-    <string name="quiz_failed_body">You need %d%% to pass. Read the notes, then try again.</string>
+    <string name="quiz_failed_body">You need %1$d% to pass. Read the notes, then try again.</string>
     <string name="quiz_try_again">Try again</string>
     <string name="quiz_read_notes">Read the notes</string>
     <string name="action_open">Open</string>

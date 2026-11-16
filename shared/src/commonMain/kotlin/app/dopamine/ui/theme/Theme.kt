@@ -21,6 +21,7 @@ fun DopamineTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
+    PlatformPreviewSetup()
     val systemReduced = systemReducedMotion()
 
     CompositionLocalProvider(

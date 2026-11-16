@@ -7,27 +7,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import app.dopamine.shared.resources.*
-import org.jetbrains.compose.resources.Font
+
+/** The three font families. Android loads them from native resources (synchronously), iOS from Compose resources. */
+class DopamineFonts(val fredoka: FontFamily, val nunito: FontFamily, val mono: FontFamily)
+
+@Composable
+expect fun rememberDopamineFonts(): DopamineFonts
 
 /** Headings, numbers and buttons: chunky and playful. */
-@Composable fun fredoka(): FontFamily = FontFamily(
-    Font(Res.font.fredoka_medium, FontWeight.Medium),
-    Font(Res.font.fredoka_bold, FontWeight.Bold),
-)
+@Composable fun fredoka(): FontFamily = rememberDopamineFonts().fredoka
 
 /** Body text and questions: round but calm, easy to read for minutes. */
-@Composable fun nunito(): FontFamily = FontFamily(
-    Font(Res.font.nunito_regular, FontWeight.Normal),
-    Font(Res.font.nunito_semibold, FontWeight.SemiBold),
-    Font(Res.font.nunito_bold, FontWeight.Bold),
-)
+@Composable fun nunito(): FontFamily = rememberDopamineFonts().nunito
 
 /** Code: monospace, for code blocks and `inline code`. */
-@Composable fun jetBrainsMono(): FontFamily = FontFamily(
-    Font(Res.font.jetbrains_mono_regular, FontWeight.Normal),
-    Font(Res.font.jetbrains_mono_bold, FontWeight.Bold),
-)
+@Composable fun jetBrainsMono(): FontFamily = rememberDopamineFonts().mono
 
 private fun style(family: FontFamily, size: Int, line: Int, weight: FontWeight, spacing: Double = 0.0) = TextStyle(
     fontFamily = family,

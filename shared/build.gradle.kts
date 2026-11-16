@@ -14,6 +14,7 @@ kotlin {
         compileSdk = 37
         minSdk = 24
         withHostTest { }
+        androidResources { enable = true } // native fonts on Android: loaded synchronously, no flash of the system font
     }
     iosArm64()
     iosSimulatorArm64()

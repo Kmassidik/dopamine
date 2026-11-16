@@ -60,7 +60,7 @@ class MathLayout(
         return MBox(w, asc, desc) { x, y ->
             if (italic) {
                 // Slanted like the old Paint.textSkewX = -0.2.
-                val skew = Matrix().apply { this[0, 1] = -0.2f }
+                val skew = Matrix().apply { this.values[Matrix.SkewX] = -0.2f }
                 withTransform({ translate(x, y); transform(skew) }) { drawText(layout, topLeft = Offset(0f, -baseline)) }
             } else {
                 drawText(layout, topLeft = Offset(x, y - baseline))
