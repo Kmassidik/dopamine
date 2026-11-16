@@ -18,9 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.fillMaxWidth
 import com.android.tools.screenshot.PreviewTest
 import app.dopamine.ui.components.ChunkyButton
 import app.dopamine.ui.components.CodeBlock
+import app.dopamine.ui.components.RibbonCorner
 import app.dopamine.ui.components.BottomBar
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.InkButton
@@ -232,4 +234,14 @@ private val PARALLEL_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0
 @Composable
 fun SvgShot() = Page {
     SvgDocImage(SvgParser.parse(PARALLEL_SVG)!!, "A circuit with a 12 volt battery and two branches, 6 ohms and 3 ohms.")
+}
+
+@PreviewTest
+@Preview(name = "ribbon", showBackground = true, widthDp = 360, heightDp = 220)
+@Composable
+fun RibbonShot() = Page {
+    val c = app.dopamine.ui.theme.Dopamine.colors
+    Box(Modifier.fillMaxWidth()) {
+        Box(Modifier.align(androidx.compose.ui.Alignment.TopEnd)) { RibbonCorner("a little every day", c.yellow, c.onAccent) }
+    }
 }

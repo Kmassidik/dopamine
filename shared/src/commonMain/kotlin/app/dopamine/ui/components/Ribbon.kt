@@ -18,7 +18,6 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.dopamine.ui.theme.fredoka
 import kotlin.math.atan2
 
@@ -26,8 +25,9 @@ import kotlin.math.atan2
 @Composable
 fun RibbonCorner(text: String, band: Color, ink: Color, modifier: Modifier = Modifier) {
     val measurer = rememberTextMeasurer()
-    val style = TextStyle(fontFamily = fredoka(), fontWeight = FontWeight.Bold, color = ink, fontSize = 17.sp)
+    val base = TextStyle(fontFamily = fredoka(), fontWeight = FontWeight.Bold, color = ink)
     Canvas(modifier.size(width = 220.dp, height = 130.dp)) {
+        val style = base.copy(fontSize = 17.dp.toSp()) // 17dp like the old Paint, not scaled by the font size setting
         val w = size.width
         val h = size.height
         val path = Path().apply {
