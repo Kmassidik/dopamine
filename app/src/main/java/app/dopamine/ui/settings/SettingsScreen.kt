@@ -1,5 +1,7 @@
 package app.dopamine.ui.settings
 
+import android.content.Intent
+import android.net.Uri
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,7 +56,9 @@ fun SettingsScreen(vm: SettingsViewModel, onOpenFormulas: () -> Unit) {
     val name by vm.name.collectAsStateWithLifecycle()
     val draft by vm.draft.collectAsStateWithLifecycle()
     val update by vm.update.collectAsStateWithLifecycle()
+    val appUpdate by vm.appUpdate.collectAsStateWithLifecycle()
     val lastUpdated by vm.lastUpdated.collectAsStateWithLifecycle()
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding().imePadding()) {
@@ -67,7 +71,9 @@ fun SettingsScreen(vm: SettingsViewModel, onOpenFormulas: () -> Unit) {
             ) {
                 item { ProfileCard(c, name, draft, vm) }
                 item { ContentCard(c, update, lastUpdated, vm) }
-                item { AboutCard(c, vm.versionName, onOpenFormulas) }
+                item { AboutCard(c, vm.versionName, appUpdate, vm, onOpenFormulas, onOpenDownload = {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
+                }) }
             }
         }
     }
@@ -126,7 +132,7 @@ private fun ContentCard(c: app.dopamine.ui.theme.DopamineColors, state: UpdateUi
             Column(Modifier.weight(1f).padding(start = 16.dp)) {
                 Text(stringResource(R.string.settings_content), style = MaterialTheme.typography.titleLarge)
                 Text(
-                    if (lastUpdated == 0L) stringResource(R.string.update_bundled)
+                    if (lastUpdated == 0L) stringResource(R.string.update_none)
                     else stringResource(
                         R.string.update_last,
                         DateUtils.getRelativeTimeSpanString(lastUpdated, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
@@ -152,8 +158,13 @@ private fun ContentCard(c: app.dopamine.ui.theme.DopamineColors, state: UpdateUi
                 }
                 ProgressBar(if (state.total == 0) 0f else state.done.toFloat() / state.total, Color.White, c.green)
             }
-            is UpdateUi.Done -> Message(Color.White, c.greenText, R.drawable.ic_check, state.message, stringResource(R.string.update_dismiss), vm::dismissMessage)
-            is UpdateUi.Failed -> Message(c.pinkTint, c.pinkText, R.drawable.ic_warning, state.message, stringResource(R.string.update_dismiss), vm::dismissMessage)
+            is UpdateUi.Done -> Message(
+                Color.White, c.greenText, R.drawable.ic_check,
+                if (state.upToDate) stringResource(R.string.update_content_current)
+                else stringResource(R.string.update_content_result, state.newCount, state.updatedCount, state.removedCount),
+                stringResource(R.string.update_dismiss), vm::dismissMessage,
+            )
+            is UpdateUi.Failed -> Message(c.pinkTint, c.pinkText, R.drawable.ic_warning, state.message ?: stringResource(R.string.update_failed), stringResource(R.string.update_dismiss), vm::dismissMessage)
             UpdateUi.Idle -> Unit
         }
         if (state !is UpdateUi.Running) {
@@ -169,7 +180,14 @@ private fun ContentCard(c: app.dopamine.ui.theme.DopamineColors, state: UpdateUi
 }
 
 @Composable
-private fun AboutCard(c: app.dopamine.ui.theme.DopamineColors, version: String, onOpenFormulas: () -> Unit) {
+private fun AboutCard(
+    c: app.dopamine.ui.theme.DopamineColors,
+    version: String,
+    state: AppUpdateUi,
+    vm: SettingsViewModel,
+    onOpenFormulas: () -> Unit,
+    onOpenDownload: (String) -> Unit,
+) {
     val formulaLabel = stringResource(R.string.settings_formula_open)
     Card(c.yellowTint) {
         Text(stringResource(R.string.settings_about), style = MaterialTheme.typography.titleLarge)
@@ -181,5 +199,18 @@ private fun AboutCard(c: app.dopamine.ui.theme.DopamineColors, version: String, 
                 .semantics { onLongClick(label = formulaLabel) { onOpenFormulas(); true } },
         )
         Text(stringResource(R.string.settings_privacy), style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
+        when (state) {
+            AppUpdateUi.Running -> Text(stringResource(R.string.app_update_checking), color = c.inkSoft)
+            AppUpdateUi.UpToDate -> Message(Color.White, c.greenText, R.drawable.ic_check, stringResource(R.string.app_update_current), stringResource(R.string.update_dismiss), vm::dismissAppUpdateMessage)
+            is AppUpdateUi.Available -> {
+                Message(Color.White, c.greenText, R.drawable.ic_update, stringResource(R.string.app_update_available, state.version), stringResource(R.string.update_dismiss), vm::dismissAppUpdateMessage)
+                InkButton(stringResource(R.string.app_update_open), onClick = { onOpenDownload(state.url) }, container = c.onAccent, content = Color.White, leadingIcon = R.drawable.ic_download)
+            }
+            is AppUpdateUi.Failed -> Message(c.pinkTint, c.pinkText, R.drawable.ic_warning, state.message ?: stringResource(R.string.app_update_failed), stringResource(R.string.update_dismiss), vm::dismissAppUpdateMessage)
+            AppUpdateUi.Idle -> Unit
+        }
+        if (state !is AppUpdateUi.Running) {
+            InkButton(stringResource(R.string.app_update_check), onClick = vm::checkAppUpdate, container = c.onAccent, content = Color.White)
+        }
     }
 }

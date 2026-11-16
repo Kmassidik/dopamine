@@ -9,7 +9,7 @@ object ContentContract {
     const val CONTRACT_VERSION = 1
 
     /** Equals BuildConfig.VERSION_CODE (checked by ContractTest). */
-    const val APP_VERSION = 3
+    const val APP_VERSION = 4
 
     /** Kind -> app version that introduced it. */
     val QUESTION_TYPES = mapOf("multiple_choice" to 1, "fill_blank" to 1, "type_answer" to 1, "match_pairs" to 1, "order_steps" to 1)

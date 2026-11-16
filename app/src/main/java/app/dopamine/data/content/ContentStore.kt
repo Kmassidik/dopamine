@@ -13,7 +13,7 @@ import app.dopamine.domain.model.Manifest
 import java.io.File
 import kotlinx.serialization.json.Json
 
-/** Owns filesDir/content. All content, bundled or downloaded, is read from here. */
+/** Owns filesDir/content. Every file arrives through a user-initiated update. */
 class ContentStore(private val context: Context) {
     private val json = Json { ignoreUnknownKeys = true }
     private val prefs = context.getSharedPreferences("content_meta", Context.MODE_PRIVATE)
@@ -29,29 +29,6 @@ class ContentStore(private val context: Context) {
     } catch (e: Exception) {
         Log.w(TAG, "manifest unreadable: ${e.message}")
         null
-    }
-
-    /** First launch, or a missing or corrupt content dir: copy the bundled pack into place. */
-    @Synchronized
-    fun ensureSeeded() {
-        if (readManifest() != null) return
-        val tmp = File(context.filesDir, "content.seed")
-        tmp.deleteRecursively()
-        copyAsset("content", tmp)
-        root.deleteRecursively()
-        check(tmp.renameTo(root)) { "could not place bundled content" }
-        Log.i(TAG, "seeded from bundled content")
-    }
-
-    private fun copyAsset(path: String, dest: File) {
-        val children = context.assets.list(path).orEmpty()
-        if (children.isEmpty()) {
-            dest.parentFile?.mkdirs()
-            context.assets.open(path).use { i -> dest.outputStream().use { o -> i.copyTo(o) } }
-        } else {
-            dest.mkdirs()
-            children.forEach { copyAsset("$path/$it", File(dest, it)) }
-        }
     }
 
     fun readLesson(ref: LessonRef): Lesson? = try {

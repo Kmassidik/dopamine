@@ -13,10 +13,12 @@ import kotlinx.coroutines.withContext
 class ContentRepository(private val store: ContentStore) {
     private val _manifest = MutableStateFlow<Manifest?>(null)
     val manifest: StateFlow<Manifest?> = _manifest.asStateFlow()
+    private val _loaded = MutableStateFlow(false)
+    val loaded: StateFlow<Boolean> = _loaded.asStateFlow()
 
     suspend fun load() = withContext(Dispatchers.IO) {
-        store.ensureSeeded()
         _manifest.value = store.readManifest()
+        _loaded.value = true
     }
 
     suspend fun reload() = withContext(Dispatchers.IO) {

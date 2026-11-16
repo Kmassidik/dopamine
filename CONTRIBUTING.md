@@ -3,7 +3,7 @@
 Thanks for helping. This is a small, offline-first Android app, so a few rules keep it small and calm.
 
 ## Ground rules
-- Kotlin and Jetpack Compose only. No WebView, no ads, no analytics, no Firebase or Google Play Services. The only permission is `INTERNET` (used by one button).
+- Kotlin and Jetpack Compose only. No WebView, no ads, no analytics, no Firebase or Google Play Services. The only permission is `INTERNET` (used only by the content and app update buttons).
 - Math is drawn natively (`ui/math/`). Content is data, never code.
 - Never crash on bad content: validate, log, skip, show a gentle note.
 - Strings go in `res/values/strings.xml`. Colors come from `ui/theme`. Touch targets are at least 48dp, and every screen must work at 320dp wide with a 1.3x font.

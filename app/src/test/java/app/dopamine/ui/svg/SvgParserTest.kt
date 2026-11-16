@@ -1,10 +1,8 @@
 package app.dopamine.ui.svg
 
-import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SvgParserTest {
@@ -20,13 +18,6 @@ class SvgParserTest {
         assertEquals(30f, line.x2, 0f)
         assertEquals(SvgPaint.Current, line.style.stroke)
         assertEquals(3f, line.style.strokeWidth, 0f)
-    }
-
-    @Test fun realBundledImagesParse() {
-        val dir = File("src/main/assets/content/content/images")
-        val files = dir.listFiles { f -> f.name.endsWith(".svg") }!!
-        assertTrue(files.isNotEmpty())
-        files.forEach { assertNotNull(it.name, SvgParser.parse(it.readText())) }
     }
 
     @Test fun stylesAreInheritedAndOpacityMultiplies() {

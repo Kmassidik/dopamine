@@ -1,4 +1,11 @@
 import com.android.build.api.variant.HostTestBuilder
+import java.util.Properties
+
+val signingProperties = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.isFile }?.inputStream()?.use(::load)
+}
+fun signingProperty(name: String): String? = signingProperties.getProperty(name)
+    ?: System.getenv("DOPAMINE_${name.replace(Regex("([a-z])([A-Z])"), "$1_$2").uppercase()}")
 
 plugins {
     alias(libs.plugins.android.application)
@@ -11,15 +18,34 @@ android {
     namespace = "app.dopamine"
     compileSdk = 37
 
+    signingConfigs {
+        val storeFile = signingProperty("releaseStoreFile")
+        val storePassword = signingProperty("releaseStorePassword")
+        val keyAlias = signingProperty("releaseKeyAlias")
+        val keyPassword = signingProperty("releaseKeyPassword")
+        if (listOf(storeFile, storePassword, keyAlias, keyPassword).all { !it.isNullOrBlank() }) {
+            create("release") {
+                this.storeFile = file(storeFile!!)
+                this.storePassword = storePassword
+                this.keyAlias = keyAlias
+                this.keyPassword = keyPassword
+            }
+        }
+    }
+
     defaultConfig {
         applicationId = "app.dopamine"
         minSdk = 24
         targetSdk = 37
-        versionCode = 3
-        versionName = "0.3.0"
+        versionCode = 4
+        versionName = "0.3.1"
         buildConfigField(
             "String", "CONTENT_BASE_URL",
             "\"https://raw.githubusercontent.com/Kmassidik/dopamine-content/main/\""
+        )
+        buildConfigField(
+            "String", "APP_RELEASES_URL",
+            "\"https://api.github.com/repos/Kmassidik/dopamine/releases/latest\""
         )
     }
 
@@ -37,9 +63,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            // Personal use: signed with the debug key so `assembleRelease` yields an installable APK.
-            // See README for using a real keystore.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
         }
     }
 

@@ -60,6 +60,7 @@ import app.dopamine.ui.theme.DopamineColors
 @Composable
 fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit, onOpenSettings: () -> Unit) {
     val manifest by vm.manifest.collectAsStateWithLifecycle()
+    val loaded by vm.loaded.collectAsStateWithLifecycle()
     val stats by vm.stats.collectAsStateWithLifecycle()
     val c = Dopamine.colors
     val firstCategory = manifest?.categories?.minByOrNull { it.order }?.id
@@ -75,18 +76,32 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
                 item {
                     Bento(c, stats, onStart = { firstCategory?.let(onOpenCategory) })
                 }
-                item {
-                    Text(
-                        stringResource(R.string.section_courses),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(top = 4.dp).heading(),
-                    )
-                }
                 val m = manifest
-                if (m == null) {
-                    item { Text(stringResource(R.string.loading), color = c.inkSoft) }
-                } else {
+                if (m != null) {
+                    item {
+                        Text(
+                            stringResource(R.string.section_courses),
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(top = 4.dp).heading(),
+                        )
+                    }
                     items(m.categories.sortedBy { it.order }, key = { it.id }) { cat -> CourseRow(c, m, cat, onOpenCategory) }
+                } else if (loaded) {
+                    item {
+                        Column(
+                            Modifier.fillMaxWidth().clip(CardShape).background(c.greenTint).padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Text(stringResource(R.string.home_empty_title), style = MaterialTheme.typography.titleLarge)
+                            Text(stringResource(R.string.home_empty_body), color = c.inkSoft)
+                            app.dopamine.ui.components.ChunkyButton(
+                                stringResource(R.string.home_empty_action), onOpenSettings,
+                                container = c.green, lip = c.greenLip, content = c.onAccent,
+                            )
+                        }
+                    }
+                } else {
+                    item { Text(stringResource(R.string.loading), color = c.inkSoft) }
                 }
             }
         }

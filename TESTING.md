@@ -33,7 +33,9 @@ An emulator `pixel_api35` exists on the laptop (`/dev/kvm` available; the host G
 
 ## Manual checklist
 
-- [ ] Fresh install: onboarding asks the name, greeting uses it, relaunch keeps it
+- [ ] Fresh install: onboarding asks the name, Home has no lessons, Settings says "No lessons downloaded"
+- [ ] Update content downloads the full catalog; relaunch works offline with the downloaded lessons
+- [ ] Check for app update reports the current release; a newer release shows Open download
 - [ ] Airplane mode launch; Update shows "Offline, using local content"
 - [ ] Update with a bad hash must roll back (serve a tampered file locally)
 - [ ] Update interrupted mid-download leaves content intact

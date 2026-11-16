@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val c: AppContainer) : ViewModel() {
     val manifest = c.content.manifest
+    val loaded = c.content.loaded
     val stats: StateFlow<HomeStats> = c.progress.homeStats.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeStats())
 
     init {

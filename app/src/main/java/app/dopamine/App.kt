@@ -3,6 +3,7 @@ package app.dopamine
 import android.app.Application
 import app.dopamine.data.content.ContentStore
 import app.dopamine.data.db.AppDatabase
+import app.dopamine.data.network.AppUpdateChecker
 import app.dopamine.data.network.UpdateManager
 import app.dopamine.data.repo.ContentRepository
 import app.dopamine.data.repo.ProfileRepository
@@ -35,4 +36,5 @@ class AppContainer(val app: Application) {
         .build()
 
     val updates = UpdateManager(store, http, { BuildConfig.CONTENT_BASE_URL }, BuildConfig.VERSION_CODE)
+    val appUpdates = AppUpdateChecker(http, BuildConfig.APP_RELEASES_URL)
 }

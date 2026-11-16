@@ -15,7 +15,6 @@ object ContentPrune {
             if (f == dir) return@forEach
             val rel = f.relativeTo(dir).invariantSeparatorsPath
             when {
-                java.nio.file.Files.isSymbolicLink(f.toPath()) -> { f.delete(); removed++ }
                 f.isFile -> if (rel !in keep) { f.delete(); removed++ }
                 f.isDirectory -> if (f.list().isNullOrEmpty()) f.delete()
             }

@@ -16,8 +16,8 @@ Short, rewarding daily lessons on your phone, with **no ads, no accounts and no 
 - **Unit notes and unit quizzes.** A cheat sheet for each unit, and a 10-question quiz (pass at 70%) that mixes questions from the whole unit.
 - **Real math and code.** Math is drawn natively from LaTeX, geometry lessons carry SVG diagrams, and C and Python code appear in proper code blocks.
 - **XP, streaks and a daily goal**, saved on your phone.
-- **Private by design.** No ads, no accounts, no analytics, no WebView. The only permission is `INTERNET`, used by one button.
-- **Works offline.** Lessons are stored on the phone. Tap **Update content** when you want new ones; nothing downloads in the background.
+- **Private by design.** No ads, no accounts, no analytics, no WebView. The only permission is `INTERNET`, used only by the two update buttons.
+- **Works offline after setup.** Tap **Update content** once to download lessons; nothing downloads in the background.
 
 <p align="center">
   <img src="docs/screenshots/programming.png" width="170" alt="Programming courses">
@@ -37,13 +37,15 @@ Short, rewarding daily lessons on your phone, with **no ads, no accounts and no 
 | Science | Science Basics | 2 |
 | Electronics | Electronics Basics | 4 |
 
-Lessons live in a separate repository, [`Kmassidik/dopamine-content`](https://github.com/Kmassidik/dopamine-content), and arrive through the **Update content** button. The app is usable on first launch with bundled sample content.
+Lessons live in a separate repository, [`Kmassidik/dopamine-content`](https://github.com/Kmassidik/dopamine-content), and arrive through the **Update content** button. A clean install has no lessons until you tap that button.
 
 > **Status: early but usable.** Not built yet: spaced review, hearts, a final course test and settings such as dark theme. See the roadmap in the content repo for what is planned next.
 
 ## Try it (Android only)
 
-Download `dopamine-0.3.0.apk` from the [latest release](https://github.com/Kmassidik/dopamine/releases/latest), open it on an Android 7.0+ phone (allow "install unknown apps" if asked), then open **Settings, Update content** once to download the lessons. There is no iPhone or web version.
+Download `dopamine-0.3.1.apk` from the [latest release](https://github.com/Kmassidik/dopamine/releases/latest), open it on an Android 7.0+ phone (allow "install unknown apps" if asked), then open **Settings, Update content** once to download all lessons. There is no iPhone or web version. Future releases can be found with **Settings, Check for app update**.
+
+**Upgrading from 0.3.0:** uninstall that debug-signed APK before installing 0.3.1; Android cannot upgrade across different signatures, and uninstalling erases its local progress. Releases from 0.3.1 onward use the same permanent signature and upgrade normally.
 
 <p align="center">
   <img src="docs/screenshots/settings.png" width="220" alt="Settings with the Update content button">
@@ -66,7 +68,16 @@ You need a JDK 21+ with `javac` (this project is built on JDK 25) and the Androi
 ./build.sh assembleDebug      # or any Gradle tasks
 ```
 
-APKs land in `app/build/outputs/apk/{debug,release}/`. The release APK is signed with the debug key so it installs for personal use; use a real keystore before sharing it.
+APKs land in `app/build/outputs/apk/{debug,release}/`. Release builds use the permanent private key configured in the root `local.properties`; without it, they fall back to the debug key for local contributor builds. Never commit a keystore or its passwords.
+
+```properties
+releaseStoreFile=/absolute/private/path/dopamine-release.jks
+releaseStorePassword=...
+releaseKeyAlias=dopamine
+releaseKeyPassword=...
+```
+
+The same values can be supplied as `DOPAMINE_RELEASE_STORE_FILE`, `DOPAMINE_RELEASE_STORE_PASSWORD`, `DOPAMINE_RELEASE_KEY_ALIAS`, and `DOPAMINE_RELEASE_KEY_PASSWORD`. Back up the owner’s keystore and passwords: losing them means existing installs cannot accept future updates.
 
 Install on a phone:
 
@@ -80,14 +91,14 @@ On Xiaomi/MIUI, turn on *Developer options → Install via USB* and *USB debuggi
 ## How it works
 
 ```
- first launch        Update content (Settings)                 lessons, notes and practice
+ clean install         Update content (Settings)                 lessons, notes and practice
       |                         |                                          ^
- assets/content  ->  filesDir/content  <-- swap <-- stage <-- verified downloads
- (bundled seed)       (what the app reads)                  (https, sha256, size, schema, path checks)
+  no lesson files  ->  filesDir/content  <-- swap <-- stage <-- verified downloads
 ```
 
-- The app only ever reads `filesDir/content`. On first launch (or if that folder is missing or corrupt) it is seeded from `app/src/main/assets/content`, a small sample (six lessons) in the same layout as the content repo: `manifest.json` at the top and everything else under `content/`.
+- The app only reads `filesDir/content`. Clean installs start without lesson files; the first **Update content** downloads the complete manifest and all referenced files. Existing installs keep their current lessons.
 - **Update** fetches `manifest.json` from the content repo (`BuildConfig.CONTENT_BASE_URL`), diffs lessons by id/version/sha256 (and re-fetches any file missing on the phone, for example after a file moved), downloads only what changed into a staged copy, verifies every file, deletes files the new manifest no longer references, and then swaps the staged folder in atomically. Any failure discards the stage and leaves current content untouched.
+- **Check for app update** queries GitHub’s latest stable release only after a tap. If it is newer, **Open download** opens the release page in the browser; Android still requires the user to install the APK.
 - Your name is stored on the phone in a Room (SQLite) database and used for the greeting.
 
 ## Repositories
@@ -95,11 +106,7 @@ On Xiaomi/MIUI, turn on *Developer options → Install via USB* and *USB debuggi
 - **App:** this repository.
 - **Content:** [`dopamine-content`](https://github.com/Kmassidik/dopamine-content). Lesson JSON, SVG diagrams, JSON Schemas, and the manifest generator. To publish new lessons: edit files, run `python3 tools/build_manifest.py`, push to `main`, and tap Update in the app.
 
-Manifest paths are relative to the content repo root and start with `content/` (for example `content/math/geometry/triangles/lesson-01.json`), because the app downloads `base URL + path`. To refresh the bundled sample from a checkout of the content repo:
-
-```bash
-python3 tools/sync_seed.py ../dopamine-content
-```
+Manifest paths are relative to the content repo root and start with `content/` (for example `content/math/geometry/triangles/lesson-01.json`), because the app downloads `base URL + path`.
 
 ## Licenses
 
