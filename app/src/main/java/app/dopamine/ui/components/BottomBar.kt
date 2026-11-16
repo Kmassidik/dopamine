@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -32,7 +34,7 @@ enum class Tab(val route: String, @DrawableRes val icon: Int, @StringRes val lab
 }
 
 /**
- * The bottom bar: a flat dark panel that runs to the very bottom of the screen, behind the
+ * The bottom bar: a flat, slightly see-through dark panel (glass) that runs to the very bottom of the screen, behind the
  * phone's own navigation buttons (the app draws edge to edge). Three equal tabs, each with its icon and label;
  * the selected one sits on a yellow chip. Pass `Modifier.navigationBarsPadding()` inside is handled here.
  */
@@ -42,7 +44,9 @@ fun BottomBar(selected: Tab?, onSelect: (Tab) -> Unit, modifier: Modifier = Modi
     Row(
         modifier
             .fillMaxWidth()
-            .background(c.onAccent)
+            // Glass: the dark panel is a little see-through, so content scrolling behind it shows softly.
+            .background(c.onAccent.copy(alpha = 0.88f))
+            .drawBehind { drawLine(Color.White.copy(alpha = 0.16f), Offset(0f, 0f), Offset(size.width, 0f), strokeWidth = 1.dp.toPx()) }
             .navigationBarsPadding()
             .padding(horizontal = 12.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
