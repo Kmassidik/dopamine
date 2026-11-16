@@ -1,6 +1,11 @@
 package app.dopamine.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -18,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.dopamine.ui.components.FloatingNav
+import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.components.Tab
 import app.dopamine.ui.course.CourseScreen
 import app.dopamine.ui.course.CourseViewModel
@@ -133,10 +139,26 @@ private fun Main(container: AppContainer, name: String) {
             }
         }
         if (!inLesson) {
+            // Content fades out behind the bar so nothing looks cut off by it.
+            val bg = Dopamine.colors.bg
+            val inset = with(androidx.compose.ui.platform.LocalDensity.current) { WindowInsets.navigationBars.getBottom(this).toDp() }
+            Box(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(124.dp + inset)
+                    .background(
+                        androidx.compose.ui.graphics.Brush.verticalGradient(
+                            0f to androidx.compose.ui.graphics.Color.Transparent,
+                            0.5f to bg.copy(alpha = 0.92f),
+                            1f to bg,
+                        ),
+                    ),
+            )
             FloatingNav(
                 selected,
                 onSelect = ::goTab,
-                modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 12.dp),
+                modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(start = 20.dp, end = 20.dp, bottom = 12.dp),
             )
         }
     }
