@@ -16,8 +16,8 @@ fun documentsDirectory(): String {
     return requireNotNull(url?.path) { "no documents directory" }
 }
 
-fun buildAppDatabase(): AppDatabase =
-    Room.databaseBuilder<AppDatabase>(name = documentsDirectory() + "/" + AppDatabase.FILE_NAME, factory = { AppDatabaseConstructor.initialize() })
+fun buildAppDatabase(path: String = documentsDirectory() + "/" + AppDatabase.FILE_NAME): AppDatabase =
+    Room.databaseBuilder<AppDatabase>(name = path, factory = { AppDatabaseConstructor.initialize() })
         .setDriver(BundledSQLiteDriver())
         .addMigrations(*AppDatabase.MIGRATIONS)
         .setQueryCoroutineContext(IoDispatcher)
