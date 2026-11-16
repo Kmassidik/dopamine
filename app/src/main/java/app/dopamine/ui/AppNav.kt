@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -74,19 +76,16 @@ private fun Main(container: AppContainer, name: String) {
         "settings" -> Tab.Settings
         else -> if (inLesson) null else Tab.Home
     }
-    // The phone's three navigation buttons sit on top of our bar: make them light on the dark bar, dark otherwise.
-    val activity = androidx.activity.compose.LocalActivity.current
-    val view = androidx.compose.ui.platform.LocalView.current
-    androidx.compose.runtime.SideEffect {
-        activity?.window?.let { androidx.core.view.WindowCompat.getInsetsController(it, view).isAppearanceLightNavigationBars = inLesson }
-    }
     fun goTab(tab: Tab) = nav.navigate(tab.route) {
         popUpTo("home") { inclusive = false }
         launchSingleTop = true
     }
 
     androidx.compose.runtime.CompositionLocalProvider(app.dopamine.ui.svg.LocalSvgLoader provides { path -> container.content.svg(path) }) {
+    val backdrop = androidx.compose.ui.graphics.rememberGraphicsLayer()
     Box(Modifier.fillMaxSize()) {
+      // The screen content is recorded once so the bottom bar can draw a blurred copy of it (glass).
+      Box(Modifier.fillMaxSize().drawWithContent { backdrop.record { this@drawWithContent.drawContent() }; drawLayer(backdrop) }) {
         NavHost(nav, startDestination = "home") {
             composable("home") {
                 HomeScreen(name, home, onOpenCategory = { nav.navigate("category/$it") }, onOpenSettings = { goTab(Tab.Settings) })
@@ -144,8 +143,9 @@ private fun Main(container: AppContainer, name: String) {
                 LessonScreen(vm, onClose = { nav.popBackStack() })
             }
         }
+      }
         if (!inLesson) {
-            BottomBar(selected, onSelect = ::goTab, modifier = Modifier.align(Alignment.BottomCenter))
+            BottomBar(selected, onSelect = ::goTab, modifier = Modifier.align(Alignment.BottomCenter), backdrop = backdrop)
         }
     }
     }
