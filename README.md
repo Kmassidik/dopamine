@@ -43,7 +43,7 @@ Lessons live in a separate repository, [`Kmassidik/dopamine-content`](https://gi
 
 ## Try it (Android only)
 
-Download `dopamine-0.3.1.apk` from the [latest release](https://github.com/Kmassidik/dopamine/releases/latest), open it on an Android 7.0+ phone (allow "install unknown apps" if asked), then open **Settings, Update content** once to download all lessons. There is no iPhone or web version. Future releases can be found with **Settings, Check for app update**.
+Download `dopamine-0.3.2.apk` from the [latest release](https://github.com/Kmassidik/dopamine/releases/latest), open it on an Android 7.0+ phone (allow "install unknown apps" if asked), then open **Settings, Update content** once to download all lessons. There is no iPhone or web version. Future releases can be found with **Settings, Check for app update**.
 
 **Upgrading from 0.3.0:** uninstall that debug-signed APK before installing 0.3.1; Android cannot upgrade across different signatures, and uninstalling erases its local progress. Releases from 0.3.1 onward use the same permanent signature and upgrade normally.
 

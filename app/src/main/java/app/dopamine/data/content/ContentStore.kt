@@ -70,7 +70,7 @@ class ContentStore(private val context: Context) {
     /** A full copy of the current content that downloads are applied to before the swap. */
     fun newStage(): File {
         stageDir.deleteRecursively()
-        root.copyRecursively(stageDir, overwrite = true)
+        if (root.isDirectory) root.copyRecursively(stageDir, overwrite = true) else stageDir.mkdirs()
         return stageDir
     }
 

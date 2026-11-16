@@ -1,5 +1,6 @@
 package app.dopamine.data.network
 
+import android.util.Log
 import app.dopamine.data.content.ContentPrune
 import app.dopamine.data.content.ContentStore
 import app.dopamine.domain.content.LessonValidator
@@ -49,8 +50,10 @@ class UpdateManager(
         try {
             run(base, onProgress)
         } catch (e: UnknownHostException) {
+            Log.w(TAG, "Content host could not be resolved", e)
             throw UpdateException("Offline, using local content.")
         } catch (e: IOException) {
+            Log.w(TAG, "Content server connection failed", e)
             throw UpdateException("Could not reach the content server. Your lessons are unchanged. Try again later.")
         }
     }
@@ -176,6 +179,7 @@ class UpdateManager(
         MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 
     companion object {
+        const val TAG = "UpdateManager"
         const val SUPPORTED_SCHEMA = 1
         const val MAX_MANIFEST = 512 * 1024
         const val MAX_LESSON = 256 * 1024
