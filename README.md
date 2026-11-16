@@ -1,13 +1,53 @@
 # Dopamine
 
-An offline-first, fully native Android app (Kotlin + Jetpack Compose) for short, rewarding daily lessons with math written in LaTeX. It replaces commercial apps that come with ads, accounts and tracking: **no ads, no accounts, no analytics, no WebView, only the `INTERNET` permission**, used by one button.
+Short, rewarding daily lessons on your phone, with **no ads, no accounts and no tracking**. Dopamine is a fully native Android app (Kotlin + Jetpack Compose) with 241 lessons in 13 courses: math from pre-algebra to precalculus, programming in C and Python, science and electronics.
 
-Lessons live in a separate repository, [`Kmassidik/dopamine-content`](https://github.com/Kmassidik/dopamine-content), and arrive through a user-initiated **Update content** button. The app is usable on first launch with bundled sample content.
+<p align="center">
+  <img src="docs/screenshots/home.png" width="220" alt="Home screen with greeting, streak, XP and daily goal">
+  <img src="docs/screenshots/subjects.png" width="220" alt="Subjects: Math, Science, Programming, Electronics, with lesson counts">
+  <img src="docs/screenshots/diagram.png" width="220" alt="A geometry lesson with a right-triangle diagram and math">
+</p>
 
-> **Status: early but usable.** Home, onboarding, lessons with reading pages and practice, unit cheat sheets, saved XP and streak, and the update flow work. Review scheduling, hearts and a final test are not built yet.
+*Screenshots are from a real Redmi Note 10S.*
 
-## Try it (Android)
-Download `dopamine-0.3.0.apk` from the [latest release](https://github.com/Kmassidik/dopamine/releases/latest), open it on an Android 7.0+ phone (allow "install unknown apps" if asked), then open **Settings, Update content** once to download the lessons. There is no iPhone version yet.
+## What you get
+
+- **Learn, then practice.** Each lesson is a few short reading pages (text, worked examples that reveal one step at a time, tips, code) followed by questions with an explanation for every answer.
+- **Unit notes and unit quizzes.** A cheat sheet for each unit, and a 10-question quiz (pass at 70%) that mixes questions from the whole unit.
+- **Real math and code.** Math is drawn natively from LaTeX, geometry lessons carry SVG diagrams, and C and Python code appear in proper code blocks.
+- **XP, streaks and a daily goal**, saved on your phone.
+- **Private by design.** No ads, no accounts, no analytics, no WebView. The only permission is `INTERNET`, used by one button.
+- **Works offline.** Lessons are stored on the phone. Tap **Update content** when you want new ones; nothing downloads in the background.
+
+<p align="center">
+  <img src="docs/screenshots/programming.png" width="170" alt="Programming courses">
+  <img src="docs/screenshots/list.png" width="170" alt="A course with units, lessons, unit notes and unit quiz">
+  <img src="docs/screenshots/mathex.png" width="170" alt="A worked example with revealed steps">
+  <img src="docs/screenshots/code.png" width="170" alt="A C code block in a lesson">
+  <img src="docs/screenshots/question.png" width="170" alt="A practice question">
+  <img src="docs/screenshots/correct.png" width="170" alt="Feedback after a correct answer">
+</p>
+
+## Courses
+
+| Subject | Courses | Lessons |
+|---|---|---|
+| Math | Pre-Algebra, Algebra 1, Geometry, Algebra 2, Precalculus | 123 |
+| Programming | C Fundamentals, Arrays, Strings and Debugging, Algorithms in C, Memory and Pointers, Data Structures in C, Programming Basics (Python) | 112 |
+| Science | Science Basics | 2 |
+| Electronics | Electronics Basics | 4 |
+
+Lessons live in a separate repository, [`Kmassidik/dopamine-content`](https://github.com/Kmassidik/dopamine-content), and arrive through the **Update content** button. The app is usable on first launch with bundled sample content.
+
+> **Status: early but usable.** Not built yet: spaced review, hearts, a final course test and settings such as dark theme. See the roadmap in the content repo for what is planned next.
+
+## Try it (Android only)
+
+Download `dopamine-0.3.0.apk` from the [latest release](https://github.com/Kmassidik/dopamine/releases/latest), open it on an Android 7.0+ phone (allow "install unknown apps" if asked), then open **Settings, Update content** once to download the lessons. There is no iPhone or web version.
+
+<p align="center">
+  <img src="docs/screenshots/settings.png" width="220" alt="Settings with the Update content button">
+</p>
 
 ## Documents
 
