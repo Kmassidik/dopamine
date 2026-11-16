@@ -11,6 +11,7 @@ kotlin {
         namespace = "app.dopamine.shared"
         compileSdk = 37
         minSdk = 24
+        withHostTest { }
     }
     iosArm64()
     iosSimulatorArm64()

@@ -3,8 +3,8 @@ package app.dopamine.ui.math
 import app.dopamine.ui.math.Seg.Code
 import app.dopamine.ui.math.Seg.Math
 import app.dopamine.ui.math.Seg.Text
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.Test
 
 class InlineSplitTest {
     @Test fun plainText() = assertEquals(listOf(Text("hello")), splitInline("hello"))
