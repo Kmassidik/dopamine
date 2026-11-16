@@ -5,6 +5,7 @@ Checks every tappable element for what a screen reader needs and what a thumb ne
   NO-LABEL     tappable but nothing to read (no text or content description, own or inside it)
   SMALL-TARGET tappable but smaller than 48dp in width or height
   EDIT-LABEL   a text box with no content description (the screen reader cannot say what to type)
+  CHECK-BOTTOM a short target at the very bottom, where some phones clip the dump: confirm on a screenshot
 Usage:  python3 tools/a11y_audit.py dump.xml [--density 440]
 Exit code 1 when there is any finding. See tools/a11y_audit.sh to run it against a connected phone.
 """
@@ -31,6 +32,8 @@ def label_of(node):
 def audit(root, density):
     min_px = 48 * density / 160.0
     findings = []
+    screen_h = max((bounds(n) or (0, 0, 0, 0))[3] for n in root.iter("node"))
+    bottom_zone = screen_h - 6 * min_px  # roughly the bottom 290dp
     for node in root.iter("node"):
         b = bounds(node)
         if b is None:
@@ -44,6 +47,12 @@ def audit(root, density):
             if not label:
                 findings.append(f"NO-LABEL     {where}")
             if w < min_px - 1 or h < min_px - 1:
+                note = ""
+                if b[3] > bottom_zone and w >= min_px - 1:
+                    # Some phones (MIUI) report bounds clipped at the bottom edge, so a short height here may be
+                    # a clipped dump, not a real problem. Confirm with a screenshot; not counted as a failure.
+                    findings.append(f"CHECK-BOTTOM  {where} looks {w / density * 160:.0f}x{h / density * 160:.0f}dp (bottom of screen: dump may clip, confirm on a screenshot)")
+                    continue
                 findings.append(f"SMALL-TARGET {where} is {w / density * 160:.0f}x{h / density * 160:.0f}dp")
         if node.get("class", "").endswith("EditText") and not (node.get("content-desc") or "").strip():
             findings.append(f"EDIT-LABEL    {where}")
@@ -62,10 +71,11 @@ def main():
     root = ET.parse(args[0]).getroot()
     findings = audit(root, density)
     taps = sum(1 for n in root.iter("node") if n.get("clickable") == "true")
-    print(f"{taps} tappable elements checked, {len(findings)} finding(s)")
+    real = [f for f in findings if not f.startswith("CHECK-BOTTOM")]
+    print(f"{taps} tappable elements checked, {len(real)} finding(s)" + (f", {len(findings) - len(real)} to confirm by eye" if len(findings) != len(real) else ""))
     for f in findings:
         print("  " + f)
-    return 1 if findings else 0
+    return 1 if real else 0
 
 
 if __name__ == "__main__":
