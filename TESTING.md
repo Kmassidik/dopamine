@@ -65,3 +65,10 @@ python3 tools/a11y_audit.py dump.xml --density 440   # or audit a saved `uiautom
 ```
 Findings: `NO-LABEL` (tappable but nothing to read), `SMALL-TARGET` (under 48dp), `EDIT-LABEL` (a text box with no description). Run it on each screen you change (Home, a course, a lesson question, notes, Settings). Rules of thumb in code: use `BackButton` for the back arrow, `Modifier.heading()` on screen and section titles, `bounceClick(onClickLabel = open label)` for tappable rows, `Role.RadioButton` plus `selected` for answer choices, a content description on every text box and on every picture (`alt` in the content), and a polite live region for messages that appear after an action (feedback after Check, a revealed step).
 Also try it by hand: Settings > Accessibility > TalkBack, then swipe through a lesson.
+
+## Check a whole content repo with the app's own validators
+```bash
+git clone https://github.com/Kmassidik/dopamine-content /tmp/content
+CONTENT_DIR=/tmp/content ./build.sh testDebugUnitTest --tests '*FullContentCheckTest*'
+```
+This runs the same strict checks an Update runs on the phone (manifest, every lesson and notes file against its hash and size, every picture). It is skipped when `CONTENT_DIR` is not set.
