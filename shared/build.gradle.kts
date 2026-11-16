@@ -14,7 +14,7 @@ kotlin {
         namespace = "app.dopamine.shared"
         compileSdk = 37
         minSdk = 24
-        withHostTest { }
+        withHostTest { isReturnDefaultValues = true } // android.util.Log in the shared code returns defaults in JVM tests
         androidResources { enable = true } // native fonts on Android: loaded synchronously, no flash of the system font
     }
     iosArm64()
