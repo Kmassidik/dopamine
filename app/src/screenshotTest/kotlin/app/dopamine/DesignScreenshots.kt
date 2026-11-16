@@ -1,5 +1,6 @@
 package app.dopamine
 
+import app.dopamine.shared.resources.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -111,8 +112,8 @@ fun ButtonsShot() = Page {
         ChunkyButton("Check (disabled)", {}, c.green, c.greenLip, c.onAccent, enabled = false)
         InkButton("Change name", {}, c.onAccent, Color.White)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            StatChip(app.dopamine.R.drawable.ic_streak, "3", c.pinkTint, c.ink, "Streak")
-            StatChip(app.dopamine.R.drawable.ic_xp, "120", c.yellowTint, c.ink, "XP")
+            StatChip(Res.drawable.ic_streak, "3", c.pinkTint, c.ink, "Streak")
+            StatChip(Res.drawable.ic_xp, "120", c.yellowTint, c.ink, "XP")
         }
         ProgressBar(0.6f, c.greenTint, c.green)
     }

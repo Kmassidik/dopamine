@@ -22,7 +22,7 @@ import app.dopamine.ui.code.Tok
 import app.dopamine.ui.code.highlight
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
-import app.dopamine.ui.theme.JetBrainsMono
+import app.dopamine.ui.theme.jetBrainsMono
 
 /** Monospace code on a dark card. Scrolls sideways, never wraps, so indentation stays honest. */
 @Composable
@@ -54,7 +54,7 @@ fun CodeBlock(code: String, language: String?, modifier: Modifier = Modifier) {
         Text(
             text,
             color = Color.White,
-            style = MaterialTheme.typography.bodyMedium.copy(fontFamily = JetBrainsMono, fontSize = 14.sp, lineHeight = 22.sp),
+            style = MaterialTheme.typography.bodyMedium.copy(fontFamily = jetBrainsMono(), fontSize = 14.sp, lineHeight = 22.sp),
             softWrap = false,
             modifier = Modifier.horizontalScroll(rememberScrollState()),
         )

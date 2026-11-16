@@ -11,10 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.theme.Dopamine
 
@@ -28,9 +28,9 @@ fun ReviewScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            IconImage(R.drawable.mascot_sleep, size = 140.dp)
-            Text(stringResource(R.string.review_empty_title), style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 16.dp))
-            Text(stringResource(R.string.review_empty_body), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
+            IconImage(Res.drawable.mascot_sleep, size = 140.dp)
+            Text(stringResource(Res.string.review_empty_title), style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 16.dp))
+            Text(stringResource(Res.string.review_empty_body), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
         }
     }
 }

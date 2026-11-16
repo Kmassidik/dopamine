@@ -24,11 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.components.BackButton
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.IconImage
@@ -50,7 +50,7 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit, onOpenCourse: (Str
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                BackButton(stringResource(R.string.back), onBack)
+                BackButton(stringResource(Res.string.back), onBack)
                 Text(cat?.name.orEmpty(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp).heading())
             }
             LazyColumn(
@@ -64,7 +64,7 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit, onOpenCourse: (Str
                             .fillMaxWidth()
                             .clip(CardShape)
                             .background(tints[i % tints.size])
-                            .bounceClick(stringResource(R.string.action_open)) { onOpenCourse(course.id) }
+                            .bounceClick(stringResource(Res.string.action_open)) { onOpenCourse(course.id) }
                             .padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -77,13 +77,13 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit, onOpenCourse: (Str
                                 Text(course.description, style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
                             }
                             Text(
-                                pluralStringResource(R.plurals.n_lessons, lessons, lessons),
+                                pluralStringResource(Res.plurals.n_lessons, lessons, lessons),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = c.inkSoft,
                                 modifier = Modifier.padding(top = 4.dp),
                             )
                         }
-                        AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
+                        AppIcon(Res.drawable.ic_chevron, c.ink, size = 24.dp)
                     }
                 }
             }

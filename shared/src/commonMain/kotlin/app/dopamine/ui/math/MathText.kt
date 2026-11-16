@@ -13,10 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
@@ -29,11 +25,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
-import androidx.core.content.res.ResourcesCompat
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.lesson.plainMath
 import app.dopamine.ui.theme.Dopamine
-import app.dopamine.ui.theme.JetBrainsMono
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
+import app.dopamine.ui.theme.jetBrainsMono
+import app.dopamine.ui.theme.nunito
 
 private class Built(val text: AnnotatedString, val content: Map<String, InlineTextContent>, val descentPx: Float)
 
@@ -53,22 +53,23 @@ fun MathText(
         Text(text, modifier, color = color, style = style, textAlign = textAlign)
         return
     }
-    val context = LocalContext.current
     val density = LocalDensity.current
-    val face = remember { ResourcesCompat.getFont(context, R.font.nunito_semibold) }
+    val measurer = rememberTextMeasurer()
+    val face = nunito()
+    val mono = jetBrainsMono()
     val ink = if (color == Color.Unspecified) LocalContentColor.current else color
     val sizePx = with(density) { (if (style.fontSize.isSpecified) style.fontSize else 16.sp).toPx() }
     val codeBg = Dopamine.colors.pinkTint
     val codeInk = Dopamine.colors.pinkText
-    val codeStyle = remember(codeBg, codeInk) { SpanStyle(fontFamily = JetBrainsMono, background = codeBg, color = codeInk) }
-    val built = remember(text, sizePx, ink, codeStyle) { build(text, sizePx, face, ink.toArgb(), density, codeStyle) }
+    val codeStyle = remember(codeBg, codeInk, mono) { SpanStyle(fontFamily = mono, background = codeBg, color = codeInk) }
+    val built = remember(text, sizePx, ink, codeStyle, face, measurer, density) { build(text, sizePx, measurer, face, ink, density, codeStyle) }
     // Math can hang below the baseline (fraction denominators); the line height does not know, so make room.
     val room = with(density) { built.descentPx.toDp() }
     Text(built.text, modifier.padding(bottom = room), color = ink, style = style, textAlign = textAlign, inlineContent = built.content)
 }
 
-private fun build(text: String, sizePx: Float, face: android.graphics.Typeface?, argb: Int, density: Density, codeStyle: SpanStyle): Built {
-    val layout = MathLayout(face, argb)
+private fun build(text: String, sizePx: Float, measurer: TextMeasurer, face: FontFamily, ink: Color, density: Density, codeStyle: SpanStyle): Built {
+    val layout = MathLayout(measurer, face, ink, density)
     val content = HashMap<String, InlineTextContent>()
     var descent = 0f
     val annotated = buildAnnotatedString {
@@ -84,7 +85,7 @@ private fun build(text: String, sizePx: Float, face: android.graphics.Typeface?,
                     content[id] = InlineTextContent(Placeholder(w, h, PlaceholderVerticalAlign.AboveBaseline)) {
                         Box(
                             Modifier.fillMaxSize().drawBehind {
-                                drawIntoCanvas { box.draw(it.nativeCanvas, 0f, box.asc) }
+                                with(box) { draw(0f, asc) }
                             },
                         )
                     }

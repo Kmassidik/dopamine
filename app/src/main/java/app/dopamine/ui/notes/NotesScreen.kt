@@ -23,13 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.components.BackButton
 import app.dopamine.domain.model.NoteBlock
 import app.dopamine.ui.components.AppIcon
@@ -49,9 +49,9 @@ fun NotesScreen(vm: NotesViewModel, onBack: () -> Unit) {
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                BackButton(stringResource(R.string.back), onBack)
+                BackButton(stringResource(Res.string.back), onBack)
                 Text(
-                    s.notes?.title ?: stringResource(R.string.notes_title),
+                    s.notes?.title ?: stringResource(Res.string.notes_title),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(start = 8.dp).heading(),
                 )
@@ -59,7 +59,7 @@ fun NotesScreen(vm: NotesViewModel, onBack: () -> Unit) {
             val notes = s.notes
             if (!s.loading && notes == null) {
                 Text(
-                    stringResource(R.string.notes_missing),
+                    stringResource(Res.string.notes_missing),
                     style = MaterialTheme.typography.bodyLarge,
                     color = c.inkSoft,
                     textAlign = TextAlign.Center,
@@ -121,7 +121,7 @@ private fun ListBlock(c: DopamineColors, b: NoteBlock) {
 @Composable
 private fun Tip(c: DopamineColors, b: NoteBlock) {
     Row(Modifier.fillMaxWidth().clip(CardShape).background(c.pinkTint).padding(20.dp), verticalAlignment = Alignment.Top) {
-        IconImage(R.drawable.ic_bulb, size = 40.dp, bob = false)
+        IconImage(Res.drawable.ic_bulb, size = 40.dp, bob = false)
         MathText(b.body.orEmpty(), style = BodyStyle, modifier = Modifier.weight(1f).padding(start = 12.dp))
     }
 }

@@ -1,8 +1,5 @@
 package app.dopamine.ui.components
 
-import android.os.Build
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,17 +31,19 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import app.dopamine.R
+import app.dopamine.shared.resources.*
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.PillShape
 
-enum class Tab(val route: String, @DrawableRes val icon: Int, @StringRes val label: Int) {
-    Home("home", R.drawable.ic_home, R.string.tab_home),
-    Review("review", R.drawable.ic_review, R.string.tab_review),
-    Settings("settings", R.drawable.ic_settings, R.string.tab_settings),
+enum class Tab(val route: String, val icon: DrawableResource, val label: StringResource) {
+    Home("home", Res.drawable.ic_home, Res.string.tab_home),
+    Review("review", Res.drawable.ic_review, Res.string.tab_review),
+    Settings("settings", Res.drawable.ic_settings, Res.string.tab_settings),
 }
 
 /**
@@ -57,7 +56,7 @@ enum class Tab(val route: String, @DrawableRes val icon: Int, @StringRes val lab
 fun BottomBar(selected: Tab?, onSelect: (Tab) -> Unit, modifier: Modifier = Modifier, backdrop: GraphicsLayer? = null) {
     val c = Dopamine.colors
     var top by remember { mutableFloatStateOf(0f) }
-    val blur = backdrop != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val blur = backdrop != null && supportsBackdropBlur()
     Box(modifier.fillMaxWidth().onGloballyPositioned { top = it.positionInRoot().y }) {
         if (blur) {
             Box(

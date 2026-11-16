@@ -2,29 +2,31 @@ package app.dopamine.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import app.dopamine.R
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import app.dopamine.shared.resources.*
+import org.jetbrains.compose.resources.Font
 
 /** Headings, numbers and buttons: chunky and playful. */
-val Fredoka = FontFamily(
-    Font(R.font.fredoka_medium, FontWeight.Medium),
-    Font(R.font.fredoka_bold, FontWeight.Bold),
+@Composable fun fredoka(): FontFamily = FontFamily(
+    Font(Res.font.fredoka_medium, FontWeight.Medium),
+    Font(Res.font.fredoka_bold, FontWeight.Bold),
 )
 
 /** Body text and questions: round but calm, easy to read for minutes. */
-val Nunito = FontFamily(
-    Font(R.font.nunito_regular, FontWeight.Normal),
-    Font(R.font.nunito_semibold, FontWeight.SemiBold),
-    Font(R.font.nunito_bold, FontWeight.Bold),
+@Composable fun nunito(): FontFamily = FontFamily(
+    Font(Res.font.nunito_regular, FontWeight.Normal),
+    Font(Res.font.nunito_semibold, FontWeight.SemiBold),
+    Font(Res.font.nunito_bold, FontWeight.Bold),
 )
 
 /** Code: monospace, for code blocks and `inline code`. */
-val JetBrainsMono = FontFamily(
-    Font(R.font.jetbrains_mono_regular, FontWeight.Normal),
-    Font(R.font.jetbrains_mono_bold, FontWeight.Bold),
+@Composable fun jetBrainsMono(): FontFamily = FontFamily(
+    Font(Res.font.jetbrains_mono_regular, FontWeight.Normal),
+    Font(Res.font.jetbrains_mono_bold, FontWeight.Bold),
 )
 
 private fun style(family: FontFamily, size: Int, line: Int, weight: FontWeight, spacing: Double = 0.0) = TextStyle(
@@ -36,7 +38,13 @@ private fun style(family: FontFamily, size: Int, line: Int, weight: FontWeight, 
 )
 
 /** Display 40, headline 28, title 24/18/16, body 16/14, label 17/13/12. */
-val DopamineTypography = Typography(
+@Composable fun dopamineTypography(): Typography {
+    val fredoka = fredoka()
+    val nunito = nunito()
+    return remember(fredoka, nunito) { buildTypography(fredoka, nunito) }
+}
+
+private fun buildTypography(Fredoka: FontFamily, Nunito: FontFamily) = Typography(
     displayLarge = style(Fredoka, 40, 46, FontWeight.Bold),
     displayMedium = style(Fredoka, 32, 38, FontWeight.Bold),
     headlineMedium = style(Fredoka, 28, 34, FontWeight.Bold),

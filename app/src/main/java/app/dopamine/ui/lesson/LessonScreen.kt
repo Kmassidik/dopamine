@@ -34,8 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -49,7 +49,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.components.BackButton
 import app.dopamine.domain.model.Question
 import app.dopamine.ui.components.AppIcon
@@ -91,9 +91,9 @@ fun LessonScreen(vm: LessonViewModel, onClose: () -> Unit, onRetry: () -> Unit =
 @Composable
 private fun Empty(c: DopamineColors, onClose: () -> Unit) {
     Column(Modifier.fillMaxSize().padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        IconImage(R.drawable.mascot_sweat, size = 120.dp)
-        Text(stringResource(R.string.lesson_empty), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center, modifier = Modifier.padding(vertical = 16.dp))
-        ChunkyButton(stringResource(R.string.back), onClose, c.green, c.greenLip, c.onAccent)
+        IconImage(Res.drawable.mascot_sweat, size = 120.dp)
+        Text(stringResource(Res.string.lesson_empty), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center, modifier = Modifier.padding(vertical = 16.dp))
+        ChunkyButton(stringResource(Res.string.back), onClose, c.green, c.greenLip, c.onAccent)
     }
 }
 
@@ -101,22 +101,22 @@ private fun Empty(c: DopamineColors, onClose: () -> Unit) {
 fun LessonDone(c: DopamineColors, s: LessonState, onClose: () -> Unit, onRetry: () -> Unit, onOpenNotes: () -> Unit) {
     val good = if (s.quiz) s.quizPassed else s.correct * 2 >= s.questions.size
     Column(Modifier.fillMaxSize().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        IconImage(if (good) R.drawable.mascot_trophy else if (s.quiz) R.drawable.mascot_think else R.drawable.mascot_cheer, size = 160.dp)
+        IconImage(if (good) Res.drawable.mascot_trophy else if (s.quiz) Res.drawable.mascot_think else Res.drawable.mascot_cheer, size = 160.dp)
         Text(
-            stringResource(if (!s.quiz) R.string.lesson_done else if (s.quizPassed) R.string.quiz_passed else R.string.quiz_failed),
+            stringResource(if (!s.quiz) Res.string.lesson_done else if (s.quizPassed) Res.string.quiz_passed else Res.string.quiz_failed),
             style = MaterialTheme.typography.displayLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp),
         )
         Text(
-            stringResource(R.string.lesson_score, s.correct, s.questions.size),
+            stringResource(Res.string.lesson_score, s.correct, s.questions.size),
             style = MaterialTheme.typography.bodyLarge,
             color = c.inkSoft,
             modifier = Modifier.padding(top = 4.dp, bottom = 16.dp),
         )
         if (s.quiz && !s.quizPassed) {
             Text(
-                stringResource(R.string.quiz_failed_body, app.dopamine.domain.progress.QUIZ_PASS_PERCENT),
+                stringResource(Res.string.quiz_failed_body, app.dopamine.domain.progress.QUIZ_PASS_PERCENT),
                 style = MaterialTheme.typography.bodyLarge,
                 color = c.inkSoft,
                 textAlign = TextAlign.Center,
@@ -125,7 +125,7 @@ fun LessonDone(c: DopamineColors, s: LessonState, onClose: () -> Unit, onRetry: 
         }
         if (s.skipped > 0) {
             Text(
-                pluralStringResource(R.plurals.n_skipped, s.skipped, s.skipped),
+                pluralStringResource(Res.plurals.n_skipped, s.skipped, s.skipped),
                 style = MaterialTheme.typography.bodyMedium,
                 color = c.inkSoft,
                 textAlign = TextAlign.Center,
@@ -133,15 +133,15 @@ fun LessonDone(c: DopamineColors, s: LessonState, onClose: () -> Unit, onRetry: 
             )
         }
         if (s.xpEarned > 0 || !s.quiz) {
-            StatChip(R.drawable.ic_xp, "+${s.xpEarned}", c.yellowTint, c.ink, stringResource(R.string.xp_desc, s.xpEarned))
+            StatChip(Res.drawable.ic_xp, "+${s.xpEarned}", c.yellowTint, c.ink, stringResource(Res.string.xp_desc, s.xpEarned))
         }
         Box(Modifier.size(24.dp))
         if (s.quiz && !s.quizPassed) {
-            ChunkyButton(stringResource(R.string.quiz_read_notes), onOpenNotes, c.yellow, c.yellowLip, c.onAccent)
+            ChunkyButton(stringResource(Res.string.quiz_read_notes), onOpenNotes, c.yellow, c.yellowLip, c.onAccent)
             Box(Modifier.size(4.dp))
-            ChunkyButton(stringResource(R.string.quiz_try_again), onRetry, c.green, c.greenLip, c.onAccent)
+            ChunkyButton(stringResource(Res.string.quiz_try_again), onRetry, c.green, c.greenLip, c.onAccent)
         } else {
-            ChunkyButton(stringResource(R.string.lesson_finish), onClose, c.green, c.greenLip, c.onAccent)
+            ChunkyButton(stringResource(Res.string.lesson_finish), onClose, c.green, c.greenLip, c.onAccent)
         }
     }
 }
@@ -151,8 +151,8 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
     val q = s.questions[s.index]
     val ans = remember(q.id) { Answer() }
     Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-        BackButton(stringResource(R.string.lesson_close), onClose)
-        val progressText = stringResource(R.string.lesson_progress, s.index + 1, s.questions.size)
+        BackButton(stringResource(Res.string.lesson_close), onClose)
+        val progressText = stringResource(Res.string.lesson_progress, s.index + 1, s.questions.size)
         ProgressBar(
             s.index.toFloat() / s.questions.size, c.greenTint, c.green,
             Modifier.weight(1f).padding(end = 16.dp).semantics {
@@ -182,9 +182,9 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconImage(if (good) R.drawable.ic_correct else R.drawable.ic_wrong, size = 32.dp, bob = false)
+                    IconImage(if (good) Res.drawable.ic_correct else Res.drawable.ic_wrong, size = 32.dp, bob = false)
                     Text(
-                        stringResource(if (good) R.string.lesson_correct else R.string.lesson_wrong),
+                        stringResource(if (good) Res.string.lesson_correct else Res.string.lesson_wrong),
                         style = MaterialTheme.typography.titleMedium,
                         color = if (good) c.greenText else c.pinkText,
                         modifier = Modifier.padding(start = 8.dp),
@@ -193,12 +193,12 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
                 if (q.explanation.isNotBlank()) MathText(q.explanation, style = MaterialTheme.typography.bodyMedium)
             }
             ChunkyButton(
-                stringResource(R.string.lesson_continue), vm::next,
+                stringResource(Res.string.lesson_continue), vm::next,
                 if (good) c.green else c.pink, if (good) c.greenLip else c.pinkLip, c.onAccent,
             )
         } else {
             ChunkyButton(
-                stringResource(R.string.lesson_check), { vm.check(ans.eval()) },
+                stringResource(Res.string.lesson_check), { vm.check(ans.eval()) },
                 c.green, c.greenLip, c.onAccent, enabled = ans.ready,
             )
         }
@@ -247,8 +247,8 @@ private fun ChoiceBody(c: DopamineColors, q: Question, ans: Answer, checked: Boo
                 else -> Color.White to c.line
             }
             val state = when {
-                checked && i == q.answerIndex -> stringResource(R.string.lesson_correct)
-                checked && i == sel -> stringResource(R.string.lesson_wrong)
+                checked && i == q.answerIndex -> stringResource(Res.string.lesson_correct)
+                checked && i == sel -> stringResource(Res.string.lesson_wrong)
                 else -> null
             }
             Option(c, choice, bg, line, if (checked) null else ({ sel = i }), role = Role.RadioButton, selected = sel == i, state = state)
@@ -270,7 +270,7 @@ private fun sameAnswer(given: String, accepted: String): Boolean {
 @Composable
 private fun TypeBody(c: DopamineColors, q: Question, ans: Answer, checked: Boolean) {
     var text by remember(q.id) { mutableStateOf("") }
-    val answerLabel = stringResource(R.string.answer_label)
+    val answerLabel = stringResource(Res.string.answer_label)
     SideEffect {
         ans.ready = text.isNotBlank()
         ans.eval = { q.accepted.orEmpty().any { sameAnswer(text, it) } }
@@ -287,7 +287,7 @@ private fun TypeBody(c: DopamineColors, q: Question, ans: Answer, checked: Boole
     )
     if (checked) {
         Text(
-            stringResource(R.string.lesson_answer_was, plainMath(q.accepted.orEmpty().firstOrNull().orEmpty())),
+            stringResource(Res.string.lesson_answer_was, plainMath(q.accepted.orEmpty().firstOrNull().orEmpty())),
             style = MaterialTheme.typography.bodyMedium,
             color = c.inkSoft,
         )
@@ -340,7 +340,7 @@ private fun OrderBody(c: DopamineColors, q: Question, ans: Answer, checked: Bool
     val chosen = remember(q.id) { mutableStateListOf<Int>() }
     SideEffect { ans.ready = steps.isNotEmpty() && chosen.size == steps.size; ans.eval = { chosen.toList() == steps.indices.toList() } }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(stringResource(R.string.lesson_order_hint), style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
+        Text(stringResource(Res.string.lesson_order_hint), style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
         chosen.forEachIndexed { n, idx ->
             val line = if (!checked) c.yellow else if (idx == n) c.green else c.pink
             val bg = if (!checked) c.yellowTint else if (idx == n) c.greenTint else c.pinkTint

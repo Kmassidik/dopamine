@@ -1,6 +1,5 @@
 package app.dopamine.ui.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -42,7 +41,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.dopamine.ui.theme.Dopamine
@@ -51,23 +50,24 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.Role
-import app.dopamine.R
+import app.dopamine.shared.resources.*
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import kotlinx.coroutines.delay
 import app.dopamine.ui.theme.ButtonShape
 import app.dopamine.ui.theme.PillShape
 
-@DrawableRes
-fun iconFor(name: String): Int = when (name) {
-    "ic_math" -> R.drawable.ic_math
-    "ic_science" -> R.drawable.ic_test
-    "ic_english" -> R.drawable.ic_english
-    "ic_swe" -> R.drawable.ic_swe
-    "ic_electronics" -> R.drawable.ic_electronics
-    else -> R.drawable.ic_english // unknown names fall back to a default icon
+fun iconFor(name: String): DrawableResource = when (name) {
+    "ic_math" -> Res.drawable.ic_math
+    "ic_science" -> Res.drawable.ic_test
+    "ic_english" -> Res.drawable.ic_english
+    "ic_swe" -> Res.drawable.ic_swe
+    "ic_electronics" -> Res.drawable.ic_electronics
+    else -> Res.drawable.ic_english // unknown names fall back to a default icon
 }
 
 @Composable
-fun AppIcon(@DrawableRes id: Int, tint: Color, modifier: Modifier = Modifier, size: Dp = 24.dp, description: String? = null) {
+fun AppIcon(id: DrawableResource, tint: Color, modifier: Modifier = Modifier, size: Dp = 24.dp, description: String? = null) {
     Icon(painterResource(id), contentDescription = description, tint = tint, modifier = modifier.size(size))
 }
 
@@ -80,7 +80,7 @@ fun ChunkyButton(
     lip: Color,
     content: Color,
     modifier: Modifier = Modifier,
-    leadingIcon: Int? = null,
+    leadingIcon: DrawableResource? = null,
     enabled: Boolean = true,
 ) {
     val fade = if (enabled) 1f else 0.4f
@@ -110,7 +110,7 @@ fun ChunkyButton(
 }
 
 @Composable
-fun StatChip(@DrawableRes icon: Int, value: String, fill: Color, textColor: Color, description: String) {
+fun StatChip(icon: DrawableResource, value: String, fill: Color, textColor: Color, description: String) {
     Row(
         Modifier.clip(PillShape).background(fill).heightIn(min = 40.dp).padding(start = 8.dp, end = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -146,7 +146,7 @@ fun ProgressBar(progress: Float, track: Color, color: Color, modifier: Modifier 
 
 /** Flat black pill, the primary action on the home screen. */
 @Composable
-fun InkButton(text: String, onClick: () -> Unit, container: Color, content: Color, modifier: Modifier = Modifier, leadingIcon: Int? = null) {
+fun InkButton(text: String, onClick: () -> Unit, container: Color, content: Color, modifier: Modifier = Modifier, leadingIcon: DrawableResource? = null) {
     Surface(
         onClick = onClick,
         shape = PillShape,
@@ -173,13 +173,13 @@ fun InkButton(text: String, onClick: () -> Unit, container: Color, content: Colo
  * no frames (battery). Skipped entirely when the system asks for reduced motion.
  */
 @Composable
-fun IconImage(@DrawableRes id: Int, modifier: Modifier = Modifier, size: Dp = 48.dp, description: String? = null, bob: Boolean = true) {
+fun IconImage(id: DrawableResource, modifier: Modifier = Modifier, size: Dp = 48.dp, description: String? = null, bob: Boolean = true) {
     val reduced = LocalReducedMotion.current
     val animated = if (bob && !reduced) {
         val y = remember(id) { Animatable(0f) }
         LaunchedEffect(id) {
-            delay((id % 9) * 130L)
-            val spec = tween<Float>(1100 + (id % 5) * 90, easing = Motion.EaseInOutSoft)
+            delay((id.stagger() % 9) * 130L)
+            val spec = tween<Float>(1100 + (id.stagger() % 5) * 90, easing = Motion.EaseInOutSoft)
             repeat(BOB_CYCLES) {
                 y.animateTo(1f, spec)
                 y.animateTo(0f, spec)
@@ -196,6 +196,9 @@ fun IconImage(@DrawableRes id: Int, modifier: Modifier = Modifier, size: Dp = 48
 }
 
 private const val BOB_CYCLES = 2
+
+/** A stable small number per icon, so icons start bobbing at different moments. */
+private fun DrawableResource.stagger(): Int = (hashCode() and 0x7fffffff)
 
 /** Clickable with a quick squash on press. No squash when reduced motion is on. */
 fun Modifier.bounceClick(onClickLabel: String? = null, role: Role? = Role.Button, onClick: () -> Unit): Modifier = composed {
@@ -214,7 +217,7 @@ fun Modifier.bounceClick(onClickLabel: String? = null, role: Role? = Role.Button
 
 /** A soft banner for a result: green for success, pink for a problem. */
 @Composable
-fun Message(bg: Color, fg: Color, icon: Int, text: String, dismissLabel: String, onDismiss: () -> Unit) {
+fun Message(bg: Color, fg: Color, icon: DrawableResource, text: String, dismissLabel: String, onDismiss: () -> Unit) {
     Row(
         Modifier.fillMaxWidth().clip(app.dopamine.ui.theme.CardShape).background(bg).padding(start = 16.dp, top = 4.dp, bottom = 4.dp, end = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -241,5 +244,5 @@ fun BackButton(description: String, onClick: () -> Unit, modifier: Modifier = Mo
             .semantics { contentDescription = description }
             .clickable(role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
-    ) { AppIcon(R.drawable.ic_back, Dopamine.colors.ink) }
+    ) { AppIcon(Res.drawable.ic_back, Dopamine.colors.ink) }
 }

@@ -31,7 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -40,7 +40,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.components.BackButton
 import app.dopamine.domain.model.LearnPage
 import app.dopamine.ui.components.AppIcon
@@ -70,17 +70,17 @@ fun LearnScreen(vm: LearnViewModel, onBack: () -> Unit, onPractice: () -> Unit) 
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             val page = s.page ?: return@Column
             Row(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp, top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                BackButton(stringResource(R.string.back), onBack)
+                BackButton(stringResource(Res.string.back), onBack)
                 ProgressBar((s.index + 1f) / s.pages.size, c.yellowTint, c.yellow, Modifier.weight(1f).padding(horizontal = 8.dp))
                 Text(
-                    stringResource(R.string.learn_skip),
+                    stringResource(Res.string.learn_skip),
                     style = MaterialTheme.typography.labelMedium,
                     color = c.inkSoft,
                     modifier = Modifier.heightIn(min = 48.dp).clip(CircleShape).clickable(role = Role.Button, onClick = onPractice).padding(horizontal = 12.dp, vertical = 14.dp),
                 )
             }
             Text(
-                stringResource(R.string.learn_page, s.index + 1, s.pages.size),
+                stringResource(Res.string.learn_page, s.index + 1, s.pages.size),
                 style = MaterialTheme.typography.labelMedium,
                 color = c.inkSoft,
                 modifier = Modifier.padding(start = 20.dp, top = 8.dp),
@@ -107,9 +107,9 @@ fun LearnScreen(vm: LearnViewModel, onBack: () -> Unit, onPractice: () -> Unit) 
                 }
             }
             val label = when {
-                !s.atLastStep -> R.string.learn_next_step
-                s.isLast -> R.string.learn_start
-                else -> R.string.learn_next
+                !s.atLastStep -> Res.string.learn_next_step
+                s.isLast -> Res.string.learn_start
+                else -> Res.string.learn_next
             }
             ChunkyButton(
                 stringResource(label),
@@ -127,7 +127,7 @@ private val BodyStyle @Composable get() = MaterialTheme.typography.bodyLarge.mer
 
 @Composable
 private fun TextPage(c: DopamineColors, p: LearnPage) {
-    IconImage(R.drawable.ic_reading, size = 64.dp)
+    IconImage(Res.drawable.ic_reading, size = 64.dp)
     Text(
         p.title.orEmpty(),
         style = MaterialTheme.typography.headlineMedium,
@@ -140,9 +140,9 @@ private fun TextPage(c: DopamineColors, p: LearnPage) {
 @Composable
 private fun TipPage(c: DopamineColors, p: LearnPage) {
     Column(Modifier.fillMaxWidth().clip(CardShape).background(c.greenTint).padding(24.dp)) {
-        IconImage(R.drawable.ic_bulb, size = 56.dp)
+        IconImage(Res.drawable.ic_bulb, size = 56.dp)
         Text(
-            stringResource(R.string.learn_tip),
+            stringResource(Res.string.learn_tip),
             style = MaterialTheme.typography.titleLarge,
             color = c.greenText,
             modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
@@ -154,7 +154,7 @@ private fun TipPage(c: DopamineColors, p: LearnPage) {
 @Composable
 private fun ExamplePage(c: DopamineColors, p: LearnPage, shown: Int) {
     Text(
-        stringResource(R.string.learn_example),
+        stringResource(Res.string.learn_example),
         style = MaterialTheme.typography.labelLarge,
         color = c.yellowText,
         modifier = Modifier.clip(CircleShape).background(c.yellowTint).padding(horizontal = 14.dp, vertical = 6.dp),
@@ -189,8 +189,8 @@ private fun CodePage(c: DopamineColors, p: LearnPage) {
 @Composable
 internal fun Unsupported(c: DopamineColors) {
     Column(Modifier.fillMaxWidth().clip(CardShape).background(c.pinkTint).padding(24.dp)) {
-        IconImage(R.drawable.ic_locked, size = 56.dp, bob = false)
-        Text(stringResource(R.string.unsupported_title), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 12.dp, bottom = 6.dp))
-        Text(stringResource(R.string.unsupported_body), style = MaterialTheme.typography.bodyLarge)
+        IconImage(Res.drawable.ic_locked, size = 56.dp, bob = false)
+        Text(stringResource(Res.string.unsupported_title), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 12.dp, bottom = 6.dp))
+        Text(stringResource(Res.string.unsupported_body), style = MaterialTheme.typography.bodyLarge)
     }
 }

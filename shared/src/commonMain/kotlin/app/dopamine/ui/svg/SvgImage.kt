@@ -26,19 +26,21 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
+import app.dopamine.ui.theme.nunito
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 
 /** How the app loads and parses an image by its content path. Provided once, near the top of the navigation. */
 val LocalSvgLoader = staticCompositionLocalOf<suspend (String) -> SvgDoc?> { { null } }
@@ -70,9 +72,8 @@ private class Result(val doc: SvgDoc?)
 @Composable
 fun SvgDocImage(doc: SvgDoc, alt: String, modifier: Modifier = Modifier) {
     val ink = Dopamine.colors.ink
-    val context = LocalContext.current
-    val regular = remember { ResourcesCompat.getFont(context, R.font.nunito_semibold) }
-    val bold = remember { ResourcesCompat.getFont(context, R.font.nunito_bold) }
+    val measurer = rememberTextMeasurer()
+    val family = nunito()
     Canvas(
         modifier
             .fillMaxWidth()
@@ -83,7 +84,7 @@ fun SvgDocImage(doc: SvgDoc, alt: String, modifier: Modifier = Modifier) {
             },
     ) {
         val scale = size.width / doc.width
-        for (shape in doc.shapes) drawShape(shape, scale, ink, regular, bold)
+        for (shape in doc.shapes) drawShape(shape, scale, ink, measurer, family)
     }
 }
 
@@ -100,7 +101,7 @@ private fun stroke(st: SvgStyle, scale: Float) = Stroke(
     pathEffect = if (st.dash.isEmpty()) null else PathEffect.dashPathEffect(FloatArray(if (st.dash.size % 2 == 0) st.dash.size else st.dash.size * 2) { st.dash[it % st.dash.size] * scale }),
 )
 
-private fun DrawScope.drawShape(shape: SvgShape, s: Float, ink: Color, regular: android.graphics.Typeface?, bold: android.graphics.Typeface?) {
+private fun DrawScope.drawShape(shape: SvgShape, s: Float, ink: Color, measurer: TextMeasurer, family: FontFamily) {
     val st = shape.style
     val fill = color(st.fill, ink, st.opacity)
     val line = color(st.stroke, ink, st.opacity)
@@ -147,19 +148,22 @@ private fun DrawScope.drawShape(shape: SvgShape, s: Float, ink: Color, regular: 
             line?.let { drawPath(p, it, style = strokeStyle) }
         }
         is SvgShape.Text -> fill?.let { c ->
-            drawIntoCanvas { canvas ->
-                val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
-                    color = c.toArgb()
-                    textSize = st.fontSize * s
-                    typeface = if (st.bold) bold else regular
-                    textAlign = when (st.anchor) {
-                        "middle" -> android.graphics.Paint.Align.CENTER
-                        "end" -> android.graphics.Paint.Align.RIGHT
-                        else -> android.graphics.Paint.Align.LEFT
-                    }
-                }
-                canvas.nativeCanvas.drawText(shape.text, shape.x * s, shape.y * s, paint)
+            val layout = measurer.measure(
+                shape.text,
+                TextStyle(
+                    fontFamily = family,
+                    fontWeight = if (st.bold) FontWeight.Bold else FontWeight.SemiBold,
+                    fontSize = (st.fontSize * s).toSp(),
+                    color = c,
+                ),
+            )
+            val width = layout.getLineRight(0)
+            val left = when (st.anchor) {
+                "middle" -> shape.x * s - width / 2
+                "end" -> shape.x * s - width
+                else -> shape.x * s
             }
+            drawText(layout, topLeft = Offset(left, shape.y * s - layout.firstBaseline))
         }
     }
 }

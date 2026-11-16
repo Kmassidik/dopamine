@@ -22,9 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.components.BackButton
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.theme.CardShape
@@ -66,7 +66,7 @@ fun FormulaTestScreen(onBack: () -> Unit) {
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                BackButton(stringResource(R.string.back), onBack)
+                BackButton(stringResource(Res.string.back), onBack)
                 Text("Formula test", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
             }
             LazyColumn(

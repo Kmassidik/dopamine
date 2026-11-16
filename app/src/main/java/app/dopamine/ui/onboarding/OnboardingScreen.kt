@@ -22,10 +22,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.domain.model.ProfileName
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.ChunkyButton
@@ -57,20 +57,20 @@ fun OnboardingScreen(vm: OnboardingViewModel) {
                     },
                 contentAlignment = androidx.compose.ui.Alignment.Center,
             ) {
-                IconImage(R.drawable.mascot_wave, size = 150.dp)
+                IconImage(Res.drawable.mascot_wave, size = 150.dp)
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(stringResource(R.string.onboarding_title), style = MaterialTheme.typography.displayLarge)
-                Text(stringResource(R.string.onboarding_body), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
+                Text(stringResource(Res.string.onboarding_title), style = MaterialTheme.typography.displayLarge)
+                Text(stringResource(Res.string.onboarding_body), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
             }
             NameField(
                 value = text,
                 onChange = vm::set,
-                hint = stringResource(R.string.onboarding_hint),
+                hint = stringResource(Res.string.onboarding_hint),
                 onDone = vm::save,
             )
             ChunkyButton(
-                text = stringResource(R.string.onboarding_action),
+                text = stringResource(Res.string.onboarding_action),
                 onClick = vm::save,
                 container = c.green,
                 lip = c.greenLip,

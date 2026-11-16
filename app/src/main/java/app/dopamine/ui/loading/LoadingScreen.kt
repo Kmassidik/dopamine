@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.LocalReducedMotion
@@ -38,10 +38,10 @@ fun LoadingScreen() {
     Box(Modifier.fillMaxSize().background(c.bg), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(Modifier.size(168.dp).clip(CircleShape).background(c.yellow), contentAlignment = Alignment.Center) {
-                IconImage(R.drawable.mascot_wave, size = 132.dp)
+                IconImage(Res.drawable.mascot_wave, size = 132.dp)
             }
-            Text(stringResource(R.string.app_name), style = MaterialTheme.typography.displayLarge, color = c.ink, modifier = Modifier.padding(top = 24.dp))
-            Text(stringResource(R.string.loading_tagline), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft, modifier = Modifier.padding(top = 4.dp))
+            Text(stringResource(Res.string.app_name), style = MaterialTheme.typography.displayLarge, color = c.ink, modifier = Modifier.padding(top = 24.dp))
+            Text(stringResource(Res.string.loading_tagline), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft, modifier = Modifier.padding(top = 4.dp))
             Row(Modifier.padding(top = 32.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 listOf(c.green, c.yellow, c.pink).forEachIndexed { i, color -> Dot(color, i, reduced) }
             }

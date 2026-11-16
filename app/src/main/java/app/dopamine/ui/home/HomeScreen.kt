@@ -32,15 +32,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.dopamine.R
+import app.dopamine.shared.resources.*
 import app.dopamine.data.repo.HomeStats
 import app.dopamine.domain.model.CategoryDto
 import app.dopamine.domain.progress.goalFraction
@@ -77,14 +77,14 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
                 }
                 item {
                     Text(
-                        stringResource(R.string.section_courses),
+                        stringResource(Res.string.section_courses),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(top = 4.dp).heading(),
                     )
                 }
                 val m = manifest
                 if (m == null) {
-                    item { Text(stringResource(R.string.loading), color = c.inkSoft) }
+                    item { Text(stringResource(Res.string.loading), color = c.inkSoft) }
                 } else {
                     items(m.categories.sortedBy { it.order }, key = { it.id }) { cat -> CourseRow(c, m, cat, onOpenCategory) }
                 }
@@ -95,9 +95,9 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
 
 @Composable
 private fun Header(c: DopamineColors, name: String, stats: HomeStats, onOpenSettings: () -> Unit) {
-    val settingsLabel = stringResource(R.string.settings_open)
+    val settingsLabel = stringResource(Res.string.settings_open)
     Box(Modifier.fillMaxWidth()) {
-        RibbonCorner(stringResource(R.string.ribbon_text), c.greenTint, c.ink, Modifier.align(Alignment.TopEnd).offset(y = (-36).dp))
+        RibbonCorner(stringResource(Res.string.ribbon_text), c.greenTint, c.ink, Modifier.align(Alignment.TopEnd).offset(y = (-36).dp))
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Row(
@@ -105,10 +105,10 @@ private fun Header(c: DopamineColors, name: String, stats: HomeStats, onOpenSett
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(Modifier.size(44.dp).clip(CircleShape).background(c.yellow), contentAlignment = Alignment.Center) {
-                        IconImage(R.drawable.mascot_happy, size = 36.dp, bob = false)
+                        IconImage(Res.drawable.mascot_happy, size = 36.dp, bob = false)
                     }
                     Text(
-                        stringResource(R.string.home_title),
+                        stringResource(Res.string.home_title),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 10.dp),
                     )
@@ -127,12 +127,12 @@ private fun Header(c: DopamineColors, name: String, stats: HomeStats, onOpenSett
                 }
             }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(stringResource(R.string.home_hello, name), style = MaterialTheme.typography.displayLarge, modifier = Modifier.heading())
-                Text(stringResource(R.string.home_subtitle), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
+                Text(stringResource(Res.string.home_hello, name), style = MaterialTheme.typography.displayLarge, modifier = Modifier.heading())
+                Text(stringResource(Res.string.home_subtitle), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                StatChip(R.drawable.ic_streak, stats.streak.toString(), c.pinkTint, c.ink, stringResource(R.string.streak_desc, stats.streak))
-                StatChip(R.drawable.ic_xp, stats.totalXp.toString(), c.yellowTint, c.ink, stringResource(R.string.xp_desc, stats.totalXp))
+                StatChip(Res.drawable.ic_streak, stats.streak.toString(), c.pinkTint, c.ink, stringResource(Res.string.streak_desc, stats.streak))
+                StatChip(Res.drawable.ic_xp, stats.totalXp.toString(), c.yellowTint, c.ink, stringResource(Res.string.xp_desc, stats.totalXp))
             }
         }
     }
@@ -140,7 +140,7 @@ private fun Header(c: DopamineColors, name: String, stats: HomeStats, onOpenSett
 
 @Composable
 private fun Tile(bg: Color, modifier: Modifier, onClick: (() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit) {
-    val openLabel = stringResource(R.string.action_open)
+    val openLabel = stringResource(Res.string.action_open)
     Column(
         modifier
             .clip(CardShape)
@@ -162,24 +162,24 @@ private fun Bento(c: DopamineColors, stats: HomeStats, onStart: () -> Unit) {
             },
             onClick = onStart,
         ) {
-            IconImage(R.drawable.mascot_study, size = 112.dp)
+            IconImage(Res.drawable.mascot_study, size = 112.dp)
             Box(Modifier.weight(1f))
-            Text(stringResource(R.string.tile_start_title), style = MaterialTheme.typography.titleLarge, color = c.onAccent)
-            Text(stringResource(R.string.tile_start_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
+            Text(stringResource(Res.string.tile_start_title), style = MaterialTheme.typography.titleLarge, color = c.onAccent)
+            Text(stringResource(Res.string.tile_start_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
         }
         Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Tile(c.yellow, Modifier.weight(1f).fillMaxWidth()) {
-                IconImage(R.drawable.ic_review, size = 48.dp)
-                Text(stringResource(R.string.tile_review_title), style = MaterialTheme.typography.titleMedium, color = c.onAccent)
-                Text(stringResource(R.string.tile_review_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
+                IconImage(Res.drawable.ic_review, size = 48.dp)
+                Text(stringResource(Res.string.tile_review_title), style = MaterialTheme.typography.titleMedium, color = c.onAccent)
+                Text(stringResource(Res.string.tile_review_sub), style = MaterialTheme.typography.bodyMedium, color = c.onAccent)
             }
             Tile(c.onAccent, Modifier.weight(1f).fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        Text(stringResource(R.string.tile_goal_title), style = MaterialTheme.typography.titleMedium, color = Color.White)
-                        Text(stringResource(R.string.goal_progress, stats.todayXp, stats.goalXp), style = MaterialTheme.typography.bodyMedium, color = Color.White)
+                        Text(stringResource(Res.string.tile_goal_title), style = MaterialTheme.typography.titleMedium, color = Color.White)
+                        Text(stringResource(Res.string.goal_progress, stats.todayXp, stats.goalXp), style = MaterialTheme.typography.bodyMedium, color = Color.White)
                     }
-                    IconImage(R.drawable.ic_goal, size = 40.dp)
+                    IconImage(Res.drawable.ic_goal, size = 40.dp)
                 }
                 Box(Modifier.height(10.dp))
                 ProgressBar(goalFraction(stats.todayXp, stats.goalXp), Color.White.copy(alpha = 0.25f), c.yellow, height = 10.dp)
@@ -202,7 +202,7 @@ private fun CourseRow(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpen: 
             .fillMaxWidth()
             .clip(CircleShape)
             .background(tint)
-            .bounceClick(stringResource(R.string.action_open)) { onOpen(cat.id) }
+            .bounceClick(stringResource(Res.string.action_open)) { onOpen(cat.id) }
             .padding(start = 8.dp, end = 20.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -213,14 +213,14 @@ private fun CourseRow(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpen: 
             Text(cat.name, style = MaterialTheme.typography.titleMedium)
             Text(
                 stringResource(
-                    R.string.category_summary,
-                    pluralStringResource(R.plurals.n_courses, courses, courses),
-                    pluralStringResource(R.plurals.n_lessons, lessons, lessons),
+                    Res.string.category_summary,
+                    pluralStringResource(Res.plurals.n_courses, courses, courses),
+                    pluralStringResource(Res.plurals.n_lessons, lessons, lessons),
                 ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = c.inkSoft,
             )
         }
-        AppIcon(R.drawable.ic_chevron, c.ink, size = 24.dp)
+        AppIcon(Res.drawable.ic_chevron, c.ink, size = 24.dp)
     }
 }
