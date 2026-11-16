@@ -86,8 +86,8 @@ On Xiaomi/MIUI, turn on *Developer options → Install via USB* and *USB debuggi
  (bundled seed)       (what the app reads)                  (https, sha256, size, schema, path checks)
 ```
 
-- The app only ever reads `filesDir/content`. On first launch (or if that folder is missing or corrupt) it is seeded from `app/src/main/assets/content`, which is a copy of the content repo.
-- **Update** fetches `manifest.json` from the content repo (`BuildConfig.CONTENT_BASE_URL`), diffs lessons by id/version/sha256, downloads only what changed into a staged copy, verifies every file, and then swaps the staged folder in atomically. Any failure discards the stage and leaves current content untouched.
+- The app only ever reads `filesDir/content`. On first launch (or if that folder is missing or corrupt) it is seeded from `app/src/main/assets/content`, a small sample (six lessons) in the same layout as the content repo: `manifest.json` at the top and everything else under `content/`.
+- **Update** fetches `manifest.json` from the content repo (`BuildConfig.CONTENT_BASE_URL`), diffs lessons by id/version/sha256 (and re-fetches any file missing on the phone, for example after a file moved), downloads only what changed into a staged copy, verifies every file, deletes files the new manifest no longer references, and then swaps the staged folder in atomically. Any failure discards the stage and leaves current content untouched.
 - Your name is stored on the phone in a Room (SQLite) database and used for the greeting.
 
 ## Repositories
@@ -95,7 +95,11 @@ On Xiaomi/MIUI, turn on *Developer options → Install via USB* and *USB debuggi
 - **App:** this repository.
 - **Content:** [`dopamine-content`](https://github.com/Kmassidik/dopamine-content). Lesson JSON, SVG diagrams, JSON Schemas, and the manifest generator. To publish new lessons: edit files, run `python3 tools/build_manifest.py`, push to `main`, and tap Update in the app.
 
-When the content repo changes, copy the new `manifest.json`, lesson folders and `images/` into `app/src/main/assets/content` if the bundled seed should include them.
+Manifest paths are relative to the content repo root and start with `content/` (for example `content/math/geometry/triangles/lesson-01.json`), because the app downloads `base URL + path`. To refresh the bundled sample from a checkout of the content repo:
+
+```bash
+python3 tools/sync_seed.py ../dopamine-content
+```
 
 ## Licenses
 

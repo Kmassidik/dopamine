@@ -52,9 +52,38 @@ class ManifestDiffTest {
         assertEquals(1, ManifestDiff.compute(m, m) { false }.imagesToFetch.size)
     }
 
+    @Test fun lessonThatMovedToANewPathIsRefetchedEvenWhenVersionAndHashAreUnchanged() {
+        val local = manifest(LessonRef("a", "a", "old/path/a.json", 1, "same", 100, 1))
+        val remote = manifest(LessonRef("a", "a", "content/new/path/a.json", 1, "same", 100, 1))
+        val onDisk = setOf("old/path/a.json")
+        val d = ManifestDiff.compute(local, remote) { it in onDisk }
+        assertEquals(listOf("a"), d.changedLessons.map { it.id })
+        assertEquals(emptyList(), d.newLessons)
+        assertEquals(emptyList(), d.removedIds)
+    }
+
+    @Test fun unchangedLessonWhoseFileIsPresentIsNotRefetched() {
+        val m = manifest(ref("a"))
+        assertEquals(0, ManifestDiff.compute(m, m) { true }.changedLessons.size)
+    }
+
+    @Test fun referencedPathsListsLessonsNotesImagesAndTheManifest() {
+        val m = Manifest(
+            1, "v", 1, emptyList(),
+            listOf(CourseDto("c", "m", "C", "", 1, listOf(UnitDto("u", "U", 1, listOf(ref("a"), ref("b")), NotesRef("n", "N", "m/c/u/notes.json", 1, "n", 10))))),
+            listOf(ImageDto("content/images/x.svg", "h", 10)),
+        )
+        assertEquals(
+            setOf("manifest.json", "m/c/u/a.json", "m/c/u/b.json", "m/c/u/notes.json", "content/images/x.svg"),
+            ManifestDiff.referencedPaths(m),
+        )
+    }
+
     @Test fun pathSafety() {
         assertTrue(SafePath.isSafe("math/algebra-1/linear-eq/lesson-01.json"))
         assertTrue(SafePath.isSafe("images/number-line.svg"))
+        assertTrue(SafePath.isSafe("content/math/algebra-1/linear-eq/lesson-01.json"))
+        assertTrue(SafePath.isSafe("content/images/number-line.svg"))
         listOf(
             "../etc/passwd.json", "/abs/lesson.json", "a/../b.json", "a//b.json", "a/b.txt",
             "a/b.json/../../c.json", "..\\x.json", "a/.hidden.json", "",

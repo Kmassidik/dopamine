@@ -1,6 +1,6 @@
 {
   "id": "linear-eq-01",
-  "version": 3,
+  "version": 4,
   "title": "One-step equations",
   "xp": 10,
   "tags": [
@@ -131,7 +131,7 @@
       "id": "q6",
       "type": "multiple_choice",
       "prompt": "Which point on the line is $x=3$?",
-      "image": "images/number-line.svg",
+      "image": "content/images/number-line.svg",
       "choices": [
         "A",
         "B",

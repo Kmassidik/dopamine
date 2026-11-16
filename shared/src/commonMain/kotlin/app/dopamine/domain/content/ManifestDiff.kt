@@ -20,13 +20,28 @@ object ManifestDiff {
 
     fun notes(m: Manifest): List<NotesRef> = m.courses.flatMap { it.units }.mapNotNull { it.notes }
 
-    /** [hasFile] reports whether an image is already on disk, so missing files get re-fetched. */
+    /**
+     * Every path a manifest points at, plus the manifest itself. Anything else in the content folder is an
+     * orphan (for example a file that moved to a new path) and can be deleted.
+     */
+    fun referencedPaths(m: Manifest): Set<String> =
+        buildSet {
+            add("manifest.json")
+            lessons(m).forEach { add(it.path) }
+            notes(m).forEach { add(it.path) }
+            m.images.forEach { add(it.path) }
+        }
+
+    /**
+     * [hasFile] reports whether a file is already on disk, so missing files get re-fetched. This covers a lesson,
+     * a note or an image that moved to a new path without its version or hash changing.
+     */
     fun compute(local: Manifest?, remote: Manifest, hasFile: (String) -> Boolean = { true }): DiffResult {
         val localLessons = local?.let { lessons(it) }.orEmpty().associateBy { it.id }
         val remoteLessons = lessons(remote)
         val new = remoteLessons.filter { it.id !in localLessons }
         val changed = remoteLessons.filter { r ->
-            localLessons[r.id]?.let { l -> l.version != r.version || l.sha256 != r.sha256 } == true
+            localLessons[r.id]?.let { l -> l.version != r.version || l.sha256 != r.sha256 || !hasFile(r.path) } == true
         }
         val removed = localLessons.keys - remoteLessons.map { it.id }.toSet()
         val localImages = local?.images.orEmpty().associateBy { it.path }

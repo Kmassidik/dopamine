@@ -1,5 +1,6 @@
 package app.dopamine.data.network
 
+import app.dopamine.data.content.ContentPrune
 import app.dopamine.data.content.ContentStore
 import app.dopamine.domain.content.LessonValidator
 import app.dopamine.domain.content.ManifestDiff
@@ -117,6 +118,7 @@ class UpdateManager(
                 onProgress(++done, total)
             }
             store.writeStaged(stage, "manifest.json", manifestBytes)
+            ContentPrune.prune(stage, ManifestDiff.referencedPaths(remote))
             currentCoroutineContext().ensureActive()
             store.swapIn(stage)
         } catch (e: Throwable) {

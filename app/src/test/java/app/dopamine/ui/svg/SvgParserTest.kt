@@ -23,7 +23,7 @@ class SvgParserTest {
     }
 
     @Test fun realBundledImagesParse() {
-        val dir = File("src/main/assets/content/images")
+        val dir = File("src/main/assets/content/content/images")
         val files = dir.listFiles { f -> f.name.endsWith(".svg") }!!
         assertTrue(files.isNotEmpty())
         files.forEach { assertNotNull(it.name, SvgParser.parse(it.readText())) }

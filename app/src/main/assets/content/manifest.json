@@ -37,8 +37,8 @@
       "id": "algebra-1",
       "categoryId": "math",
       "title": "Algebra 1",
-      "description": "Equations, expressions, and functions",
-      "order": 1,
+      "description": "From one-step equations to quadratics, one short lesson at a time.",
+      "order": 2,
       "units": [
         {
           "id": "linear-eq",
@@ -48,34 +48,37 @@
             {
               "id": "linear-eq-01",
               "title": "One-step equations",
-              "path": "math/algebra-1/linear-eq/lesson-01.json",
-              "version": 3,
-              "sha256": "0c501cc5ef5063914ad4a19b73b2fe9bcd9ee16a4847e5755f76528b807c4f74",
-              "sizeBytes": 4148,
+              "path": "content/math/algebra-1/linear-eq/lesson-01.json",
+              "version": 4,
+              "sha256": "35b9e4fae3d3c1bde2b7e16762974c00cba599a719720442b3a786eab7f6cddf",
+              "sizeBytes": 4156,
               "order": 1
             }
           ],
           "notes": {
             "id": "linear-eq-notes",
             "title": "Linear equations: cheat sheet",
-            "path": "math/algebra-1/linear-eq/notes.json",
-            "version": 1,
-            "sha256": "52479906dd261d28830173d31d59bc0eadd038bdfeeef76acf955ef1bfe5ef63",
-            "sizeBytes": 1505
+            "path": "content/math/algebra-1/linear-eq/notes.json",
+            "version": 2,
+            "sha256": "111cee1f717f319690af79e6c12d370fb4518a8c4b174273434174a759ef79e6",
+            "sizeBytes": 2439
           }
         }
       ],
       "overview": {
-        "summary": "Learn to solve equations step by step. Each lesson starts with a short reading, then you practise.",
+        "summary": "Build algebra from the ground up: equations, lines and functions, inequalities and systems, exponents and polynomials, and quadratics. Short lessons with worked examples and practice.",
         "outcomes": [
-          "Solve one-step and two-step equations",
-          "Understand why doing the same thing to both sides works",
-          "Read common math notation like squares, roots and absolute value"
+          "Solve linear equations, including brackets, fractions and word problems",
+          "Graph lines and write their equations in several forms",
+          "Solve inequalities and systems of equations",
+          "Use exponent rules and scientific notation",
+          "Add, multiply and factor polynomials",
+          "Solve quadratic equations by factoring or the formula"
         ],
         "requirements": [
-          "Basic arithmetic: add, subtract, multiply, divide"
+          "Pre-Algebra: fractions, integers and one-step equations"
         ],
-        "minutes": 10
+        "minutes": 160
       }
     },
     {
@@ -93,9 +96,9 @@
             {
               "id": "matter-01",
               "title": "States of matter",
-              "path": "science/basics/matter/lesson-01.json",
-              "version": 2,
-              "sha256": "bd9387bef8be24672b95a517594fa373a2c8ec9ed8c990c12b4a20dfbb55b2c2",
+              "path": "content/science/basics/matter/lesson-01.json",
+              "version": 3,
+              "sha256": "63da5c3b4c144f7cb1b71a47b29f553016c33c37ae584dac0203370466cc4757",
               "sizeBytes": 3959,
               "order": 1
             }
@@ -103,7 +106,7 @@
           "notes": {
             "id": "matter-notes",
             "title": "Matter: cheat sheet",
-            "path": "science/basics/matter/notes.json",
+            "path": "content/science/basics/matter/notes.json",
             "version": 1,
             "sha256": "6966ffee90ac86f24eab873faa9016a8e57562c90129a3d89167a8dd1897740a",
             "sizeBytes": 1471
@@ -128,7 +131,7 @@
       "categoryId": "swe",
       "title": "Programming Basics",
       "description": "Learn to think in code with Python",
-      "order": 1,
+      "order": 6,
       "units": [
         {
           "id": "variables",
@@ -138,9 +141,9 @@
             {
               "id": "variables-01",
               "title": "Variables",
-              "path": "swe/programming-basics/variables/lesson-01.json",
-              "version": 1,
-              "sha256": "b2a726c7729e82bb369bc5ec11e958206a277643de397cfbf942278633561b1f",
+              "path": "content/swe/programming-basics/variables/lesson-01.json",
+              "version": 2,
+              "sha256": "e80a6b2a272f072a58ad22554fe0a712abac1e8a88ed83582f9120e24dabb603",
               "sizeBytes": 3713,
               "order": 1,
               "minApp": 2
@@ -149,7 +152,7 @@
           "notes": {
             "id": "variables-notes",
             "title": "Variables and types: cheat sheet",
-            "path": "swe/programming-basics/variables/notes.json",
+            "path": "content/swe/programming-basics/variables/notes.json",
             "version": 1,
             "sha256": "41951fb32445619fefe67b474821cf24239f4d65444da7c0059f569d9b9c1469",
             "sizeBytes": 1476,
@@ -164,9 +167,9 @@
             {
               "id": "decisions-01",
               "title": "If and else",
-              "path": "swe/programming-basics/decisions/lesson-01.json",
-              "version": 1,
-              "sha256": "f4dc9900619fa2b26ba7895c25a1b14bd7392f8d4bde49e5d98cc4a7d48fd10c",
+              "path": "content/swe/programming-basics/decisions/lesson-01.json",
+              "version": 2,
+              "sha256": "778a2064f56b63476073496a5fb8fac17dbe9be76395e634544e1c63eaeb6e30",
               "sizeBytes": 4007,
               "order": 1,
               "minApp": 2
@@ -175,7 +178,7 @@
           "notes": {
             "id": "decisions-notes",
             "title": "Decisions: cheat sheet",
-            "path": "swe/programming-basics/decisions/notes.json",
+            "path": "content/swe/programming-basics/decisions/notes.json",
             "version": 1,
             "sha256": "0bda458336a634e091cb14f3cca8fb94d7d9fedbc37169dbe3ae932d536bbb14",
             "sizeBytes": 1181,
@@ -212,9 +215,9 @@
             {
               "id": "ohms-law-01",
               "title": "Voltage and current",
-              "path": "electronics/electronics-basics/ohms-law/lesson-01.json",
-              "version": 1,
-              "sha256": "55715b76b175a4e1280fd2f3223808ec5f53f0e4a65a1900b1e584ee39b8fdb0",
+              "path": "content/electronics/electronics-basics/ohms-law/lesson-01.json",
+              "version": 2,
+              "sha256": "3c2689c5935540d84349cd1b3cc2d01ff11fed6e51e0aa2f61d386ab138acc72",
               "sizeBytes": 3803,
               "order": 1
             }
@@ -222,7 +225,7 @@
           "notes": {
             "id": "ohms-law-notes",
             "title": "Voltage, current, resistance: cheat sheet",
-            "path": "electronics/electronics-basics/ohms-law/notes.json",
+            "path": "content/electronics/electronics-basics/ohms-law/notes.json",
             "version": 1,
             "sha256": "28d06e2750c6ed0224ff7931e0aae85194693e9710de58e2615fbe06a4ab4147",
             "sizeBytes": 1184
@@ -236,17 +239,17 @@
             {
               "id": "circuits-01",
               "title": "Series circuits",
-              "path": "electronics/electronics-basics/circuits/lesson-01.json",
-              "version": 3,
-              "sha256": "b5ac38d25a5d8a26be25004336a908823caea47e391e278bd40dcf80c001687a",
-              "sizeBytes": 3927,
+              "path": "content/electronics/electronics-basics/circuits/lesson-01.json",
+              "version": 4,
+              "sha256": "7ea754d478a0b39cb47b2384fad8adbaec664887e65a36fea66f1d4e1609dbb7",
+              "sizeBytes": 3935,
               "order": 1
             }
           ],
           "notes": {
             "id": "circuits-notes",
             "title": "Simple circuits: cheat sheet",
-            "path": "electronics/electronics-basics/circuits/notes.json",
+            "path": "content/electronics/electronics-basics/circuits/notes.json",
             "version": 1,
             "sha256": "17e6b8e0f6f8e5502bb833a02f97d897c2e47e3c704454f989900993c44b9490",
             "sizeBytes": 1249
@@ -270,17 +273,12 @@
   ],
   "images": [
     {
-      "path": "images/number-line.svg",
+      "path": "content/images/number-line.svg",
       "sha256": "b3ae72e03796e4387275129bd2a823769cdc4db150d99660944f69bc4aa35387",
       "sizeBytes": 832
     },
     {
-      "path": "images/parallel-circuit.svg",
-      "sha256": "063f21280d5157faae01edf8ea631f8ded9136017a7f35de93825cae94374a6b",
-      "sizeBytes": 1167
-    },
-    {
-      "path": "images/series-circuit.svg",
+      "path": "content/images/series-circuit.svg",
       "sha256": "8c2224890d570ee099cd0284a1f8307a67dffa8aecca24b835e5f04ef64f7e91",
       "sizeBytes": 1050
     }
