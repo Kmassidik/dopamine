@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.selection.selectable
@@ -33,7 +32,7 @@ enum class Tab(val route: String, @DrawableRes val icon: Int, @StringRes val lab
 }
 
 /**
- * The bottom bar: a dark panel with rounded top corners that runs to the very bottom of the screen, behind the
+ * The bottom bar: a flat dark panel that runs to the very bottom of the screen, behind the
  * phone's own navigation buttons (the app draws edge to edge). Three equal tabs, each with its icon and label;
  * the selected one sits on a yellow chip. Pass `Modifier.navigationBarsPadding()` inside is handled here.
  */
@@ -43,7 +42,6 @@ fun BottomBar(selected: Tab?, onSelect: (Tab) -> Unit, modifier: Modifier = Modi
     Row(
         modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
             .background(c.onAccent)
             .navigationBarsPadding()
             .padding(horizontal = 12.dp, vertical = 8.dp),
