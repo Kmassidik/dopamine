@@ -7,7 +7,8 @@ import app.dopamine.domain.progress.QUIZ_XP
 import app.dopamine.domain.progress.quizPassed
 import app.dopamine.domain.progress.scorePercent
 import app.dopamine.domain.progress.streak
-import java.util.TimeZone
+import app.dopamine.platform.localUtcOffsetMillis
+import app.dopamine.platform.nowMillis
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.map
 data class HomeStats(val totalXp: Int = 0, val streak: Int = 0, val todayXp: Int = 0, val goalXp: Int = DEFAULT_GOAL_XP)
 
 /** Reads are Flows (Room runs them off the main thread); writes are suspend (also off main). */
-class ProgressRepository(private val dao: ProgressDao, private val now: () -> Long = System::currentTimeMillis) {
+class ProgressRepository(private val dao: ProgressDao, private val now: () -> Long = ::nowMillis) {
     val completedLessons: Flow<Set<String>> =
         dao.observeLessons().map { rows -> rows.filter { it.completed }.mapTo(HashSet()) { it.lessonId } as Set<String> }.distinctUntilChanged()
 
@@ -34,7 +35,7 @@ class ProgressRepository(private val dao: ProgressDao, private val now: () -> Lo
 
     suspend fun recordLesson(lessonId: String, correct: Int, total: Int, xp: Int) {
         val t = now()
-        dao.record(lessonId, scorePercent(correct, total), xp, epochDay(t, TimeZone.getDefault().getOffset(t).toLong()), t)
+        dao.record(lessonId, scorePercent(correct, total), xp, epochDay(t, localUtcOffsetMillis(t)), t)
     }
 
     /** Saves a finished unit quiz. Returns true when it was the first pass (QUIZ_XP was added). */
@@ -45,6 +46,6 @@ class ProgressRepository(private val dao: ProgressDao, private val now: () -> Lo
 
     private fun today(): Long {
         val t = now()
-        return epochDay(t, TimeZone.getDefault().getOffset(t).toLong())
+        return epochDay(t, localUtcOffsetMillis(t))
     }
 }

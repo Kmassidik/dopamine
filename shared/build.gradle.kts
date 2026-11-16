@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -26,10 +27,24 @@ kotlin {
             api(compose.material3)
             api(compose.ui)
             api(compose.components.resources)
+            api(libs.kotlinx.coroutines.core)
+            api(libs.okio)
+            api(libs.ktor.client.core)
+            api(libs.androidx.room.runtime.kmp)
+            api(libs.androidx.sqlite.bundled)
             implementation(libs.kotlinx.serialization.json)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.ktor.client.mock)
+            implementation(libs.okio.fakefilesystem)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
@@ -38,4 +53,15 @@ compose.resources {
     publicResClass = true
     packageOfResClass = "app.dopamine.shared.resources"
     generateResClass = always
+}
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+}
+
+ksp {
+    // Same place as before the move, so the exported schemas and MigrationSqlTest stay where they were.
+    arg("room.schemaLocation", rootProject.file("app/schemas").absolutePath)
 }

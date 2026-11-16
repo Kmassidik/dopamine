@@ -4,7 +4,8 @@ import app.dopamine.data.content.ContentStore
 import app.dopamine.domain.model.Lesson
 import app.dopamine.domain.model.LessonRef
 import app.dopamine.domain.model.Manifest
-import kotlinx.coroutines.Dispatchers
+import app.dopamine.platform.SimpleLock
+import app.dopamine.platform.IoDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,23 +15,24 @@ class ContentRepository(private val store: ContentStore) {
     private val _manifest = MutableStateFlow<Manifest?>(null)
     val manifest: StateFlow<Manifest?> = _manifest.asStateFlow()
 
-    suspend fun load() = withContext(Dispatchers.IO) {
+    suspend fun load() = withContext(IoDispatcher) {
         store.ensureSeeded()
         _manifest.value = store.readManifest()
     }
 
-    suspend fun reload() = withContext(Dispatchers.IO) {
+    suspend fun reload() = withContext(IoDispatcher) {
         _manifest.value = store.readManifest()
     }
 
-    suspend fun notes(ref: app.dopamine.domain.model.NotesRef) = withContext(Dispatchers.IO) { store.readNotes(ref) }
+    suspend fun notes(ref: app.dopamine.domain.model.NotesRef) = withContext(IoDispatcher) { store.readNotes(ref) }
 
-    private val svgCache = java.util.concurrent.ConcurrentHashMap<String, app.dopamine.ui.svg.SvgDoc>()
+    private val svgLock = SimpleLock()
+    private val svgCache = HashMap<String, app.dopamine.ui.svg.SvgDoc>()
 
     /** A parsed picture, or null when it is missing or outside the allowed subset. Parsed once per process. */
-    suspend fun svg(path: String): app.dopamine.ui.svg.SvgDoc? = svgCache[path] ?: withContext(Dispatchers.IO) {
-        store.readImageText(path)?.let { app.dopamine.ui.svg.SvgParser.parse(it) }?.also { svgCache[path] = it }
+    suspend fun svg(path: String): app.dopamine.ui.svg.SvgDoc? = svgLock.withLock { svgCache[path] } ?: withContext(IoDispatcher) {
+        store.readImageText(path)?.let { app.dopamine.ui.svg.SvgParser.parse(it) }?.also { d -> svgLock.withLock { svgCache[path] = d } }
     }
 
-    suspend fun lesson(ref: LessonRef): Lesson? = withContext(Dispatchers.IO) { store.readLesson(ref) }
+    suspend fun lesson(ref: LessonRef): Lesson? = withContext(IoDispatcher) { store.readLesson(ref) }
 }

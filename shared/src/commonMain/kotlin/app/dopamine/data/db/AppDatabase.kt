@@ -1,6 +1,5 @@
 package app.dopamine.data.db
 
-import android.content.Context
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
@@ -9,10 +8,12 @@ import androidx.room.Transaction
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Room
+import androidx.room.ConstructedBy
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import app.dopamine.domain.progress.mergeQuiz
 import kotlinx.coroutines.flow.Flow
 
@@ -121,8 +122,8 @@ object Migrations {
     )
 
     val MIGRATION_1_2 = object : Migration(1, 2) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-            STATEMENTS_1_2.forEach { db.execSQL(it) }
+        override fun migrate(connection: SQLiteConnection) {
+            STATEMENTS_1_2.forEach { connection.execSQL(it) }
         }
     }
 }
@@ -134,8 +135,8 @@ object Migrations3 {
     )
 
     val MIGRATION_2_3 = object : Migration(2, 3) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-            STATEMENTS_2_3.forEach { db.execSQL(it) }
+        override fun migrate(connection: SQLiteConnection) {
+            STATEMENTS_2_3.forEach { connection.execSQL(it) }
         }
     }
 }
@@ -146,14 +147,19 @@ object Migrations3 {
     version = 3,
     exportSchema = true,
 )
+@ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDao
     abstract fun progressDao(): ProgressDao
 
     companion object {
-        fun build(context: Context): AppDatabase =
-            Room.databaseBuilder(context, AppDatabase::class.java, "dopamine.db")
-                .addMigrations(Migrations.MIGRATION_1_2, Migrations3.MIGRATION_2_3)
-                .build()
+        const val FILE_NAME = "dopamine.db"
+        val MIGRATIONS = arrayOf(Migrations.MIGRATION_1_2, Migrations3.MIGRATION_2_3)
     }
+}
+
+/** Room generates the actual constructor for each platform. */
+@Suppress("KotlinNoActualForExpect")
+expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
+    override fun initialize(): AppDatabase
 }
