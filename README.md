@@ -6,6 +6,9 @@ Lessons live in a separate repository, [`Kmassidik/dopamine-content`](https://gi
 
 > **Status: early but usable.** Home, onboarding, lessons with reading pages and practice, unit cheat sheets, saved XP and streak, and the update flow work. Review scheduling, hearts and a final test are not built yet.
 
+## Try it (Android)
+Download `dopamine-0.3.0.apk` from the [latest release](https://github.com/Kmassidik/dopamine/releases/latest), open it on an Android 7.0+ phone (allow "install unknown apps" if asked), then open **Settings, Update content** once to download the lessons. There is no iPhone version yet.
+
 ## Documents
 
 | File | Read it for |
