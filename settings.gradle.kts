@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "dopamine"
 include(":app")
+include(":shared")

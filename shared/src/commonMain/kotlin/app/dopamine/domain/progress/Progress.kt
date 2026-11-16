@@ -15,7 +15,7 @@ fun scorePercent(correct: Int, total: Int): Int =
     if (total <= 0) 0 else (correct.coerceIn(0, total) * 100f / total).roundToInt()
 
 /** Local calendar day number for a timestamp. [tzOffsetMs] is the zone offset valid at that instant. */
-fun epochDay(millis: Long, tzOffsetMs: Long): Long = Math.floorDiv(millis + tzOffsetMs, DAY_MS)
+fun epochDay(millis: Long, tzOffsetMs: Long): Long = (millis + tzOffsetMs).floorDiv(DAY_MS)
 
 /**
  * Consecutive days with at least one finished lesson, ending today. If nothing was finished today yet,

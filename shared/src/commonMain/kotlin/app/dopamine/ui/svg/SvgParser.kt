@@ -32,7 +32,7 @@ object SvgParser {
         private var height = 0f
 
         init {
-            if (s.toByteArray(Charsets.UTF_8).size > SvgSubset.MAX_BYTES) reject("too large")
+            if (s.encodeToByteArray().size > SvgSubset.MAX_BYTES) reject("too large")
             val low = s.lowercase()
             if ("<!doctype" in low || "<!entity" in low) reject("doctype")
         }
