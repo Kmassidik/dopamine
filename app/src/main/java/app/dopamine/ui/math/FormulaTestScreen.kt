@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.dopamine.R
+import app.dopamine.ui.components.BackButton
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
@@ -65,10 +66,7 @@ fun FormulaTestScreen(onBack: () -> Unit) {
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(48.dp).clip(CircleShape).clickable(onClickLabel = stringResource(R.string.back), onClick = onBack),
-                    contentAlignment = Alignment.Center,
-                ) { AppIcon(R.drawable.ic_back, c.ink, description = stringResource(R.string.back)) }
+                BackButton(stringResource(R.string.back), onBack)
                 Text("Formula test", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
             }
             LazyColumn(

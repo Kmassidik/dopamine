@@ -19,6 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import app.dopamine.R
 import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.PillShape
@@ -40,17 +43,20 @@ fun FloatingNav(selected: Tab?, onSelect: (Tab) -> Unit, modifier: Modifier = Mo
     ) {
         Tab.entries.forEach { tab ->
             val on = tab == selected
+            val tabLabel = stringResource(tab.label)
             Row(
                 Modifier
                     .clip(PillShape)
                     .background(if (on) c.yellow else Color.Transparent)
                     .heightIn(min = 52.dp)
+                    .semantics { if (!on) contentDescription = tabLabel }
                     .selectable(selected = on, role = Role.Tab, onClick = { onSelect(tab) })
+                    .sizeIn(minWidth = 56.dp, minHeight = 52.dp)
                     .padding(horizontal = if (on) 18.dp else 14.dp, vertical = 6.dp)
                     .animateContentSize(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconImage(tab.icon, size = 32.dp, description = stringResource(tab.label), bob = false)
+                IconImage(tab.icon, size = 32.dp, bob = false)
                 if (on) {
                     Text(
                         stringResource(tab.label),

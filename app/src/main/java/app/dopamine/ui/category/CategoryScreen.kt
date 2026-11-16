@@ -29,8 +29,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
+import app.dopamine.ui.components.BackButton
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.IconImage
+import app.dopamine.ui.components.heading
 import app.dopamine.ui.components.bounceClick
 import app.dopamine.ui.components.iconFor
 import app.dopamine.ui.theme.CardShape
@@ -48,11 +50,8 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit, onOpenCourse: (Str
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(48.dp).clip(CircleShape).clickable(onClickLabel = stringResource(R.string.back), onClick = onBack),
-                    contentAlignment = Alignment.Center,
-                ) { AppIcon(R.drawable.ic_back, c.ink, description = stringResource(R.string.back)) }
-                Text(cat?.name.orEmpty(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
+                BackButton(stringResource(R.string.back), onBack)
+                Text(cat?.name.orEmpty(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp).heading())
             }
             LazyColumn(
                 contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 112.dp),
@@ -65,7 +64,7 @@ fun CategoryScreen(vm: CategoryViewModel, onBack: () -> Unit, onOpenCourse: (Str
                             .fillMaxWidth()
                             .clip(CardShape)
                             .background(tints[i % tints.size])
-                            .bounceClick(course.title) { onOpenCourse(course.id) }
+                            .bounceClick(stringResource(R.string.action_open)) { onOpenCourse(course.id) }
                             .padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {

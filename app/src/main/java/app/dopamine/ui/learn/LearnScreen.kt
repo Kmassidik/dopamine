@@ -34,16 +34,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
+import app.dopamine.ui.components.BackButton
 import app.dopamine.domain.model.LearnPage
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.ChunkyButton
 import app.dopamine.ui.components.CodeBlock
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.ProgressBar
+import app.dopamine.ui.components.heading
 import app.dopamine.ui.math.MathText
+import app.dopamine.ui.svg.SvgImage
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.DopamineColors
@@ -63,16 +70,13 @@ fun LearnScreen(vm: LearnViewModel, onBack: () -> Unit, onPractice: () -> Unit) 
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             val page = s.page ?: return@Column
             Row(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp, top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(48.dp).clip(CircleShape).clickable(onClickLabel = stringResource(R.string.back), onClick = onBack),
-                    contentAlignment = Alignment.Center,
-                ) { AppIcon(R.drawable.ic_back, c.ink, description = stringResource(R.string.back)) }
+                BackButton(stringResource(R.string.back), onBack)
                 ProgressBar((s.index + 1f) / s.pages.size, c.yellowTint, c.yellow, Modifier.weight(1f).padding(horizontal = 8.dp))
                 Text(
                     stringResource(R.string.learn_skip),
                     style = MaterialTheme.typography.labelMedium,
                     color = c.inkSoft,
-                    modifier = Modifier.heightIn(min = 48.dp).clip(CircleShape).clickable(onClick = onPractice).padding(horizontal = 12.dp, vertical = 14.dp),
+                    modifier = Modifier.heightIn(min = 48.dp).clip(CircleShape).clickable(role = Role.Button, onClick = onPractice).padding(horizontal = 12.dp, vertical = 14.dp),
                 )
             }
             Text(
@@ -127,9 +131,10 @@ private fun TextPage(c: DopamineColors, p: LearnPage) {
     Text(
         p.title.orEmpty(),
         style = MaterialTheme.typography.headlineMedium,
-        modifier = Modifier.padding(top = 12.dp, bottom = 12.dp),
+        modifier = Modifier.padding(top = 12.dp, bottom = 12.dp).heading(),
     )
     MathText(p.body.orEmpty(), style = BodyStyle)
+    p.image?.let { SvgImage(it, p.alt.orEmpty(), Modifier.padding(top = 16.dp)) }
 }
 
 @Composable
@@ -154,13 +159,14 @@ private fun ExamplePage(c: DopamineColors, p: LearnPage, shown: Int) {
         color = c.yellowText,
         modifier = Modifier.clip(CircleShape).background(c.yellowTint).padding(horizontal = 14.dp, vertical = 6.dp),
     )
-    MathText(p.title.orEmpty(), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(top = 12.dp, bottom = 8.dp))
+    MathText(p.title.orEmpty(), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(top = 12.dp, bottom = 8.dp).heading())
     if (!p.body.isNullOrBlank()) MathText(p.body, style = BodyStyle, color = c.inkSoft)
+    p.image?.let { SvgImage(it, p.alt.orEmpty(), Modifier.padding(top = 16.dp)) }
     Column(Modifier.padding(top = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         p.steps.orEmpty().forEachIndexed { n, step ->
             AnimatedVisibility(visible = n < shown, enter = fadeIn() + slideInHorizontally { it / 6 }) {
                 Row(
-                    Modifier.fillMaxWidth().clip(CardShape).background(c.yellowTint).padding(16.dp),
+                    Modifier.fillMaxWidth().clip(CardShape).background(c.yellowTint).semantics { liveRegion = LiveRegionMode.Polite }.padding(16.dp),
                     verticalAlignment = Alignment.Top,
                 ) {
                     Box(Modifier.size(32.dp).clip(CircleShape).background(c.yellow), contentAlignment = Alignment.Center) {
@@ -175,7 +181,7 @@ private fun ExamplePage(c: DopamineColors, p: LearnPage, shown: Int) {
 
 @Composable
 private fun CodePage(c: DopamineColors, p: LearnPage) {
-    Text(p.title.orEmpty(), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(bottom = 12.dp))
+    Text(p.title.orEmpty(), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.padding(bottom = 12.dp).heading())
     if (!p.body.isNullOrBlank()) MathText(p.body, style = BodyStyle, modifier = Modifier.padding(bottom = 16.dp))
     CodeBlock(p.code.orEmpty(), p.language)
 }

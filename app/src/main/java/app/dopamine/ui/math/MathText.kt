@@ -58,8 +58,9 @@ fun MathText(
     val face = remember { ResourcesCompat.getFont(context, R.font.nunito_semibold) }
     val ink = if (color == Color.Unspecified) LocalContentColor.current else color
     val sizePx = with(density) { (if (style.fontSize.isSpecified) style.fontSize else 16.sp).toPx() }
-    val codeBg = Dopamine.colors.line
-    val codeStyle = remember(codeBg) { SpanStyle(fontFamily = JetBrainsMono, background = codeBg) }
+    val codeBg = Dopamine.colors.pinkTint
+    val codeInk = Dopamine.colors.pinkText
+    val codeStyle = remember(codeBg, codeInk) { SpanStyle(fontFamily = JetBrainsMono, background = codeBg, color = codeInk) }
     val built = remember(text, sizePx, ink, codeStyle) { build(text, sizePx, face, ink.toArgb(), density, codeStyle) }
     // Math can hang below the baseline (fraction denominators); the line height does not know, so make room.
     val room = with(density) { built.descentPx.toDp() }

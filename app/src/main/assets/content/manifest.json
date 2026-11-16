@@ -49,9 +49,9 @@
               "id": "linear-eq-01",
               "title": "One-step equations",
               "path": "math/algebra-1/linear-eq/lesson-01.json",
-              "version": 2,
-              "sha256": "6c0baf4f7b5c743744d8961f467266751d583f4262eb66ef6a3a748c84a8aeea",
-              "sizeBytes": 4052,
+              "version": 3,
+              "sha256": "0c501cc5ef5063914ad4a19b73b2fe9bcd9ee16a4847e5755f76528b807c4f74",
+              "sizeBytes": 4148,
               "order": 1
             }
           ],
@@ -237,9 +237,9 @@
               "id": "circuits-01",
               "title": "Series circuits",
               "path": "electronics/electronics-basics/circuits/lesson-01.json",
-              "version": 1,
-              "sha256": "ee178cb9d5526f4e9e6373e8b76ce7720d438fb1a1835cfc2606fc2b184f483e",
-              "sizeBytes": 3746,
+              "version": 3,
+              "sha256": "b5ac38d25a5d8a26be25004336a908823caea47e391e278bd40dcf80c001687a",
+              "sizeBytes": 3927,
               "order": 1
             }
           ],
@@ -271,8 +271,18 @@
   "images": [
     {
       "path": "images/number-line.svg",
-      "sha256": "69f1ff6bef33841bbfd9e09d21b97c0ab570c288af5d63ea15bb1249b88604c3",
-      "sizeBytes": 842
+      "sha256": "b3ae72e03796e4387275129bd2a823769cdc4db150d99660944f69bc4aa35387",
+      "sizeBytes": 832
+    },
+    {
+      "path": "images/parallel-circuit.svg",
+      "sha256": "063f21280d5157faae01edf8ea631f8ded9136017a7f35de93825cae94374a6b",
+      "sizeBytes": 1167
+    },
+    {
+      "path": "images/series-circuit.svg",
+      "sha256": "8c2224890d570ee099cd0284a1f8307a67dffa8aecca24b835e5f04ef64f7e91",
+      "sizeBytes": 1050
     }
   ]
 }

@@ -56,6 +56,7 @@ object LessonValidator {
         if (p.title != null && badText(p.title, L.PAGE_TITLE_MAX)) return "bad title"
         if (p.body != null && badText(p.body)) return "bad body"
         if (p.image != null && !SVG.matches(p.image)) return "bad image path"
+        if (p.image != null && (p.alt == null || p.alt.length !in L.ALT_MIN..L.ALT_MAX)) return "an image needs an alt description of ${L.ALT_MIN} to ${L.ALT_MAX} characters"
         return when (p.kind) {
             "text", "tip" -> if (p.body == null) "needs a body" else null
             "example" -> when {
@@ -80,6 +81,7 @@ object LessonValidator {
         if (badText(q.explanation)) return "needs an explanation"
         if (q.prompt != null && badText(q.prompt)) return "bad prompt"
         if (q.image != null && !SVG.matches(q.image)) return "bad image path"
+        if (q.image != null && (q.alt == null || q.alt.length !in L.ALT_MIN..L.ALT_MAX)) return "an image needs an alt description of ${L.ALT_MIN} to ${L.ALT_MAX} characters"
         return when (q.type) {
             "multiple_choice", "fill_blank" -> {
                 val c = q.choices

@@ -39,16 +39,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
+import app.dopamine.ui.components.BackButton
 import app.dopamine.domain.model.Question
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.ChunkyButton
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.components.StatChip
+import app.dopamine.ui.components.heading
 import app.dopamine.ui.components.bounceClick
 import app.dopamine.ui.math.MathText
+import app.dopamine.ui.svg.SvgImage
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.DopamineColors
@@ -139,17 +151,22 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
     val q = s.questions[s.index]
     val ans = remember(q.id) { Answer() }
     Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            Modifier.size(48.dp).clip(CircleShape).clickable(onClickLabel = stringResource(R.string.lesson_close), onClick = onClose),
-            contentAlignment = Alignment.Center,
-        ) { AppIcon(R.drawable.ic_back, c.ink, description = stringResource(R.string.lesson_close)) }
-        ProgressBar(s.index.toFloat() / s.questions.size, c.greenTint, c.green, Modifier.weight(1f).padding(end = 16.dp))
+        BackButton(stringResource(R.string.lesson_close), onClose)
+        val progressText = stringResource(R.string.lesson_progress, s.index + 1, s.questions.size)
+        ProgressBar(
+            s.index.toFloat() / s.questions.size, c.greenTint, c.green,
+            Modifier.weight(1f).padding(end = 16.dp).semantics {
+                contentDescription = progressText
+                progressBarRangeInfo = ProgressBarRangeInfo(s.index.toFloat(), 0f..s.questions.size.toFloat())
+            },
+        )
     }
     Column(
         Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        MathText(q.prompt.orEmpty(), style = MaterialTheme.typography.titleLarge)
+        MathText(q.prompt.orEmpty(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.heading())
+        q.image?.let { SvgImage(it, q.alt.orEmpty()) }
         when (q.type) {
             "multiple_choice", "fill_blank" -> ChoiceBody(c, q, ans, s.checked)
             "type_answer" -> TypeBody(c, q, ans, s.checked)
@@ -161,7 +178,7 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
         if (s.checked) {
             val good = s.lastCorrect
             Column(
-                Modifier.fillMaxWidth().clip(CardShape).background(if (good) c.greenTint else c.pinkTint).padding(16.dp),
+                Modifier.fillMaxWidth().clip(CardShape).background(if (good) c.greenTint else c.pinkTint).semantics { liveRegion = LiveRegionMode.Polite }.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -189,14 +206,28 @@ private fun ColumnScope.Playing(c: DopamineColors, s: LessonState, vm: LessonVie
 }
 
 @Composable
-private fun Option(c: DopamineColors, text: String, bg: Color, border: Color, onClick: (() -> Unit)?, modifier: Modifier = Modifier) {
+private fun Option(
+    c: DopamineColors,
+    text: String,
+    bg: Color,
+    border: Color,
+    onClick: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+    role: Role = Role.Button,
+    selected: Boolean = false,
+    state: String? = null,
+) {
     Box(
         modifier
             .fillMaxWidth()
             .clip(CardShape)
             .background(bg)
             .border(OutlineWidth, border, CardShape)
-            .bounceClick(onClick = { onClick?.invoke() })
+            .semantics {
+                this.selected = selected
+                if (state != null) stateDescription = state
+            }
+            .bounceClick(role = role, onClick = { onClick?.invoke() })
             .heightIn(min = 56.dp)
             .padding(horizontal = 20.dp, vertical = 16.dp),
         contentAlignment = Alignment.CenterStart,
@@ -215,7 +246,12 @@ private fun ChoiceBody(c: DopamineColors, q: Question, ans: Answer, checked: Boo
                 sel == i -> c.yellowTint to c.yellow
                 else -> Color.White to c.line
             }
-            Option(c, choice, bg, line, if (checked) null else ({ sel = i }))
+            val state = when {
+                checked && i == q.answerIndex -> stringResource(R.string.lesson_correct)
+                checked && i == sel -> stringResource(R.string.lesson_wrong)
+                else -> null
+            }
+            Option(c, choice, bg, line, if (checked) null else ({ sel = i }), role = Role.RadioButton, selected = sel == i, state = state)
         }
     }
 }
@@ -234,6 +270,7 @@ private fun sameAnswer(given: String, accepted: String): Boolean {
 @Composable
 private fun TypeBody(c: DopamineColors, q: Question, ans: Answer, checked: Boolean) {
     var text by remember(q.id) { mutableStateOf("") }
+    val answerLabel = stringResource(R.string.answer_label)
     SideEffect {
         ans.ready = text.isNotBlank()
         ans.eval = { q.accepted.orEmpty().any { sameAnswer(text, it) } }
@@ -246,7 +283,7 @@ private fun TypeBody(c: DopamineColors, q: Question, ans: Answer, checked: Boole
         shape = CardShape,
         textStyle = MaterialTheme.typography.titleLarge,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().semantics { contentDescription = answerLabel },
     )
     if (checked) {
         Text(

@@ -25,5 +25,12 @@ class ContentRepository(private val store: ContentStore) {
 
     suspend fun notes(ref: app.dopamine.domain.model.NotesRef) = withContext(Dispatchers.IO) { store.readNotes(ref) }
 
+    private val svgCache = java.util.concurrent.ConcurrentHashMap<String, app.dopamine.ui.svg.SvgDoc>()
+
+    /** A parsed picture, or null when it is missing or outside the allowed subset. Parsed once per process. */
+    suspend fun svg(path: String): app.dopamine.ui.svg.SvgDoc? = svgCache[path] ?: withContext(Dispatchers.IO) {
+        store.readImageText(path)?.let { app.dopamine.ui.svg.SvgParser.parse(it) }?.also { svgCache[path] = it }
+    }
+
     suspend fun lesson(ref: LessonRef): Lesson? = withContext(Dispatchers.IO) { store.readLesson(ref) }
 }

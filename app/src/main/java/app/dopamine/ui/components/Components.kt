@@ -45,6 +45,12 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.dopamine.ui.theme.Dopamine
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.Role
 import app.dopamine.R
 import kotlinx.coroutines.delay
 import app.dopamine.ui.theme.ButtonShape
@@ -192,7 +198,7 @@ fun IconImage(@DrawableRes id: Int, modifier: Modifier = Modifier, size: Dp = 48
 private const val BOB_CYCLES = 2
 
 /** Clickable with a quick squash on press. No squash when reduced motion is on. */
-fun Modifier.bounceClick(onClickLabel: String? = null, onClick: () -> Unit): Modifier = composed {
+fun Modifier.bounceClick(onClickLabel: String? = null, role: Role? = Role.Button, onClick: () -> Unit): Modifier = composed {
     val source = remember { MutableInteractionSource() }
     val pressed by source.collectIsPressedAsState()
     val reduced = LocalReducedMotion.current
@@ -203,7 +209,7 @@ fun Modifier.bounceClick(onClickLabel: String? = null, onClick: () -> Unit): Mod
     )
     this
         .graphicsLayer { scaleX = scale; scaleY = scale }
-        .clickable(interactionSource = source, indication = null, onClickLabel = onClickLabel, onClick = onClick)
+        .clickable(interactionSource = source, indication = null, onClickLabel = onClickLabel, role = role, onClick = onClick)
 }
 
 /** A soft banner for a result: green for success, pink for a problem. */
@@ -219,4 +225,21 @@ fun Message(bg: Color, fg: Color, icon: Int, text: String, dismissLabel: String,
             Text(dismissLabel, color = fg)
         }
     }
+}
+
+
+/** Marks a title so screen-reader users can jump between headings. */
+fun Modifier.heading(): Modifier = semantics { heading() }
+
+/** The arrow at the top-left of every inner screen. 48dp, a real button, read as [description]. */
+@Composable
+fun BackButton(description: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .semantics { contentDescription = description }
+            .clickable(role = Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) { AppIcon(R.drawable.ic_back, Dopamine.colors.ink) }
 }

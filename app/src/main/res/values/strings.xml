@@ -91,4 +91,8 @@
     <string name="quiz_failed_body">You need %d%% to pass. Read the notes, then try again.</string>
     <string name="quiz_try_again">Try again</string>
     <string name="quiz_read_notes">Read the notes</string>
+    <string name="action_open">Open</string>
+    <string name="lesson_progress">Question %1$d of %2$d</string>
+    <string name="answer_label">Your answer</string>
+    <string name="settings_formula_open">Open the formula test</string>
 </resources>

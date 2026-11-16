@@ -73,6 +73,7 @@ private fun Main(container: AppContainer, name: String) {
         launchSingleTop = true
     }
 
+    androidx.compose.runtime.CompositionLocalProvider(app.dopamine.ui.svg.LocalSvgLoader provides { path -> container.content.svg(path) }) {
     Box(Modifier.fillMaxSize()) {
         NavHost(nav, startDestination = "home") {
             composable("home") {
@@ -138,5 +139,6 @@ private fun Main(container: AppContainer, name: String) {
                 modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 12.dp),
             )
         }
+    }
     }
 }

@@ -56,3 +56,12 @@ Purpose: make sure the UI keeps the design and nothing sloppy slips in. Not a ge
 - Record and validate on Linux (the Fedora laptop or CI). Fonts and anti-aliasing can differ on other systems.
 - When you add a reusable component or a design token, add a preview for it. Screens that need a ViewModel are not covered yet; extract a stateless `XContent` composable first.
 - Requires `android.experimental.enableScreenshotTest` and `android.experimental.testSuiteSupport` in `gradle.properties`, `unitTests.isIncludeAndroidResources = true`, and unit tests enabled for every variant (`androidComponents` block in `app/build.gradle.kts`). AGP prints "experimental" warnings; that is expected.
+
+## Accessibility audit (a phone and a screen reader mindset)
+Every tappable element needs something to read aloud and a touch target of at least 48dp.
+```bash
+tools/a11y_audit.sh            # audits the screen currently showing on the connected phone
+python3 tools/a11y_audit.py dump.xml --density 440   # or audit a saved `uiautomator dump`
+```
+Findings: `NO-LABEL` (tappable but nothing to read), `SMALL-TARGET` (under 48dp), `EDIT-LABEL` (a text box with no description). Run it on each screen you change (Home, a course, a lesson question, notes, Settings). Rules of thumb in code: use `BackButton` for the back arrow, `Modifier.heading()` on screen and section titles, `bounceClick(onClickLabel = open label)` for tappable rows, `Role.RadioButton` plus `selected` for answer choices, a content description on every text box and on every picture (`alt` in the content), and a polite live region for messages that appear after an action (feedback after Check, a revealed step).
+Also try it by hand: Settings > Accessibility > TalkBack, then swipe through a lesson.

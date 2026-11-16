@@ -30,10 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
+import app.dopamine.ui.components.BackButton
 import app.dopamine.domain.model.NoteBlock
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.CodeBlock
 import app.dopamine.ui.components.IconImage
+import app.dopamine.ui.components.heading
 import app.dopamine.ui.math.MathText
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
@@ -47,14 +49,11 @@ fun NotesScreen(vm: NotesViewModel, onBack: () -> Unit) {
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(48.dp).clip(CircleShape).clickable(onClickLabel = stringResource(R.string.back), onClick = onBack),
-                    contentAlignment = Alignment.Center,
-                ) { AppIcon(R.drawable.ic_back, c.ink, description = stringResource(R.string.back)) }
+                BackButton(stringResource(R.string.back), onBack)
                 Text(
                     s.notes?.title ?: stringResource(R.string.notes_title),
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(start = 8.dp),
+                    modifier = Modifier.padding(start = 8.dp).heading(),
                 )
             }
             val notes = s.notes

@@ -52,8 +52,8 @@ class LessonViewModel(private val c: AppContainer, private val lessonId: String,
     private suspend fun loadLesson(): LessonState {
         val ref = c.content.manifest.value?.courses?.flatMap { it.units }?.flatMap { it.lessons }?.firstOrNull { it.id == lessonId }
         val lesson = ref?.let { c.content.lesson(it) }
-        // Unknown types are skipped by design. Questions with pictures wait for the image renderer.
-        val qs = lesson?.questions?.filter { it.type in KNOWN_QUESTION_TYPES && it.image == null }.orEmpty()
+        // Unknown types are skipped by design (and counted on the result screen).
+        val qs = lesson?.questions?.filter { it.type in KNOWN_QUESTION_TYPES }.orEmpty()
         return LessonState(loading = false, lesson = lesson, questions = qs, skipped = (lesson?.questions?.size ?: 0) - qs.size)
     }
 
@@ -61,7 +61,7 @@ class LessonViewModel(private val c: AppContainer, private val lessonId: String,
     private suspend fun loadQuiz(): LessonState {
         val unit = c.content.manifest.value?.courses?.flatMap { it.units }?.firstOrNull { it.id == lessonId }
         val groups = unit?.lessons.orEmpty().filter { !ContentContract.isLocked(it.minApp) }.mapNotNull { ref ->
-            c.content.lesson(ref)?.questions?.filter { it.type in KNOWN_QUESTION_TYPES && it.image == null }
+            c.content.lesson(ref)?.questions?.filter { it.type in KNOWN_QUESTION_TYPES }
         }
         val qs = pickBalanced(groups)
         val lesson = Lesson("quiz-$lessonId", 1, unit?.title.orEmpty(), QUIZ_XP, questions = qs)

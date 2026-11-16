@@ -9,6 +9,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.dopamine.domain.model.ProfileName
@@ -35,6 +37,6 @@ fun NameField(value: String, onChange: (String) -> Unit, hint: String, onDone: (
             focusedPlaceholderColor = c.inkSoft,
             unfocusedPlaceholderColor = c.inkSoft,
         ),
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().semantics { contentDescription = hint },
     )
 }

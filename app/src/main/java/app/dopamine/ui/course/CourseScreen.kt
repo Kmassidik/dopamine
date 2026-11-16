@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
+import app.dopamine.ui.components.BackButton
 import app.dopamine.domain.content.ContentContract
 import app.dopamine.domain.progress.QUIZ_MAX_QUESTIONS
 import app.dopamine.domain.progress.QUIZ_MIN_QUESTIONS
@@ -37,6 +38,7 @@ import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.ChunkyButton
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.bounceClick
+import app.dopamine.ui.components.heading
 import app.dopamine.ui.theme.CardShape
 import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.theme.DopamineColors
@@ -61,11 +63,8 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(48.dp).clip(CircleShape).clickable(onClickLabel = stringResource(R.string.back), onClick = onBack),
-                    contentAlignment = Alignment.Center,
-                ) { AppIcon(R.drawable.ic_back, c.ink, description = stringResource(R.string.back)) }
-                Text(course?.title.orEmpty(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
+                BackButton(stringResource(R.string.back), onBack)
+                Text(course?.title.orEmpty(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp).heading())
             }
             LazyColumn(
                 contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 112.dp),
@@ -87,7 +86,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                 course?.units?.sortedBy { it.order }?.forEach { unit ->
                     item(key = "unit-${unit.id}") {
                         Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Text(unit.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                            Text(unit.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f).heading())
                             Text(
                                 pluralStringResource(R.plurals.n_lessons, unit.lessons.size, unit.lessons.size),
                                 style = MaterialTheme.typography.labelMedium,
@@ -102,7 +101,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                     .fillMaxWidth()
                                     .clip(CircleShape)
                                     .background(c.yellowTint)
-                                    .bounceClick(stringResource(R.string.notes_open)) { onOpenNotes(unit.id) }
+                                    .bounceClick(stringResource(R.string.action_open)) { onOpenNotes(unit.id) }
                                     .padding(horizontal = 16.dp, vertical = 10.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
@@ -124,7 +123,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                     .fillMaxWidth()
                                     .clip(CardShape)
                                     .border(OutlineWidth, c.line, CardShape)
-                                    .then(if (locked) Modifier else Modifier.bounceClick(lesson.title) { onOpenLesson(lesson.id) })
+                                    .then(if (locked) Modifier else Modifier.bounceClick(stringResource(R.string.action_open)) { onOpenLesson(lesson.id) })
                                     .padding(horizontal = 20.dp, vertical = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
@@ -163,7 +162,7 @@ fun CourseScreen(vm: CourseViewModel, onBack: () -> Unit, onOpenLesson: (String)
                                     .fillMaxWidth()
                                     .clip(CircleShape)
                                     .background(c.pinkTint)
-                                    .bounceClick(stringResource(R.string.unit_quiz)) { onOpenQuiz(unit.id) }
+                                    .bounceClick(stringResource(R.string.action_open)) { onOpenQuiz(unit.id) }
                                     .padding(horizontal = 16.dp, vertical = 10.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
@@ -208,7 +207,7 @@ private fun Overview(c: DopamineColors, tint: Color, ov: app.dopamine.domain.mod
         }
         ChunkyButton(stringResource(startLabel), onStart, c.green, c.greenLip, c.onAccent, Modifier.padding(top = 8.dp))
     }
-    Text(stringResource(R.string.course_lessons), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 12.dp))
+    Text(stringResource(R.string.course_lessons), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 12.dp).heading())
 }
 
 @Composable

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import app.dopamine.domain.content.LessonValidator
 import app.dopamine.domain.content.NotesValidator
+import app.dopamine.domain.content.SafePath
 import app.dopamine.domain.model.Notes
 import app.dopamine.domain.model.NotesRef
 import app.dopamine.domain.model.Lesson
@@ -73,6 +74,15 @@ class ContentStore(private val context: Context) {
         if (problem != null) { Log.w(TAG, "skipping notes ${ref.id}: $problem"); null } else notes
     } catch (e: Exception) {
         Log.w(TAG, "skipping notes ${ref.id}: ${e.message}")
+        null
+    }
+
+    /** The text of an image file, only for a plain relative `.svg` path and a small file. */
+    fun readImageText(path: String): String? = try {
+        if (!SafePath.isSafe(path) || !path.endsWith(".svg")) null
+        else File(root, path).takeIf { it.isFile && it.length() <= 16 * 1024 }?.readText()
+    } catch (e: Exception) {
+        Log.w(TAG, "image unreadable $path: ${e.message}")
         null
     }
 

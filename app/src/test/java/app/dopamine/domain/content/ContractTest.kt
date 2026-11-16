@@ -2,6 +2,7 @@ package app.dopamine.domain.content
 
 import app.dopamine.BuildConfig
 import app.dopamine.ui.math.MathParser
+import app.dopamine.ui.svg.SvgSubset
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.int
@@ -55,9 +56,27 @@ class ContractTest {
             "notesBlocksMax" to L.NOTES_BLOCKS_MAX, "noteItemsMax" to L.NOTE_ITEMS_MAX,
             "summaryMax" to L.SUMMARY_MAX, "outcomesMax" to L.OUTCOMES_MAX, "requirementsMax" to L.REQUIREMENTS_MAX,
             "minutesMax" to L.MINUTES_MAX, "codeMax" to L.CODE_MAX, "codeLines" to L.CODE_LINES, "codeWidth" to L.CODE_WIDTH,
+            "altMax" to L.ALT_MAX,
         )
         // Every limit the contract lists is checked, and every one we check is in the contract.
         assertEquals((l.keys - "idPattern"), expected.keys)
         expected.forEach { (k, v) -> assertEquals("limit $k", i(k), v) }
+    }
+
+    @Test fun svgSubsetMatches() {
+        val svg = contract["svg"]!!.jsonObject
+        fun strings(k: String) = svg[k]!!.jsonArray.map { it.jsonPrimitive.content }.toSet()
+        fun n(k: String) = svg[k]!!.jsonPrimitive.int
+        assertEquals(strings("elements"), SvgSubset.ELEMENTS)
+        assertEquals(strings("attributes"), SvgSubset.ATTRIBUTES)
+        assertEquals(strings("colors"), SvgSubset.COLORS)
+        assertEquals(svg["pathCommands"]!!.jsonPrimitive.content, SvgSubset.PATH_COMMANDS)
+        assertEquals(n("maxBytes"), SvgSubset.MAX_BYTES)
+        assertEquals(n("maxElements"), SvgSubset.MAX_ELEMENTS)
+        assertEquals(n("maxDepth"), SvgSubset.MAX_DEPTH)
+        assertEquals(n("viewBoxMin"), SvgSubset.VIEWBOX_MIN)
+        assertEquals(n("viewBoxMax"), SvgSubset.VIEWBOX_MAX)
+        assertEquals(n("fontSizeMin"), SvgSubset.FONT_SIZE_MIN)
+        assertEquals(n("fontSizeMax"), SvgSubset.FONT_SIZE_MAX)
     }
 }

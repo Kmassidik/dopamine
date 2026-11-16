@@ -30,8 +30,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.onLongClick
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
+import app.dopamine.ui.components.heading
 import app.dopamine.domain.model.ProfileName
 import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.ChunkyButton
@@ -54,7 +59,7 @@ fun SettingsScreen(vm: SettingsViewModel, onOpenFormulas: () -> Unit) {
     Surface(Modifier.fillMaxSize(), color = c.bg, contentColor = c.ink) {
         Column(Modifier.fillMaxSize().safeDrawingPadding().imePadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.settings_title), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp))
+                Text(stringResource(R.string.settings_title), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(start = 8.dp).heading())
             }
             LazyColumn(
                 contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 112.dp),
@@ -165,12 +170,15 @@ private fun ContentCard(c: app.dopamine.ui.theme.DopamineColors, state: UpdateUi
 
 @Composable
 private fun AboutCard(c: app.dopamine.ui.theme.DopamineColors, version: String, onOpenFormulas: () -> Unit) {
+    val formulaLabel = stringResource(R.string.settings_formula_open)
     Card(c.yellowTint) {
         Text(stringResource(R.string.settings_about), style = MaterialTheme.typography.titleLarge)
         Text(
             stringResource(R.string.settings_version, version),
             style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.combinedClickable(onClick = {}, onLongClick = onOpenFormulas),
+            modifier = Modifier
+                .pointerInput(Unit) { detectTapGestures(onLongPress = { onOpenFormulas() }) }
+                .semantics { onLongClick(label = formulaLabel) { onOpenFormulas(); true } },
         )
         Text(stringResource(R.string.settings_privacy), style = MaterialTheme.typography.bodyMedium, color = c.inkSoft)
     }

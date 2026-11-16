@@ -112,6 +112,7 @@ data class LearnPage(
     val image: String? = null,
     val code: String? = null,
     val language: String? = null,
+    val alt: String? = null,
 )
 
 /** Flat on purpose: unknown question types still parse and are skipped by the player. */
@@ -128,6 +129,8 @@ data class Question(
     val steps: List<String>? = null,
     val explanation: String = "",
     val image: String? = null,
+    /** What the picture shows, for screen readers. Required whenever [image] is set. */
+    val alt: String? = null,
 )
 
 val KNOWN_NOTE_KINDS = ContentContract.NOTE_KINDS.filterValues { it <= ContentContract.APP_VERSION }.keys

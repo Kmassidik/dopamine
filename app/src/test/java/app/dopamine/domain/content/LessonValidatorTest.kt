@@ -56,6 +56,15 @@ class LessonValidatorTest {
         bad(lesson(mc(), learn = listOf(p, p)))
     }
 
+    @Test fun imageNeedsAltText() {
+        bad(lesson(mc().copy(image = "images/a.svg")))
+        bad(lesson(mc().copy(image = "images/a.svg", alt = "short")))
+        bad(lesson(mc().copy(image = "images/a.svg", alt = "x".repeat(201))))
+        assertNull(LessonValidator.validate(lesson(mc().copy(image = "images/a.svg", alt = "A number line with three points."))))
+        bad(lesson(mc(), learn = listOf(LearnPage("p1", "text", body = "b", image = "images/a.svg"))))
+        assertNull(LessonValidator.validate(lesson(mc(), learn = listOf(LearnPage("p1", "text", body = "b", image = "images/a.svg", alt = "A circuit with a battery.")))))
+    }
+
     @Test fun manifestMismatchFails() {
         val ref = LessonRef("other", "t", "x/y.json", 1, "h", 1, 1)
         assertNotNull(LessonValidator.validate(lesson(mc()), ref))

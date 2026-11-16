@@ -35,6 +35,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.dopamine.R
 import app.dopamine.data.repo.HomeStats
@@ -45,6 +49,7 @@ import app.dopamine.ui.components.AppIcon
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.ProgressBar
 import app.dopamine.ui.components.bounceClick
+import app.dopamine.ui.components.heading
 import app.dopamine.ui.components.RibbonCorner
 import app.dopamine.ui.components.StatChip
 import app.dopamine.ui.components.iconFor
@@ -74,7 +79,7 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
                     Text(
                         stringResource(R.string.section_courses),
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(top = 4.dp),
+                        modifier = Modifier.padding(top = 4.dp).heading(),
                     )
                 }
                 val m = manifest
@@ -90,6 +95,7 @@ fun HomeScreen(name: String, vm: HomeViewModel, onOpenCategory: (String) -> Unit
 
 @Composable
 private fun Header(c: DopamineColors, name: String, stats: HomeStats, onOpenSettings: () -> Unit) {
+    val settingsLabel = stringResource(R.string.settings_open)
     Box(Modifier.fillMaxWidth()) {
         RibbonCorner(stringResource(R.string.ribbon_text), c.greenTint, c.ink, Modifier.align(Alignment.TopEnd).offset(y = (-36).dp))
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -113,14 +119,15 @@ private fun Header(c: DopamineColors, name: String, stats: HomeStats, onOpenSett
                         .size(48.dp)
                         .clip(CircleShape)
                         .background(c.pink)
-                        .bounceClick(stringResource(R.string.settings_open), onOpenSettings),
+                        .semantics { contentDescription = settingsLabel }
+                        .bounceClick(role = Role.Button, onClick = onOpenSettings),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(name.take(1).uppercase(), style = MaterialTheme.typography.titleMedium, color = c.onAccent)
+                    Text(name.take(1).uppercase(), style = MaterialTheme.typography.titleMedium, color = c.onAccent, modifier = Modifier.clearAndSetSemantics {})
                 }
             }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(stringResource(R.string.home_hello, name), style = MaterialTheme.typography.displayLarge)
+                Text(stringResource(R.string.home_hello, name), style = MaterialTheme.typography.displayLarge, modifier = Modifier.heading())
                 Text(stringResource(R.string.home_subtitle), style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -133,11 +140,12 @@ private fun Header(c: DopamineColors, name: String, stats: HomeStats, onOpenSett
 
 @Composable
 private fun Tile(bg: Color, modifier: Modifier, onClick: (() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit) {
+    val openLabel = stringResource(R.string.action_open)
     Column(
         modifier
             .clip(CardShape)
             .background(bg)
-            .then(if (onClick != null) Modifier.bounceClick(onClick = onClick) else Modifier)
+            .then(if (onClick != null) Modifier.bounceClick(openLabel, onClick = onClick) else Modifier)
             .padding(20.dp),
         content = content,
     )
@@ -194,7 +202,7 @@ private fun CourseRow(c: DopamineColors, m: Manifest, cat: CategoryDto, onOpen: 
             .fillMaxWidth()
             .clip(CircleShape)
             .background(tint)
-            .bounceClick(cat.name) { onOpen(cat.id) }
+            .bounceClick(stringResource(R.string.action_open)) { onOpen(cat.id) }
             .padding(start = 8.dp, end = 20.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
