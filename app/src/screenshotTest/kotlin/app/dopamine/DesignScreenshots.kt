@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
 import app.dopamine.ui.components.ChunkyButton
 import app.dopamine.ui.components.CodeBlock
-import app.dopamine.ui.components.FloatingNav
+import app.dopamine.ui.components.BottomBar
 import app.dopamine.ui.components.IconImage
 import app.dopamine.ui.components.InkButton
 import app.dopamine.ui.components.ProgressBar
@@ -123,7 +123,7 @@ fun ButtonsShot() = Page {
 @Composable
 fun NavShot() = Page {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Tab.entries.forEach { FloatingNav(it, {}) }
+        Tab.entries.forEach { BottomBar(it, {}) }
     }
 }
 
@@ -156,7 +156,7 @@ fun SmallPhoneShot() = Page {
         Text("What will you learn today?", style = MaterialTheme.typography.bodyLarge, color = c.inkSoft)
         ChunkyButton("Start course", {}, c.green, c.greenLip, c.onAccent)
         MathText("Solve \$2x+3=7\$ for \$x\$", style = MaterialTheme.typography.titleLarge)
-        FloatingNav(Tab.Home, {}, Modifier.fillMaxWidth())
+        BottomBar(Tab.Home, {})
     }
 }
 

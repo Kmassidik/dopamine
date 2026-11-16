@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,14 +33,20 @@ enum class Tab(val route: String, @DrawableRes val icon: Int, @StringRes val lab
 }
 
 /**
- * A dark pill that floats above the content. Three equal tabs, each with its icon and its label;
- * the selected one sits on a yellow chip. Each tab is a full third of the bar to tap.
+ * The bottom bar: a dark panel with rounded top corners that runs to the very bottom of the screen, behind the
+ * phone's own navigation buttons (the app draws edge to edge). Three equal tabs, each with its icon and label;
+ * the selected one sits on a yellow chip. Pass `Modifier.navigationBarsPadding()` inside is handled here.
  */
 @Composable
-fun FloatingNav(selected: Tab?, onSelect: (Tab) -> Unit, modifier: Modifier = Modifier) {
+fun BottomBar(selected: Tab?, onSelect: (Tab) -> Unit, modifier: Modifier = Modifier) {
     val c = Dopamine.colors
     Row(
-        modifier.widthIn(max = 420.dp).fillMaxWidth().clip(PillShape).background(c.onAccent).padding(6.dp),
+        modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+            .background(c.onAccent)
+            .navigationBarsPadding()
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

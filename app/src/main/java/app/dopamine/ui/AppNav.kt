@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import app.dopamine.ui.components.FloatingNav
+import app.dopamine.ui.components.BottomBar
 import app.dopamine.ui.theme.Dopamine
 import app.dopamine.ui.components.Tab
 import app.dopamine.ui.course.CourseScreen
@@ -73,6 +73,12 @@ private fun Main(container: AppContainer, name: String) {
         "review" -> Tab.Review
         "settings" -> Tab.Settings
         else -> if (inLesson) null else Tab.Home
+    }
+    // The phone's three navigation buttons sit on top of our bar: make them light on the dark bar, dark otherwise.
+    val activity = androidx.activity.compose.LocalActivity.current
+    val view = androidx.compose.ui.platform.LocalView.current
+    androidx.compose.runtime.SideEffect {
+        activity?.window?.let { androidx.core.view.WindowCompat.getInsetsController(it, view).isAppearanceLightNavigationBars = inLesson }
     }
     fun goTab(tab: Tab) = nav.navigate(tab.route) {
         popUpTo("home") { inclusive = false }
@@ -139,27 +145,7 @@ private fun Main(container: AppContainer, name: String) {
             }
         }
         if (!inLesson) {
-            // Content fades out behind the bar so nothing looks cut off by it.
-            val bg = Dopamine.colors.bg
-            val inset = with(androidx.compose.ui.platform.LocalDensity.current) { WindowInsets.navigationBars.getBottom(this).toDp() }
-            Box(
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(124.dp + inset)
-                    .background(
-                        androidx.compose.ui.graphics.Brush.verticalGradient(
-                            0f to androidx.compose.ui.graphics.Color.Transparent,
-                            0.5f to bg.copy(alpha = 0.92f),
-                            1f to bg,
-                        ),
-                    ),
-            )
-            FloatingNav(
-                selected,
-                onSelect = ::goTab,
-                modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(start = 20.dp, end = 20.dp, bottom = 12.dp),
-            )
+            BottomBar(selected, onSelect = ::goTab, modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
     }
