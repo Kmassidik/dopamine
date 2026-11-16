@@ -4,10 +4,10 @@ import app.dopamine.domain.model.LearnPage
 import app.dopamine.domain.model.Lesson
 import app.dopamine.domain.model.LessonRef
 import app.dopamine.domain.model.Question
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.Test
 
 class LessonValidatorTest {
     private fun mc(id: String = "q1", answer: Int? = 0, choices: List<String>? = listOf("a", "b")) =
@@ -18,20 +18,20 @@ class LessonValidatorTest {
 
     private fun bad(l: Lesson) = assertNotNull(LessonValidator.validate(l))
 
-    @Test fun validLessonPasses() = assertNull(LessonValidator.validate(lesson(mc())))
-    @Test fun emptyLessonFails() = bad(lesson())
-    @Test fun answerIndexOutOfRangeFails() = bad(lesson(mc(answer = 5)))
-    @Test fun duplicateIdsFail() = bad(lesson(mc("q1"), mc("q1")))
-    @Test fun duplicateChoicesFail() = bad(lesson(mc(choices = listOf("a", "a"))))
-    @Test fun tooManyChoicesFail() = bad(lesson(mc(choices = listOf("a", "b", "c", "d", "e", "f"))))
-    @Test fun badIdFails() = bad(lesson(mc("Bad Id")))
-    @Test fun missingExplanationFails() = bad(lesson(mc().copy(explanation = "")))
-    @Test fun overlongTextFails() = bad(lesson(mc().copy(prompt = "x".repeat(601))))
-    @Test fun badImagePathFails() = bad(lesson(mc().copy(image = "../secret.svg")))
-    @Test fun xpOutOfRangeFails() = bad(lesson(mc()).copy(xp = 0))
+    @Test fun validLessonPasses() { assertNull(LessonValidator.validate(lesson(mc()))) }
+    @Test fun emptyLessonFails() { bad(lesson()) }
+    @Test fun answerIndexOutOfRangeFails() { bad(lesson(mc(answer = 5))) }
+    @Test fun duplicateIdsFail() { bad(lesson(mc("q1"), mc("q1"))) }
+    @Test fun duplicateChoicesFail() { bad(lesson(mc(choices = listOf("a", "a")))) }
+    @Test fun tooManyChoicesFail() { bad(lesson(mc(choices = listOf("a", "b", "c", "d", "e", "f")))) }
+    @Test fun badIdFails() { bad(lesson(mc("Bad Id"))) }
+    @Test fun missingExplanationFails() { bad(lesson(mc().copy(explanation = ""))) }
+    @Test fun overlongTextFails() { bad(lesson(mc().copy(prompt = "x".repeat(601)))) }
+    @Test fun badImagePathFails() { bad(lesson(mc().copy(image = "../secret.svg"))) }
+    @Test fun xpOutOfRangeFails() { bad(lesson(mc()).copy(xp = 0)) }
 
-    @Test fun unknownQuestionTypeIsRejected() = bad(lesson(mc(), Question("q9", "hologram", explanation = "e")))
-    @Test fun unknownPageKindIsRejected() = bad(lesson(mc(), learn = listOf(LearnPage("p1", "hologram", body = "b"))))
+    @Test fun unknownQuestionTypeIsRejected() { bad(lesson(mc(), Question("q9", "hologram", explanation = "e"))) }
+    @Test fun unknownPageKindIsRejected() { bad(lesson(mc(), learn = listOf(LearnPage("p1", "hologram", body = "b")))) }
 
     @Test fun lockedLessonIsNotReadButPasses() {
         // Needs a newer app: even unknown kinds are fine because the app will not open it.

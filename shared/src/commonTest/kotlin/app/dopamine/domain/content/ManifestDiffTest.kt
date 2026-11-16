@@ -6,10 +6,10 @@ import app.dopamine.domain.model.LessonRef
 import app.dopamine.domain.model.Manifest
 import app.dopamine.domain.model.NotesRef
 import app.dopamine.domain.model.UnitDto
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 class ManifestDiffTest {
     private fun ref(id: String, v: Int = 1, sha: String = "a") =
@@ -58,7 +58,7 @@ class ManifestDiffTest {
         listOf(
             "../etc/passwd.json", "/abs/lesson.json", "a/../b.json", "a//b.json", "a/b.txt",
             "a/b.json/../../c.json", "..\\x.json", "a/.hidden.json", "",
-        ).forEach { assertFalse("should reject $it", SafePath.isSafe(it)) }
+        ).forEach { assertFalse(SafePath.isSafe(it), "should reject $it") }
     }
 
     private fun withNotes(n: NotesRef?) = Manifest(

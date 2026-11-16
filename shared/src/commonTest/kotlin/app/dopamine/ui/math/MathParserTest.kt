@@ -5,9 +5,9 @@ import app.dopamine.ui.math.MathNode.Row
 import app.dopamine.ui.math.MathNode.Script
 import app.dopamine.ui.math.MathNode.Sqrt
 import app.dopamine.ui.math.MathNode.Sym
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.Test
 
 class MathParserTest {
     private fun items(src: String) = (MathParser.parse(src) as Row).items

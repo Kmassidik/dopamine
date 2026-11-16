@@ -6,9 +6,9 @@ import app.dopamine.domain.model.LessonRef
 import app.dopamine.domain.model.Manifest
 import app.dopamine.domain.model.Overview
 import app.dopamine.domain.model.UnitDto
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Test
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.Test
 
 class ManifestValidatorTest {
     private val sha = "a".repeat(64)
@@ -20,10 +20,10 @@ class ManifestValidatorTest {
         listOf(CourseDto("c", cat, "C", "", 1, listOf(UnitDto("u", "U", 1, listOf(ref))), ov)), emptyList(),
     )
 
-    @Test fun validManifestPasses() = assertNull(ManifestValidator.validate(manifest()))
-    @Test fun unsafePathFails() = assertNotNull(ManifestValidator.validate(manifest(ref(path = "../x.json"))))
-    @Test fun badHashFails() = assertNotNull(ManifestValidator.validate(manifest(ref(sha = "zz"))))
-    @Test fun unknownCategoryFails() = assertNotNull(ManifestValidator.validate(manifest(cat = "nope")))
-    @Test fun overlongSummaryFails() = assertNotNull(ManifestValidator.validate(manifest(ov = Overview("x".repeat(401)))))
-    @Test fun badMinAppFails() = assertNotNull(ManifestValidator.validate(manifest(ref(minApp = 0))))
+    @Test fun validManifestPasses() { assertNull(ManifestValidator.validate(manifest())) }
+    @Test fun unsafePathFails() { assertNotNull(ManifestValidator.validate(manifest(ref(path = "../x.json")))) }
+    @Test fun badHashFails() { assertNotNull(ManifestValidator.validate(manifest(ref(sha = "zz")))) }
+    @Test fun unknownCategoryFails() { assertNotNull(ManifestValidator.validate(manifest(cat = "nope"))) }
+    @Test fun overlongSummaryFails() { assertNotNull(ManifestValidator.validate(manifest(ov = Overview("x".repeat(401))))) }
+    @Test fun badMinAppFails() { assertNotNull(ManifestValidator.validate(manifest(ref(minApp = 0)))) }
 }

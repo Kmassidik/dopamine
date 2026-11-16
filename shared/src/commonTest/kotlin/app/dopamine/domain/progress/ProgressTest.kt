@@ -1,7 +1,7 @@
 package app.dopamine.domain.progress
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.Test
 
 class ProgressTest {
     @Test fun xpScalesWithAccuracy() {
