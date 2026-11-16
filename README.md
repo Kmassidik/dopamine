@@ -1,6 +1,6 @@
 # Dopamine
 
-Short, rewarding daily lessons on your phone, with **no ads, no accounts and no tracking**. Dopamine is a fully native Android app (Kotlin + Jetpack Compose) with 241 lessons in 13 courses: math from pre-algebra to precalculus, programming in C and Python, science and electronics.
+Short, rewarding daily lessons on your phone, with **no ads, no accounts and no tracking**. Dopamine is a fully native Android app (Kotlin + Jetpack Compose) with 266 lessons in 14 courses: math from pre-algebra to precalculus, programming in C, Python and AI-assisted software engineering, science and electronics.
 
 <p align="center">
   <img src="docs/screenshots/home.png" width="220" alt="Home screen with greeting, streak, XP and daily goal">
@@ -33,7 +33,7 @@ Short, rewarding daily lessons on your phone, with **no ads, no accounts and no 
 | Subject | Courses | Lessons |
 |---|---|---|
 | Math | Pre-Algebra, Algebra 1, Geometry, Algebra 2, Precalculus | 123 |
-| Programming | C Fundamentals, Arrays, Strings and Debugging, Algorithms in C, Memory and Pointers, Data Structures in C, Programming Basics (Python) | 112 |
+| Programming | C Fundamentals, Arrays, Strings and Debugging, Algorithms in C, Memory and Pointers, Data Structures in C, Programming Basics (Python), AI Engineering | 137 |
 | Science | Science Basics | 2 |
 | Electronics | Electronics Basics | 4 |
 
